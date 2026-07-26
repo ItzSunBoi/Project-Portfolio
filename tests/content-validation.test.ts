@@ -9,6 +9,7 @@ import {
 function validInput() {
   return {
     site: structuredClone(content.site),
+    contact: structuredClone(content.contact),
     projects: structuredClone(content.projects),
     skills: structuredClone(content.skills),
     timeline: structuredClone(content.timeline),
@@ -62,6 +63,34 @@ describe("portfolio content validation", () => {
     };
 
     expect(() => validatePortfolioContent(input)).not.toThrow();
+  });
+
+  it("rejects legacy profile fields in site metadata", () => {
+    const input = validInput();
+    Object.assign(input.site, { github: "https://github.com/example" });
+
+    expect(() => validatePortfolioContent(input)).toThrow(
+      /site.*unrecognized key.*github/i,
+    );
+  });
+
+  it("requires visible social profiles to have a URL", () => {
+    const input = validInput();
+    input.socials[0].visible = true;
+
+    expect(() => validatePortfolioContent(input)).toThrow(
+      /visible profile must have a URL/i,
+    );
+  });
+
+  it("keeps the portfolio URL out of external profiles", () => {
+    const input = validInput();
+    input.socials[0].url = "https://www.itzsunboi.dev/";
+    input.socials[0].visible = true;
+
+    expect(() => validatePortfolioContent(input)).toThrow(
+      /portfolio URL belongs only in site\.json/i,
+    );
   });
 
   it("hides drafts in production and includes them explicitly in development", () => {

@@ -1,14 +1,9 @@
 {
   "name": "Sun",
   "brandName": "ItzSunBoi",
-  "domain": "itzsunboi.dev",
-  "baseUrl": "https://itzsunboi.dev",
+  "baseUrl": "https://www.itzsunboi.dev",
   "title": "Sun | Hardware, Embedded Systems and Software",
   "description": "A portfolio of hardware, firmware, robotics, PCB and software projects.",
-  "email": "contact@itzsunboi.dev",
-  "github": "https://github.com/ItzSunBoi",
-  "linkedin": "",
-  "cvPath": "",
   "defaultTheme": "system",
-  "footerLine": "Designed, Routed, Compiled and occasionally reflowed by Me."
+  "footerLine": "I designed, routed, compiled and occasionally reflowed this."
 }

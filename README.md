@@ -45,12 +45,19 @@ duplicating page markup:
 | `skills.json`     | Skill groups and toolbox entries                                     |
 | `timeline.json`   | The recurring technical threads connecting projects                  |
 | `navigation.json` | Header and footer navigation                                         |
-| `socials.json`    | Configurable public profile links                                    |
-| `site.json`       | Brand, metadata, theme, placeholder email and optional profile URLs  |
+| `socials.json`    | External public profile links, never this portfolio itself           |
+| `contact.json`    | Contact-page wording and the configurable public email               |
+| `site.json`       | Portfolio identity, canonical URL, metadata, theme and footer copy   |
 
 Adding a project means adding one validated object. Astro then creates its card,
 route, metadata, related-project suggestions and fallback artwork. No matching
 page file is required.
+
+Each content file has one owner role. Profile URLs are read only from
+`socials.json`, contact details only from `contact.json`, and the portfolio's
+canonical address only from `site.json`. Validation rejects duplicate profile
+IDs, duplicate navigation targets, legacy profile fields in `site.json` and any
+attempt to add the portfolio itself as an external profile.
 
 Project detail content is assembled from a safe set of typed blocks: paragraphs,
 headings, images, galleries, code, quotes, callouts, specifications, timelines,
@@ -76,6 +83,12 @@ not rendered.
 
 `INTERNAL.md` is reserved for my own notes and is intentionally excluded from
 Git.
+
+## Deployment
+
+The production build is a static `dist/` directory suitable for Cloudflare
+Pages. The portfolio's canonical address is configured as
+`www.ItzSunBoi.dev`.
 
 ## Licence
 

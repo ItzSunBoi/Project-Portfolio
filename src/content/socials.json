@@ -1,8 +1,14 @@
 [
   {
-    "id": "website",
-    "label": "Personal domain",
-    "url": "https://itzsunboi.dev",
-    "visible": true
+    "id": "github",
+    "label": "GitHub",
+    "url": "",
+    "visible": false
+  },
+  {
+    "id": "linkedin",
+    "label": "LinkedIn",
+    "url": "",
+    "visible": false
   }
 ]

@@ -6,7 +6,7 @@ import { resolveThemePreference } from "../src/lib/theme";
 describe("URL generation", () => {
   it("creates canonical absolute URLs", () => {
     expect(absoluteUrl("/projects/", content.site)).toBe(
-      "https://itzsunboi.dev/projects/",
+      "https://www.itzsunboi.dev/projects/",
     );
   });
 

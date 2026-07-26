@@ -73,7 +73,7 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-body:has(.mobile-menu[open]) {
+body.mobile-menu-open {
   overflow: hidden;
 }
 
@@ -419,14 +419,6 @@ a {
 }
 
 .mobile-menu {
-  display: none;
-}
-
-.mobile-menu summary {
-  list-style: none;
-}
-
-.mobile-menu summary::-webkit-details-marker {
   display: none;
 }
 
@@ -1997,16 +1989,16 @@ a {
     display: block;
   }
 
-  .mobile-menu[open] .menu-line-top {
+  .mobile-menu[data-open="true"] .menu-line-top {
     transform: translateY(5px) rotate(45deg);
     transform-origin: center;
   }
 
-  .mobile-menu[open] .menu-line-middle {
+  .mobile-menu[data-open="true"] .menu-line-middle {
     opacity: 0;
   }
 
-  .mobile-menu[open] .menu-line-bottom {
+  .mobile-menu[data-open="true"] .menu-line-bottom {
     transform: translateY(-5px) rotate(-45deg);
     transform-origin: center;
   }

@@ -2,6 +2,11 @@
 import { currentYear } from "../../lib/dates";
 import { content } from "../../lib/content";
 import SunMark from "../common/SunMark.astro";
+
+const displayDomain = new URL(content.site.baseUrl).hostname;
+const visibleSocials = content.socials.filter(
+  (social) => social.visible && social.url,
+);
 ---
 
 <footer class="site-footer">
@@ -15,7 +20,7 @@ import SunMark from "../common/SunMark.astro";
         <SunMark class="brand-sun" size={34} />
         <span class="brand-wordmark">
           <strong>{content.site.brandName}</strong>
-          <small>{content.site.domain}</small>
+          <small>{displayDomain}</small>
         </span>
       </a>
       <p>{content.site.footerLine}</p>
@@ -33,33 +38,20 @@ import SunMark from "../common/SunMark.astro";
       <div>
         <h2>Elsewhere</h2>
         {
-          content.socials
-            .filter((social) => social.visible)
-            .map((social) => (
-              <a href={social.url} rel="me">
-                {social.label}
-              </a>
-            ))
-        }
-        {
-          content.site.github && (
-            <a href={content.site.github} rel="me noreferrer">
-              GitHub
+          visibleSocials.map((social) => (
+            <a href={social.url} rel="me noreferrer">
+              {social.label}
             </a>
-          )
+          ))
         }
-        {
-          content.site.email && (
-            <a href={`mailto:${content.site.email}`}>Email</a>
-          )
-        }
+        <a href={`mailto:${content.contact.email}`}>Email</a>
       </div>
     </div>
   </div>
   <div class="site-shell footer-bottom">
     <p>
       {
-        `© ${currentYear()} ${content.site.name}. Built with Astro and stubborn curiosity with a sprinkle of AI.`
+        `© ${currentYear()} ${content.site.name}. Built with Astro and stubborn curiosity.`
       }
     </p>
     <a href="#top">Back to top <span aria-hidden="true">↑</span></a>

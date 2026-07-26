@@ -1,6 +1,10 @@
 ---
 import { content } from "../../lib/content";
 import HeroIllustration from "./HeroIllustration.astro";
+
+const github = content.socials.find(
+  (social) => social.id === "github" && social.visible && social.url,
+);
 ---
 
 <section class="hero-section site-shell" aria-labelledby="hero-title">
@@ -21,8 +25,8 @@ import HeroIllustration from "./HeroIllustration.astro";
       </a>
       <a class="button button-secondary" href="/#skills"> Browse my toolbox </a>
       {
-        content.site.github && (
-          <a class="text-link" href={content.site.github} rel="noreferrer">
+        github && (
+          <a class="text-link" href={github.url} rel="me noreferrer">
             GitHub profile <span aria-hidden="true">→</span>
           </a>
         )

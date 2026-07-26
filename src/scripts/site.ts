@@ -1,3 +1,7 @@
+import { initializeMobileMenu } from "../lib/mobile-menu";
+
+initializeMobileMenu();
+
 const root = document.documentElement;
 const themeButtons = document.querySelectorAll<HTMLButtonElement>(
   "[data-theme-toggle]",
@@ -33,7 +37,7 @@ themeButtons.forEach((button) => {
   });
 });
 
-media.addEventListener("change", () => {
+const handleSystemThemeChange = () => {
   try {
     if (localStorage.getItem("portfolio-theme")) return;
   } catch {
@@ -41,7 +45,18 @@ media.addEventListener("change", () => {
   }
   root.dataset.theme = media.matches ? "dark" : "light";
   syncThemeButtons();
-});
+};
+
+const compatibleMedia = media as unknown as {
+  addEventListener?: (name: string, listener: () => void) => void;
+  addListener?: (listener: () => void) => void;
+};
+
+if (typeof compatibleMedia.addEventListener === "function") {
+  compatibleMedia.addEventListener("change", handleSystemThemeChange);
+} else if (typeof compatibleMedia.addListener === "function") {
+  compatibleMedia.addListener(handleSystemThemeChange);
+}
 
 syncThemeButtons();
 
@@ -57,20 +72,3 @@ document
     image.addEventListener("error", showFallback, { once: true });
     if (image.complete && image.naturalWidth === 0) showFallback();
   });
-
-const mobileMenu =
-  document.querySelector<HTMLDetailsElement>("[data-mobile-menu]");
-
-document.querySelectorAll("[data-mobile-nav-link]").forEach((link) => {
-  link.addEventListener("click", () => {
-    if (mobileMenu) mobileMenu.open = false;
-  });
-});
-
-document.addEventListener("keydown", (event) => {
-  if (event.key === "Escape" && mobileMenu?.open) mobileMenu.open = false;
-});
-
-window.addEventListener("resize", () => {
-  if (window.innerWidth >= 960 && mobileMenu) mobileMenu.open = false;
-});
