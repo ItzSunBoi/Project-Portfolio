@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <rect width="1200" height="630" fill="#07131F"/>
+  <g fill="none" stroke="#23445C" stroke-width="2" opacity=".72">
+    <path d="M0 112h358l42 42h156M1200 490H860l-42-42H616"/>
+    <path d="M94 0v180l42 42v142M1102 630V452l-42-42V265"/>
+    <circle cx="400" cy="154" r="7" fill="#52B8FA"/>
+    <circle cx="818" cy="448" r="7" fill="#52B8FA"/>
+  </g>
+  <g transform="translate(92 92)">
+    <g fill="none" stroke="#FFD447" stroke-linecap="round" stroke-width="8">
+      <path d="M52 0v16M52 88v16M0 52h16M88 52h16"/>
+      <path d="m15 15 11 11M78 78l11 11M89 15 78 26M26 78 15 89"/>
+    </g>
+    <circle cx="52" cy="52" r="25" fill="#FFD447" stroke="#E9A900" stroke-width="3"/>
+  </g>
+  <text x="92" y="314" fill="#EFF8FF" font-family="Inter, Arial, sans-serif" font-size="82" font-weight="700" letter-spacing="-3">ItzSunBoi</text>
+  <text x="96" y="382" fill="#A8C0D2" font-family="Inter, Arial, sans-serif" font-size="32">Hardware · firmware · software</text>
+  <text x="96" y="517" fill="#52B8FA" font-family="ui-monospace, SFMono-Regular, monospace" font-size="23" letter-spacing="2">BUILDING PRACTICAL SYSTEMS</text>
+  <rect x="92" y="548" width="1016" height="2" fill="#23445C"/>
+</svg>

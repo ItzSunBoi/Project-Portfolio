@@ -1,0 +1,39 @@
+---
+import { content } from "../../lib/content";
+import HeroIllustration from "./HeroIllustration.astro";
+---
+
+<section class="hero-section site-shell" aria-labelledby="hero-title">
+  <div class="hero-copy">
+    <p class="eyebrow">Hardware, firmware & software</p>
+    <h1 id="hero-title">
+      Building practical systems across the <span>physical</span> and digital worlds.
+    </h1>
+    <p class="hero-lead">
+      I design custom electronics, embedded firmware, automation tools,
+      manufacturing equipment and software that turn unusual ideas into working
+      systems.
+    </p>
+    <div class="hero-actions">
+      <a class="button button-primary" href="/projects/">
+        Explore projects
+        <span aria-hidden="true">↗</span>
+      </a>
+      <a class="button button-secondary" href="/#skills"> Browse my toolbox </a>
+      {
+        content.site.github && (
+          <a class="text-link" href={content.site.github} rel="noreferrer">
+            GitHub profile <span aria-hidden="true">→</span>
+          </a>
+        )
+      }
+    </div>
+    <div class="status-strip" role="status">
+      <span class="status-strip-indicator" aria-hidden="true"></span>
+      <span
+        >Building. Testing. Occasionally finding the escaped magic smoke.</span
+      >
+    </div>
+  </div>
+  <HeroIllustration />
+</section>

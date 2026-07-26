@@ -1,0 +1,144 @@
+---
+import type { ProjectContentBlock } from "../../schemas/project";
+
+interface Props {
+  blocks: ProjectContentBlock[];
+}
+
+const { blocks } = Astro.props;
+---
+
+<div class="project-content">
+  {
+    blocks.map((block) => {
+      switch (block.type) {
+        case "paragraph":
+          return <p>{block.body}</p>;
+        case "heading":
+          return block.level === 2 ? (
+            <h2>{block.title}</h2>
+          ) : (
+            <h3>{block.title}</h3>
+          );
+        case "image":
+          return (
+            <figure>
+              <img
+                src={block.src}
+                alt={block.alt}
+                loading="lazy"
+                decoding="async"
+              />
+              {block.caption && <figcaption>{block.caption}</figcaption>}
+            </figure>
+          );
+        case "gallery":
+          return (
+            <div class="content-gallery">
+              {block.images.map((image) => (
+                <figure>
+                  <img
+                    src={image.src}
+                    alt={image.alt}
+                    loading="lazy"
+                    decoding="async"
+                  />
+                  {image.caption && <figcaption>{image.caption}</figcaption>}
+                </figure>
+              ))}
+            </div>
+          );
+        case "code":
+          return (
+            <pre>
+              <code data-language={block.language}>{block.code}</code>
+            </pre>
+          );
+        case "quote":
+          return (
+            <blockquote>
+              <p>{block.body}</p>
+              {block.attribution && <cite>{block.attribution}</cite>}
+            </blockquote>
+          );
+        case "callout":
+          return (
+            <aside class:list={["content-callout", `callout-${block.style}`]}>
+              <strong>{block.title}</strong>
+              <p>{block.body}</p>
+            </aside>
+          );
+        case "specificationTable":
+          return (
+            <div class="spec-table-wrap">
+              <table class="spec-table">
+                <tbody>
+                  {block.rows.map((row) => (
+                    <tr>
+                      <th scope="row">{row.label}</th>
+                      <td>{row.value}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          );
+        case "timeline":
+          return (
+            <ol class="content-timeline">
+              {block.items.map((item) => (
+                <li>
+                  <span
+                    class:list={[
+                      "timeline-marker",
+                      item.state && `is-${item.state}`,
+                    ]}
+                  />
+                  <div>
+                    <div class="content-timeline-heading">
+                      <strong>{item.title}</strong>
+                      {item.date && <span>{item.date}</span>}
+                    </div>
+                    <p>{item.body}</p>
+                  </div>
+                </li>
+              ))}
+            </ol>
+          );
+        case "linkGroup":
+          return (
+            <div class="content-links">
+              {block.links.map((link) => (
+                <a href={link.url} rel="noreferrer">
+                  {link.label} <span aria-hidden="true">↗</span>
+                </a>
+              ))}
+            </div>
+          );
+        case "video":
+          return (
+            <figure>
+              <video controls preload="metadata" poster={block.poster}>
+                <source src={block.src} />
+              </video>
+              {block.caption && <figcaption>{block.caption}</figcaption>}
+            </figure>
+          );
+        case "diagram":
+          return (
+            <aside class="content-diagram">
+              {block.title && <strong>{block.title}</strong>}
+              <p>{block.description}</p>
+              {block.items?.length && (
+                <ul>
+                  {block.items.map((item) => (
+                    <li>{item}</li>
+                  ))}
+                </ul>
+              )}
+            </aside>
+          );
+      }
+    })
+  }
+</div>

@@ -1,0 +1,620 @@
+[
+  {
+    "id": "laser-triangulator",
+    "slug": "laser-triangulator",
+    "title": "Laser Triangulator",
+    "subtitle": "Compact optical surface measurement system",
+    "summary": "A custom camera and dual-laser system for measuring printed surfaces and extrusion behaviour.",
+    "category": "hardware",
+    "secondaryCategories": ["embedded", "computer-vision", "pcb"],
+    "status": "active",
+    "year": 2026,
+    "featured": true,
+    "visibility": "public",
+    "thumbnail": null,
+    "thumbnailAlt": null,
+    "technologies": ["ESP32-S3", "OV9281", "Python", "CAN bus", "PCB design"],
+    "links": {
+      "github": null,
+      "demo": null,
+      "documentation": null
+    },
+    "highlights": [
+      "Custom OV9281 camera interface",
+      "Dual laser control",
+      "Compact mixed-signal PCB",
+      "Surface-profile processing"
+    ],
+    "content": [
+      {
+        "type": "paragraph",
+        "body": "This project explores compact laser triangulation as a practical measurement tool for 3D-printing experiments. A monochrome OV9281 sensor observes two controlled laser lines while an ESP32-S3 manages capture, timing and communication."
+      },
+      {
+        "type": "heading",
+        "level": 2,
+        "title": "System outline"
+      },
+      {
+        "type": "specificationTable",
+        "rows": [
+          {
+            "label": "Controller",
+            "value": "ESP32-S3"
+          },
+          {
+            "label": "Image sensor",
+            "value": "OV9281 through a 24-pin FFC"
+          },
+          {
+            "label": "Illumination",
+            "value": "Two independently controlled laser modules"
+          },
+          {
+            "label": "Communication",
+            "value": "CAN bus"
+          },
+          {
+            "label": "Board input",
+            "value": "5 V"
+          }
+        ]
+      },
+      {
+        "type": "callout",
+        "style": "warning",
+        "title": "Power sequencing",
+        "body": "The sensor rails and I/O levels are being treated as first-class design constraints while the interface is finalised."
+      },
+      {
+        "type": "paragraph",
+        "body": "The current work centres on PCB layout, sensor interfacing, optical geometry and a processing path that can extract useful profiles without asking the microcontroller to become a workstation."
+      }
+    ]
+  },
+  {
+    "id": "esp32-hp123-inkjet",
+    "slug": "esp32-hp123-inkjet",
+    "title": "ESP32-S3 HP123 Inkjet Driver",
+    "subtitle": "Parallel waveform generation for a colour cartridge",
+    "summary": "An ESP32-S3 pipeline for queuing nozzle data and driving an HP123 colour cartridge through a timing-critical parallel bus.",
+    "category": "embedded",
+    "secondaryCategories": ["firmware", "hardware"],
+    "status": "active",
+    "year": 2026,
+    "featured": true,
+    "visibility": "public",
+    "thumbnail": null,
+    "thumbnailAlt": null,
+    "technologies": ["ESP32-S3", "ESP-IDF", "DMA", "I80", "C"],
+    "links": {
+      "github": null,
+      "demo": null,
+      "documentation": null
+    },
+    "highlights": [
+      "16-bit parallel output",
+      "DMA-backed waveform buffers",
+      "Nozzle-data queue",
+      "Timing-focused firmware"
+    ],
+    "content": [
+      {
+        "type": "paragraph",
+        "body": "The inkjet driver converts queued colour-nozzle data into the precisely timed digital waveforms expected by an HP123 cartridge. The current firmware migration replaces an earlier I²S-parallel approach with the ESP32-S3 LCD I80 peripheral."
+      },
+      {
+        "type": "specificationTable",
+        "rows": [
+          {
+            "label": "MCU",
+            "value": "ESP32-S3-WROOM-1-N16"
+          },
+          {
+            "label": "Framework",
+            "value": "ESP-IDF"
+          },
+          {
+            "label": "Output",
+            "value": "16-bit parallel waveform bus"
+          },
+          {
+            "label": "Transfer model",
+            "value": "Queued data with DMA-backed output"
+          }
+        ]
+      },
+      {
+        "type": "callout",
+        "style": "info",
+        "title": "Current state",
+        "body": "Bus allocation and transfer validation are active debugging areas; this page deliberately does not present the driver as complete."
+      }
+    ]
+  },
+  {
+    "id": "chromaslicer",
+    "slug": "chromaslicer",
+    "title": "ChromaSlicer",
+    "subtitle": "A full-colour FDM slicing pipeline",
+    "summary": "An OrcaSlicer fork exploring textured model import, colour-aware slicing and per-layer raster generation.",
+    "category": "software",
+    "secondaryCategories": ["manufacturing", "computer-vision"],
+    "status": "active",
+    "year": 2026,
+    "featured": true,
+    "visibility": "public",
+    "thumbnail": null,
+    "thumbnailAlt": null,
+    "technologies": ["C++", "OrcaSlicer", "3MF", "CMYK", "Image processing"],
+    "links": {
+      "github": null,
+      "demo": null,
+      "documentation": null
+    },
+    "highlights": [
+      "UV-texture import path",
+      "Colour surface data model",
+      "Layer-raster scaffold",
+      "Full-colour FDM research"
+    ],
+    "content": [
+      {
+        "type": "paragraph",
+        "body": "ChromaSlicer is a working fork of OrcaSlicer aimed at carrying colour information from textured geometry into the slicing pipeline. The first milestone established UV-aware import and a surface-data representation attached to model volumes."
+      },
+      {
+        "type": "timeline",
+        "items": [
+          {
+            "title": "Model import",
+            "body": "Texture-backed OBJ geometry reaches the model with UV data intact.",
+            "state": "complete"
+          },
+          {
+            "title": "Raster scaffold",
+            "body": "A per-layer colour-raster pipeline is connected to print processing.",
+            "state": "active"
+          },
+          {
+            "title": "Toolpath integration",
+            "body": "CMYK conversion, persistence and deposition strategy remain future work.",
+            "state": "planned"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "filament-scale",
+    "slug": "filament-scale",
+    "title": "Filament Scale",
+    "subtitle": "NFC-aware spool tracking with a local interface",
+    "summary": "A standalone ESP32-S3 spool scale combining load-cell measurement, NFC identity, storage and a responsive web UI.",
+    "category": "hardware",
+    "secondaryCategories": ["embedded", "web", "pcb"],
+    "status": "active",
+    "year": 2026,
+    "featured": true,
+    "visibility": "public",
+    "thumbnail": null,
+    "thumbnailAlt": null,
+    "technologies": ["ESP32-S3", "HX711", "NFC", "ST7789", "Spoolman"],
+    "links": {
+      "github": null,
+      "demo": null,
+      "documentation": null
+    },
+    "highlights": [
+      "Load-cell measurement",
+      "NFC spool binding",
+      "240 × 240 local display",
+      "Spoolman-oriented workflow"
+    ],
+    "content": [
+      {
+        "type": "paragraph",
+        "body": "The filament scale is designed to work beside a printer without depending on another controller. It combines an HX711 load-cell front end, NFC, a 240 × 240 display, SD-backed transaction logging and an ESP32-S3 web interface."
+      },
+      {
+        "type": "heading",
+        "level": 2,
+        "title": "Design priorities"
+      },
+      {
+        "type": "paragraph",
+        "body": "The interface is being shaped around reliable zeroing and calibration, clear recovery from sensor failures, readable long names and a binding flow that does not assume the NFC tag is already known."
+      },
+      {
+        "type": "callout",
+        "style": "info",
+        "title": "Integration status",
+        "body": "Spoolman connectivity, local logging and network-mode behaviour are being developed iteratively."
+      }
+    ]
+  },
+  {
+    "id": "gigaplex-mini-console",
+    "slug": "gigaplex-mini-console",
+    "title": "Gigaplex Mini Console",
+    "subtitle": "A keychain game system on a 15 × 11 LED matrix",
+    "summary": "A CR2032-powered miniature console with a charlieplexed display, five buttons, an IMU and a buzzer.",
+    "category": "hardware",
+    "secondaryCategories": ["embedded", "firmware", "pcb"],
+    "status": "active",
+    "year": 2026,
+    "featured": true,
+    "visibility": "public",
+    "thumbnail": null,
+    "thumbnailAlt": null,
+    "technologies": [
+      "CH32V006",
+      "Charlieplexing",
+      "IMU",
+      "CR2032",
+      "Embedded C"
+    ],
+    "links": {
+      "github": null,
+      "demo": null,
+      "documentation": null
+    },
+    "highlights": [
+      "15 × 11 LED matrix",
+      "Five-button controls",
+      "Motion-aware games",
+      "Keychain-scale PCB"
+    ],
+    "content": [
+      {
+        "type": "paragraph",
+        "body": "Gigaplex is a compact game system built around severe display, memory and power constraints. Its 15 × 11 charlieplexed LED matrix is paired with five controls, a six-axis IMU, an ambient-light sensor and a buzzer."
+      },
+      {
+        "type": "specificationTable",
+        "rows": [
+          {
+            "label": "Controller",
+            "value": "CH32V006K8U6"
+          },
+          {
+            "label": "Display",
+            "value": "15 × 11 charlieplexed 0603 LED matrix"
+          },
+          {
+            "label": "Inputs",
+            "value": "Five buttons and six-axis IMU"
+          },
+          {
+            "label": "Power",
+            "value": "CR2032"
+          },
+          {
+            "label": "Board envelope",
+            "value": "Approximately 35 × 35 mm"
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "body": "The firmware work includes recognisable low-resolution menus, multi-button input, deterministic sand simulation and compact game logic. StarByte is the associated product-brand direction."
+      }
+    ]
+  },
+  {
+    "id": "lumenpnp-upgrades",
+    "slug": "lumenpnp-upgrades",
+    "title": "LumenPnP Upgrades",
+    "subtitle": "Vision, tooling and feeder improvements",
+    "summary": "A collection of practical upgrades for component placement, including vision tuning, feeder selection and nozzle tooling.",
+    "category": "manufacturing",
+    "secondaryCategories": ["robotics", "computer-vision", "hardware"],
+    "status": "active",
+    "year": 2026,
+    "featured": true,
+    "visibility": "public",
+    "thumbnail": null,
+    "thumbnailAlt": null,
+    "technologies": [
+      "LumenPnP",
+      "OpenPnP",
+      "Machine vision",
+      "Juki nozzles",
+      "Motion systems"
+    ],
+    "links": {
+      "github": null,
+      "demo": null,
+      "documentation": null
+    },
+    "highlights": [
+      "Bottom-camera tuning",
+      "Feeder motor selection",
+      "Nozzle and package mapping",
+      "Placement calibration"
+    ],
+    "content": [
+      {
+        "type": "paragraph",
+        "body": "This work improves a LumenPnP-based placement machine as a real manufacturing tool. It spans bottom-camera focus and lighting, package-specific vision pipelines, feeder mechanics, nozzle mapping and calibration."
+      },
+      {
+        "type": "callout",
+        "style": "info",
+        "title": "Engineering by feedback loop",
+        "body": "Most changes are validated against actual pickup, alignment and placement behaviour rather than treated as isolated software settings."
+      }
+    ]
+  },
+  {
+    "id": "voron-can-upgrades",
+    "slug": "voron-can-upgrades",
+    "title": "Voron 2.4 CAN Upgrades",
+    "subtitle": "Toolhead communication and a serviceable umbilical",
+    "summary": "CAN-bus debugging and wiring improvements for a Voron 2.4 toolhead and Cartographer probe.",
+    "category": "hardware",
+    "secondaryCategories": ["embedded", "manufacturing"],
+    "status": "active",
+    "year": 2026,
+    "featured": false,
+    "visibility": "public",
+    "thumbnail": null,
+    "thumbnailAlt": null,
+    "technologies": ["Voron 2.4", "Klipper", "CAN bus", "Katapult", "SB2209"],
+    "links": {
+      "github": null,
+      "demo": null,
+      "documentation": null
+    },
+    "highlights": [
+      "CAN fault diagnosis",
+      "Toolhead bootloader work",
+      "Umbilical cable redesign"
+    ],
+    "content": [
+      {
+        "type": "paragraph",
+        "body": "The Voron work focuses on making a toolhead CAN installation dependable under continuous motion. It combines firmware and bootloader debugging with a redesign of the physical cable path after repeated conductor failures in the drag chain."
+      },
+      {
+        "type": "paragraph",
+        "body": "The revised umbilical approach treats conductor construction, bend radius, strain relief and support-wire behaviour as part of the communication system rather than separate mechanical details."
+      }
+    ]
+  },
+  {
+    "id": "bad-apple-compression",
+    "slug": "bad-apple-compression",
+    "title": "Bad Apple MCU Compression",
+    "subtitle": "2-bit video inside a tiny microcontroller budget",
+    "summary": "A deterministic compression format for 15 × 11 grayscale animation targeting the CH32V006.",
+    "category": "firmware",
+    "secondaryCategories": ["embedded", "software"],
+    "status": "active",
+    "year": 2026,
+    "featured": false,
+    "visibility": "public",
+    "thumbnail": null,
+    "thumbnailAlt": null,
+    "technologies": [
+      "CH32V006",
+      "Python",
+      "Video compression",
+      "Integer decoding",
+      "LED matrix"
+    ],
+    "links": {
+      "github": null,
+      "demo": null,
+      "documentation": null
+    },
+    "highlights": [
+      "3,286 compressed frames",
+      "15 × 11 at 2-bit grayscale",
+      "49,439-byte SBV1 stream",
+      "Deterministic MCU decoder"
+    ],
+    "content": [
+      {
+        "type": "paragraph",
+        "body": "The SBV1 format compresses 3,286 frames of 15 × 11, 2-bit grayscale animation into 49,439 bytes. That is 36.47% of the raw packed size, leaving room for firmware and a separately arranged buzzer score."
+      },
+      {
+        "type": "specificationTable",
+        "rows": [
+          {
+            "label": "Frames",
+            "value": "3,286"
+          },
+          {
+            "label": "Resolution",
+            "value": "15 × 11"
+          },
+          {
+            "label": "Colour depth",
+            "value": "2-bit grayscale"
+          },
+          {
+            "label": "Raw packed size",
+            "value": "135,548 bytes"
+          },
+          {
+            "label": "Compressed size",
+            "value": "49,439 bytes"
+          }
+        ]
+      },
+      {
+        "type": "callout",
+        "style": "success",
+        "title": "Round-trip verified",
+        "body": "The encoded stream was decoded and compared against the source frames before the format was accepted."
+      }
+    ]
+  },
+  {
+    "id": "firefox-video-capture",
+    "slug": "firefox-video-capture",
+    "title": "Firefox Video Capture Extension",
+    "subtitle": "Reliable capture of browser-delivered video blobs",
+    "summary": "A Firefox extension fork focused on a dependable recording pipeline, recoverable deletion and storage behaviour.",
+    "category": "software",
+    "secondaryCategories": ["web"],
+    "status": "active",
+    "year": 2026,
+    "featured": false,
+    "visibility": "public",
+    "thumbnail": null,
+    "thumbnailAlt": null,
+    "technologies": [
+      "Firefox WebExtensions",
+      "JavaScript",
+      "IndexedDB",
+      "Media capture"
+    ],
+    "links": {
+      "github": null,
+      "demo": null,
+      "documentation": null
+    },
+    "highlights": [
+      "Recording-pipeline repair",
+      "Storage lifecycle debugging",
+      "Edge-case capture handling"
+    ],
+    "content": [
+      {
+        "type": "paragraph",
+        "body": "This extension work began with an intermittent failure: a video could be detected without producing any recorded output or useful error. The recording pipeline was compared with a reliable upstream implementation and reworked around the proven flow."
+      },
+      {
+        "type": "paragraph",
+        "body": "Follow-up work addresses deletion that remains stuck in a clearing state, accumulated site storage and the practical limits of long-running captures."
+      }
+    ]
+  },
+  {
+    "id": "openpnp-vision-tools",
+    "slug": "openpnp-vision-tools",
+    "title": "OpenPnP Vision Tools",
+    "subtitle": "Package-aware detection and calibration workflows",
+    "summary": "Vision-pipeline experiments for fiducials, dark component bodies, transparent tape and bottom-camera alignment.",
+    "category": "computer-vision",
+    "secondaryCategories": ["manufacturing", "software", "robotics"],
+    "status": "experimental",
+    "year": 2026,
+    "featured": false,
+    "visibility": "public",
+    "thumbnail": null,
+    "thumbnailAlt": null,
+    "technologies": [
+      "OpenPnP",
+      "Image processing",
+      "Hough transforms",
+      "Calibration",
+      "Machine vision"
+    ],
+    "links": {
+      "github": null,
+      "demo": null,
+      "documentation": null
+    },
+    "highlights": [
+      "Fiducial detection",
+      "Largest-island filtering",
+      "Dark-body component vision",
+      "Tape-feature experiments"
+    ],
+    "content": [
+      {
+        "type": "paragraph",
+        "body": "These experiments tune OpenPnP pipelines for the difficult cases that generic thresholding does not solve cleanly: black switch bodies, transparent feeder tape, hole-based fiducials and low-mounted bottom cameras."
+      },
+      {
+        "type": "paragraph",
+        "body": "The emphasis is on predictable intermediate images and parameters that remain understandable at the machine, where a false positive is more expensive than an untidy preview."
+      }
+    ]
+  },
+  {
+    "id": "custom-pcb-development",
+    "slug": "custom-pcb-development",
+    "title": "Custom PCB Development",
+    "subtitle": "Reusable notes from compact embedded boards",
+    "summary": "A developing collection of design, sourcing and assembly lessons from custom embedded hardware.",
+    "category": "pcb",
+    "secondaryCategories": ["hardware", "embedded"],
+    "status": "experimental",
+    "year": 2026,
+    "featured": false,
+    "visibility": "draft",
+    "thumbnail": null,
+    "thumbnailAlt": null,
+    "technologies": ["PCB design", "LCSC", "JLCPCB", "Power design", "DFM"],
+    "links": {
+      "github": null,
+      "demo": null,
+      "documentation": null
+    },
+    "highlights": [
+      "Component selection",
+      "Compact layout",
+      "Assembly-aware design"
+    ],
+    "content": [
+      {
+        "type": "paragraph",
+        "body": "This draft will collect cross-project PCB notes once the examples and photographs are ready for public presentation."
+      }
+    ]
+  },
+  {
+    "id": "charlieplexed-games",
+    "slug": "charlieplexed-games",
+    "title": "Charlieplexed LED Matrix Games",
+    "subtitle": "Recognisable interaction at extremely low resolution",
+    "summary": "A compact firmware architecture for games, menus, IMU input and sound on a 15 × 11 LED display.",
+    "category": "firmware",
+    "secondaryCategories": ["embedded", "software"],
+    "status": "experimental",
+    "year": 2026,
+    "featured": false,
+    "visibility": "public",
+    "thumbnail": null,
+    "thumbnailAlt": null,
+    "technologies": [
+      "CH32V006",
+      "Charlieplexing",
+      "Game logic",
+      "IMU",
+      "Buzzer audio"
+    ],
+    "links": {
+      "github": null,
+      "demo": null,
+      "documentation": null
+    },
+    "highlights": [
+      "Low-resolution menu design",
+      "Tetris and Snake concepts",
+      "Deterministic sand simulation",
+      "Shared input architecture"
+    ],
+    "content": [
+      {
+        "type": "paragraph",
+        "body": "The firmware architecture separates input polling, game state, display scanning and buzzer timing so each can remain small and predictable on the CH32V006."
+      },
+      {
+        "type": "callout",
+        "style": "info",
+        "title": "Display constraint",
+        "body": "At 15 × 11 pixels, a menu icon has to communicate before it has enough pixels to decorate itself."
+      },
+      {
+        "type": "paragraph",
+        "body": "Current concepts include Tetris, Snake, an IMU-driven sand simulation, dice and compact settings screens designed around the physical 2 mm LED pitch."
+      }
+    ]
+  }
+]

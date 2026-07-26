@@ -1,0 +1,24 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout
+  title="Page not found"
+  description="The requested page could not be found."
+  noIndex
+>
+  <section class="site-shell not-found">
+    <div>
+      <p class="not-found-code">404</p>
+      <h1>This trace does not connect anywhere.</h1>
+      <p>
+        The page may have moved, the link may be incomplete, or the project
+        documentation is still negotiating.
+      </p>
+      <div class="hero-actions" style="justify-content: center">
+        <a class="button button-primary" href="/">Return home</a>
+        <a class="button button-secondary" href="/projects/">Browse projects</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

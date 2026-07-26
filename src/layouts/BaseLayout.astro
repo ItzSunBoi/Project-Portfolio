@@ -1,0 +1,110 @@
+---
+import Footer from "../components/layout/Footer.astro";
+import Header from "../components/layout/Header.astro";
+import { content } from "../lib/content";
+import { absoluteUrl, pageTitle } from "../lib/seo";
+import "../styles/global.css";
+
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+  canonicalPath?: string;
+  noIndex?: boolean;
+  jsonLd?: Record<string, unknown>;
+}
+
+const {
+  title = content.site.title,
+  description = content.site.description,
+  image = "/social-preview/default.svg",
+  canonicalPath = Astro.url.pathname,
+  noIndex = false,
+  jsonLd,
+} = Astro.props;
+
+const fullTitle = pageTitle(title, content.site);
+const canonical = absoluteUrl(canonicalPath, content.site);
+const socialImage = absoluteUrl(image, content.site);
+const defaultTheme = content.site.defaultTheme;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="description" content={description} />
+    <meta
+      name="theme-color"
+      content="#F7FBFF"
+      media="(prefers-color-scheme: light)"
+    />
+    <meta
+      name="theme-color"
+      content="#07131F"
+      media="(prefers-color-scheme: dark)"
+    />
+    {noIndex && <meta name="robots" content="noindex, nofollow" />}
+
+    <title>{fullTitle}</title>
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={socialImage} />
+    <meta property="og:site_name" content={content.site.brandName} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={socialImage} />
+
+    <script is:inline define:vars={{ defaultTheme }}>
+      (() => {
+        let saved = null;
+        try {
+          saved = localStorage.getItem("portfolio-theme");
+        } catch {
+          // Preference storage can fail without taking the page with it.
+        }
+        const systemDark = window.matchMedia(
+          "(prefers-color-scheme: dark)",
+        ).matches;
+        const theme =
+          saved === "light" || saved === "dark"
+            ? saved
+            : defaultTheme === "light" || defaultTheme === "dark"
+              ? defaultTheme
+              : systemDark
+                ? "dark"
+                : "light";
+        document.documentElement.dataset.theme = theme;
+      })();
+    </script>
+
+    {
+      jsonLd && (
+        <script
+          is:inline
+          type="application/ld+json"
+          set:html={JSON.stringify(jsonLd).replace(/</g, "\\u003c")}
+        />
+      )
+    }
+  </head>
+  <body id="top">
+    <a class="skip-link" href="#main-content">Skip to content</a>
+    <Header />
+    <main class="page-main" id="main-content">
+      <slot />
+    </main>
+    <Footer />
+    <script>
+      import "../scripts/site";
+    </script>
+  </body>
+</html>

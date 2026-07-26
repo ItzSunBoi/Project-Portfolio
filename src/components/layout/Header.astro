@@ -1,0 +1,102 @@
+---
+import { content } from "../../lib/content";
+import SunMark from "../common/SunMark.astro";
+import ThemeToggle from "../common/ThemeToggle.astro";
+
+const pathname = Astro.url.pathname;
+
+function isActive(href: string) {
+  if (href.includes("#")) return false;
+  if (href === "/") return pathname === "/";
+  return pathname.startsWith(href);
+}
+---
+
+<header class="site-header" data-site-header>
+  <div class="site-shell header-inner">
+    <a
+      class="brand-link"
+      href="/"
+      aria-label={`${content.site.brandName} home`}
+    >
+      <SunMark class="brand-sun" size={34} />
+      <span class="brand-wordmark">
+        <strong>{content.site.brandName}</strong>
+        <small>{content.site.domain}</small>
+      </span>
+    </a>
+
+    <nav class="desktop-nav" aria-label="Primary navigation">
+      {
+        content.navigation.map((item) => (
+          <a
+            class:list={["nav-link", isActive(item.href) && "is-active"]}
+            href={item.href}
+            aria-current={isActive(item.href) ? "page" : undefined}
+          >
+            {item.label}
+          </a>
+        ))
+      }
+    </nav>
+
+    <div class="header-actions">
+      {
+        content.site.cvPath && (
+          <a
+            class="button button-compact button-outline desktop-cv"
+            href={content.site.cvPath}
+          >
+            Download CV
+          </a>
+        )
+      }
+      <ThemeToggle />
+      <details class="mobile-menu" data-mobile-menu>
+        <summary
+          class="menu-toggle"
+          aria-label="Toggle navigation"
+          aria-controls="mobile-navigation"
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path class="menu-line menu-line-top" d="M4 7h16"></path>
+            <path class="menu-line menu-line-middle" d="M4 12h16"></path>
+            <path class="menu-line menu-line-bottom" d="M4 17h16"></path>
+          </svg>
+        </summary>
+
+        <div class="mobile-nav-panel" id="mobile-navigation">
+          <nav class="site-shell mobile-nav" aria-label="Mobile navigation">
+            {
+              content.navigation.map((item, index) => (
+                <a
+                  class:list={[
+                    "mobile-nav-link",
+                    isActive(item.href) && "is-active",
+                  ]}
+                  href={item.href}
+                  data-mobile-nav-link
+                >
+                  <span class="mobile-nav-index" aria-hidden="true">
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
+                  {item.label}
+                </a>
+              ))
+            }
+            {
+              content.site.cvPath && (
+                <a
+                  class="button button-primary mobile-cv"
+                  href={content.site.cvPath}
+                >
+                  Download CV
+                </a>
+              )
+            }
+          </nav>
+        </div>
+      </details>
+    </div>
+  </div>
+</header>

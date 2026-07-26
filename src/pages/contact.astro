@@ -1,0 +1,94 @@
+---
+import SectionHeading from "../components/common/SectionHeading.astro";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { content } from "../lib/content";
+
+const directLinks = [
+  content.site.github
+    ? {
+        label: "GitHub",
+        value: content.site.github.replace(/^https?:\/\//, ""),
+        href: content.site.github,
+      }
+    : null,
+  content.site.email
+    ? {
+        label: "Email",
+        value: content.site.email,
+        href: `mailto:${content.site.email}`,
+      }
+    : null,
+  {
+    label: "Website",
+    value: content.site.domain,
+    href: content.site.baseUrl,
+  },
+  content.site.linkedin
+    ? {
+        label: "LinkedIn",
+        value: content.site.linkedin.replace(/^https?:\/\//, ""),
+        href: content.site.linkedin,
+      }
+    : null,
+].filter((link): link is { label: string; value: string; href: string } =>
+  Boolean(link),
+);
+
+const profileLinks = directLinks.filter((link) => link.label !== "Email");
+---
+
+<BaseLayout
+  title="Contact"
+  description="How to contact me about my hardware, embedded systems and software projects."
+  canonicalPath="/contact/"
+>
+  <header class="site-shell page-header">
+    <SectionHeading
+      as="h1"
+      eyebrow="Contact"
+      title="A short route, deliberately"
+      description="No location map, inbox form or helpful trail of personal breadcrumbs."
+    />
+  </header>
+
+  <section class="section section-soft" style="padding-top: 3rem">
+    <div class="site-shell contact-layout">
+      <div class="contact-message">
+        <p class="eyebrow">Where to find me</p>
+        <h2>I'm somewhere,</h2>
+        <p>If you know me personally, then you'll easily find me.</p>
+        <p>
+          Otherwise please direct all inquiries to
+          {" "}
+          <a class="contact-email" href={`mailto:${content.site.email}`}>
+            {content.site.email}
+          </a>
+        </p>
+      </div>
+
+      <aside class="contact-profiles">
+        <p class="eyebrow">Profiles</p>
+        <h2>Public links</h2>
+        {
+          profileLinks.length > 0 ? (
+            <div class="contact-options">
+              {profileLinks.map((link) => (
+                <a class="contact-option" href={link.href} rel="me">
+                  <span>
+                    <small>{link.label}</small>
+                    <strong>{link.value}</strong>
+                  </span>
+                  <span aria-hidden="true">↗</span>
+                </a>
+              ))}
+            </div>
+          ) : (
+            <p class="contact-empty">
+              More links will appear here when I decide they should.
+            </p>
+          )
+        }
+      </aside>
+    </div>
+  </section>
+</BaseLayout>

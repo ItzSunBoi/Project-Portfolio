@@ -1,0 +1,172 @@
+---
+import BlueprintThumbnail from "../../components/projects/BlueprintThumbnail.astro";
+import ContentBlocks from "../../components/projects/ContentBlocks.astro";
+import ProjectCard from "../../components/projects/ProjectCard.astro";
+import StatusBadge from "../../components/common/StatusBadge.astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { content, getVisibleProjects } from "../../lib/content";
+import type { Project } from "../../schemas/project";
+
+export function getStaticPaths() {
+  const includeDrafts =
+    import.meta.env.DEV && import.meta.env.PUBLIC_SHOW_DRAFTS === "true";
+  return getVisibleProjects(undefined, includeDrafts).map((project) => ({
+    params: { slug: project.slug },
+    props: { project },
+  }));
+}
+
+interface Props {
+  project: Project;
+}
+
+const { project } = Astro.props;
+const categories = [project.category, ...project.secondaryCategories];
+const relatedProjects = getVisibleProjects()
+  .filter(
+    (candidate) =>
+      candidate.id !== project.id &&
+      [candidate.category, ...candidate.secondaryCategories].some((category) =>
+        categories.includes(category),
+      ),
+  )
+  .slice(0, 3);
+const externalLinks = Object.entries(project.links).filter(
+  (entry): entry is [string, string] => Boolean(entry[1]),
+);
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "CreativeWork",
+  name: project.title,
+  description: project.summary,
+  dateCreated: String(project.year),
+  creator: {
+    "@type": "Person",
+    name: content.site.name,
+    url: content.site.baseUrl,
+  },
+  url: new URL(`/projects/${project.slug}/`, content.site.baseUrl).toString(),
+  keywords: project.technologies.join(", "),
+};
+---
+
+<BaseLayout
+  title={project.title}
+  description={project.summary}
+  image={project.thumbnail ?? `/social-preview/${project.slug}.svg`}
+  canonicalPath={`/projects/${project.slug}/`}
+  jsonLd={jsonLd}
+>
+  <header class="project-hero">
+    <div class="site-shell">
+      <nav class="breadcrumbs" aria-label="Breadcrumb">
+        <a href="/">Home</a>
+        <span aria-hidden="true">/</span>
+        <a href="/projects/">Projects</a>
+        <span aria-hidden="true">/</span>
+        <span aria-current="page">{project.title}</span>
+      </nav>
+
+      <div class="project-hero-grid">
+        <div class="project-hero-copy">
+          <p class="page-kicker">{project.category.replace("-", " / ")}</p>
+          <h1>{project.title}</h1>
+          <p class="project-subtitle">{project.subtitle}</p>
+          <p class="project-hero-summary">{project.summary}</p>
+          <div class="project-hero-meta">
+            <span class="project-year">{project.year}</span>
+            <span class="project-category-label"
+              >{categories.length} disciplines</span
+            >
+            <StatusBadge status={project.status} />
+          </div>
+          <div class="tag-list" style="margin-top: 1.2rem">
+            {
+              project.technologies.map((technology) => (
+                <span class="tag">{technology}</span>
+              ))
+            }
+          </div>
+        </div>
+
+        <div class="project-hero-visual">
+          {
+            project.thumbnail ? (
+              <>
+                <img
+                  src={project.thumbnail}
+                  alt={project.thumbnailAlt ?? ""}
+                  width="900"
+                  height="700"
+                  data-project-image
+                />
+                <div data-project-image-fallback hidden>
+                  <BlueprintThumbnail
+                    category={project.category}
+                    title={project.title}
+                  />
+                </div>
+              </>
+            ) : (
+              <BlueprintThumbnail
+                category={project.category}
+                title={project.title}
+              />
+            )
+          }
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <section class="section section-soft">
+    <div class="site-shell project-layout">
+      <ContentBlocks blocks={project.content} />
+
+      <aside class="project-sidebar" aria-label="Project summary">
+        <section class="project-sidebar-card">
+          <h2>Highlights</h2>
+          <ul>
+            {project.highlights.map((highlight) => <li>{highlight}</li>)}
+          </ul>
+        </section>
+        <section class="project-sidebar-card">
+          <h2>Project links</h2>
+          <div class="project-sidebar-links" style="margin-top: .85rem">
+            {
+              externalLinks.length ? (
+                externalLinks.map(([kind, url]) => (
+                  <a href={url} rel="noreferrer">
+                    {kind.charAt(0).toUpperCase() + kind.slice(1)} ↗
+                  </a>
+                ))
+              ) : (
+                <p style="margin: 0; color: var(--text-secondary); font-size: .82rem">
+                  Public links are not configured yet.
+                </p>
+              )
+            }
+          </div>
+        </section>
+      </aside>
+    </div>
+  </section>
+
+  {
+    relatedProjects.length > 0 && (
+      <section class="section" aria-labelledby="related-title">
+        <div class="site-shell">
+          <div class="section-heading">
+            <p class="eyebrow">Continue exploring</p>
+            <h2 id="related-title">Related projects</h2>
+          </div>
+          <div class="related-projects">
+            {relatedProjects.map((related) => (
+              <ProjectCard project={related} compact />
+            ))}
+          </div>
+        </div>
+      </section>
+    )
+  }
+</BaseLayout>

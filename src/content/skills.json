@@ -1,0 +1,72 @@
+[
+  {
+    "id": "embedded-firmware",
+    "title": "Embedded & firmware",
+    "description": "Low-level systems, compact devices and the protocols connecting them.",
+    "skills": [
+      "ESP32",
+      "STM32",
+      "CH32V006",
+      "RP2040",
+      "C",
+      "C++",
+      "Python",
+      "Real-time systems",
+      "CAN bus",
+      "I²C",
+      "SPI",
+      "UART"
+    ]
+  },
+  {
+    "id": "electronics-pcb",
+    "title": "Electronics & PCB design",
+    "description": "Schematics and layouts shaped around electrical, mechanical and assembly constraints.",
+    "skills": [
+      "Schematic design",
+      "PCB layout",
+      "Power regulation",
+      "Camera interfaces",
+      "RF layout fundamentals",
+      "Sensor integration",
+      "Design for assembly",
+      "Component sourcing",
+      "LCSC",
+      "JLCPCB"
+    ]
+  },
+  {
+    "id": "robotics-manufacturing",
+    "title": "Robotics & manufacturing",
+    "description": "Machines, motion systems and vision workflows that make physical things repeatably.",
+    "skills": [
+      "OpenPnP",
+      "LumenPnP",
+      "Machine vision",
+      "Motion systems",
+      "3D printing",
+      "Voron",
+      "Klipper",
+      "Tool changers",
+      "Calibration systems",
+      "Automation"
+    ]
+  },
+  {
+    "id": "software",
+    "title": "Software",
+    "description": "Tools and interfaces that expose, process and automate engineering work.",
+    "skills": [
+      "Python",
+      "TypeScript",
+      "Web interfaces",
+      "Data processing",
+      "Image processing",
+      "Video compression",
+      "Browser extensions",
+      "Git",
+      "Linux",
+      "Cloudflare"
+    ]
+  }
+]

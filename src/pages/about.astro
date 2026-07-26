@@ -1,0 +1,110 @@
+---
+import SectionHeading from "../components/common/SectionHeading.astro";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { content } from "../lib/content";
+---
+
+<BaseLayout
+  title="About"
+  description="How I approach hardware, embedded systems, robotics, manufacturing and software projects."
+  canonicalPath="/about/"
+>
+  <header class="site-shell page-header">
+    <SectionHeading
+      as="h1"
+      eyebrow="About"
+      title="Engineering the whole path from idea to working system"
+      description="The common thread is not a particular board or language. It is the process of making electrical, mechanical and software decisions agree with each other."
+    />
+  </header>
+
+  <section class="section section-soft" style="padding-top: 3rem">
+    <div class="site-shell about-grid">
+      <div class="about-copy">
+        <p class="eyebrow">Working style</p>
+        <h2>Practical curiosity, tested physically.</h2>
+        <p>
+          I enjoy building systems that sit between disciplines: a camera
+          becomes useful when its power rails, interface, optics and processing
+          pipeline all work; a placement machine improves when calibration,
+          lighting, motion and tooling are treated as one problem.
+        </p>
+        <p>
+          That usually means moving between a schematic, firmware logs, Python
+          scripts, CAD and a physical prototype until the system is
+          understandable and repeatable.
+        </p>
+      </div>
+      <div class="principles-grid">
+        {
+          [
+            ["01", "Build", "Move an idea into a form that can be measured."],
+            ["02", "Learn", "Use failures to refine the model of the system."],
+            [
+              "03",
+              "Test",
+              "Check assumptions at electrical and physical boundaries.",
+            ],
+            [
+              "04",
+              "Improve",
+              "Keep the next revision simpler and more reliable.",
+            ],
+          ].map(([number, title, description]) => (
+            <article class="principle">
+              <span>{number}</span>
+              <h3>{title}</h3>
+              <p style="margin: .45rem 0 0; color: var(--text-secondary); font-size: .78rem">
+                {description}
+              </p>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="site-shell">
+      <SectionHeading
+        eyebrow="Toolbox"
+        title="The tools change; the integration work remains"
+        description="A compact view of the fields that recur across current projects."
+      />
+      <div class="skills-grid">
+        {
+          content.skills.map((group, index) => (
+            <article class="skill-group">
+              <div class="skill-group-heading">
+                <span class="skill-group-number">
+                  {String(index + 1).padStart(2, "0")}
+                </span>
+                <h3>{group.title}</h3>
+                <p>{group.description}</p>
+              </div>
+              <div class="skill-list">
+                {group.skills.map((skill) => (
+                  <span class="skill-pill">{skill}</span>
+                ))}
+              </div>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-soft">
+    <div class="site-shell cta-band">
+      <div>
+        <p class="eyebrow">Current work</p>
+        <h2>Read the decisions, constraints and current state.</h2>
+        <p>
+          Project pages omit empty sections and mark active work honestly rather
+          than presenting every experiment as finished.
+        </p>
+      </div>
+      <a class="button button-primary" href="/projects/">Browse projects</a>
+    </div>
+  </section>
+</BaseLayout>

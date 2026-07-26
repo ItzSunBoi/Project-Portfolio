@@ -1,0 +1,142 @@
+---
+import SectionHeading from "../../components/common/SectionHeading.astro";
+import ProjectCard from "../../components/projects/ProjectCard.astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getVisibleProjects } from "../../lib/content";
+import { projectCategories, projectStatuses } from "../../lib/project-taxonomy";
+
+const includeDrafts =
+  import.meta.env.DEV && import.meta.env.PUBLIC_SHOW_DRAFTS === "true";
+const projects = getVisibleProjects(undefined, includeDrafts);
+const categoryLabels = {
+  hardware: "Hardware",
+  firmware: "Firmware",
+  software: "Software",
+  pcb: "PCB",
+  robotics: "Robotics",
+  "computer-vision": "Computer vision",
+  manufacturing: "Manufacturing",
+  web: "Web",
+  embedded: "Embedded",
+};
+const statusLabels = {
+  completed: "Completed",
+  active: "Active",
+  experimental: "Experimental",
+};
+---
+
+<BaseLayout
+  title="Projects"
+  description="My hardware, firmware, robotics, PCB, manufacturing and software projects."
+  canonicalPath="/projects/"
+>
+  <header class="site-shell page-header">
+    <div class="page-header-row">
+      <SectionHeading
+        as="h1"
+        eyebrow="Project index"
+        title="Systems, tools and experiments"
+        description="Search by name or technology, then combine categories and status filters. Every result is generated from the same validated JSON content used by the detail pages."
+      />
+      <p class="page-header-count">{projects.length} public projects</p>
+    </div>
+  </header>
+
+  <section
+    class="site-shell section"
+    style="padding-top: 0"
+    aria-label="Project browser"
+  >
+    <form class="filters-panel" data-project-filters>
+      <div class="filters-top">
+        <label class="search-label">
+          Search projects
+          <span class="search-field">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <circle cx="11" cy="11" r="7"></circle>
+              <path d="m20 20-4-4"></path>
+            </svg>
+            <input
+              type="search"
+              name="q"
+              placeholder="Try ESP32, vision or CAN bus"
+              autocomplete="off"
+            />
+          </span>
+        </label>
+        <div class="filter-actions">
+          <button
+            class="button button-secondary"
+            type="button"
+            data-clear-filters
+          >
+            Clear filters
+          </button>
+        </div>
+      </div>
+
+      <div class="filter-groups">
+        <fieldset class="filter-group">
+          <legend>Categories</legend>
+          <div class="filter-options">
+            {
+              projectCategories.map((category) => (
+                <label class="filter-chip">
+                  <input type="checkbox" name="category" value={category} />
+                  <span>{categoryLabels[category]}</span>
+                </label>
+              ))
+            }
+          </div>
+        </fieldset>
+        <fieldset class="filter-group">
+          <legend>Status</legend>
+          <div class="filter-options">
+            {
+              projectStatuses.map((status) => (
+                <label class="filter-chip">
+                  <input type="checkbox" name="status" value={status} />
+                  <span>{statusLabels[status]}</span>
+                </label>
+              ))
+            }
+          </div>
+        </fieldset>
+      </div>
+    </form>
+
+    <div class="results-bar" aria-live="polite">
+      <span data-result-count>{projects.length} projects</span>
+      <button class="clear-filters" type="button" data-clear-filters>
+        Reset view
+      </button>
+    </div>
+
+    <div class="projects-grid">
+      {projects.map((project) => <ProjectCard project={project} filterable />)}
+    </div>
+
+    <div class="empty-state" data-empty-state hidden>
+      <div>
+        <span class="empty-state-icon" aria-hidden="true">∅</span>
+        <h2>No matching projects</h2>
+        <p>Try removing a filter or using a broader search term.</p>
+        <button class="button button-primary" type="button" data-clear-filters>
+          Clear filters
+        </button>
+      </div>
+    </div>
+
+    <noscript>
+      <p class="content-callout callout-info">
+        JavaScript is disabled, so every project is shown. Individual project
+        pages remain fully available.
+      </p>
+    </noscript>
+  </section>
+
+  <script>
+    import "../../scripts/project-filters";
+  </script>
+</BaseLayout>

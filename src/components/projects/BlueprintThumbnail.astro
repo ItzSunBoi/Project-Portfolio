@@ -1,0 +1,69 @@
+---
+import type { ProjectCategory } from "../../schemas/project";
+
+interface Props {
+  category: ProjectCategory;
+  title: string;
+}
+
+const { category, title } = Astro.props;
+
+const iconKind =
+  category === "software" || category === "web"
+    ? "code"
+    : category === "robotics" || category === "manufacturing"
+      ? "motion"
+      : category === "computer-vision"
+        ? "vision"
+        : "chip";
+---
+
+<div class="blueprint-thumbnail" aria-hidden="true">
+  <div class="blueprint-grid"></div>
+  <div class="blueprint-header">
+    <span>PROJECT / MODULE</span>
+    <span>{category.replace("-", " / ")}</span>
+  </div>
+
+  <div class:list={["blueprint-module", `is-${iconKind}`]}>
+    <svg viewBox="0 0 96 96">
+      {
+        iconKind === "code" ? (
+          <>
+            <path d="m35 29-18 19 18 19M61 29l18 19-18 19M55 20 41 76" />
+          </>
+        ) : iconKind === "motion" ? (
+          <>
+            <circle cx="27" cy="67" r="10" />
+            <circle cx="53" cy="40" r="9" />
+            <path d="m34 60 13-14M60 44l15 12M75 56v17M65 73h20" />
+          </>
+        ) : iconKind === "vision" ? (
+          <>
+            <path d="M12 48s13-22 36-22 36 22 36 22-13 22-36 22S12 48 12 48Z" />
+            <circle cx="48" cy="48" r="13" />
+            <circle class="blueprint-icon-accent" cx="48" cy="48" r="5" />
+          </>
+        ) : (
+          <>
+            <rect x="24" y="24" width="48" height="48" rx="8" />
+            <rect
+              class="blueprint-icon-accent"
+              x="38"
+              y="38"
+              width="20"
+              height="20"
+              rx="4"
+            />
+            <path d="M34 14v10M48 14v10M62 14v10M34 72v10M48 72v10M62 72v10M14 34h10M14 48h10M14 62h10M72 34h10M72 48h10M72 62h10" />
+          </>
+        )
+      }
+    </svg>
+  </div>
+
+  <div class="blueprint-title">
+    <span>{title}</span>
+    <i aria-hidden="true"></i>
+  </div>
+</div>

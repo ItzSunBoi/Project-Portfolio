@@ -1,0 +1,32 @@
+[
+  {
+    "id": "embedded-systems",
+    "title": "Embedded systems",
+    "description": "Designing compact devices where firmware and circuit decisions are made together.",
+    "relatedProjects": ["laser-triangulator", "gigaplex-mini-console"]
+  },
+  {
+    "id": "manufacturing-automation",
+    "title": "Manufacturing automation",
+    "description": "Improving feeders, vision, calibration and repeatability in small-scale production.",
+    "relatedProjects": ["lumenpnp-upgrades", "openpnp-vision-tools"]
+  },
+  {
+    "id": "computer-vision",
+    "title": "Computer vision",
+    "description": "Turning camera data into measurements that can drive physical process changes.",
+    "relatedProjects": ["laser-triangulator", "openpnp-vision-tools"]
+  },
+  {
+    "id": "full-colour-fdm",
+    "title": "Full-colour FDM",
+    "description": "Exploring the path from textured models to colour-aware slicing and deposition.",
+    "relatedProjects": ["chromaslicer"]
+  },
+  {
+    "id": "resource-limited-media",
+    "title": "Tiny-device media",
+    "description": "Fitting animation, interaction and sound into strict flash and RAM budgets.",
+    "relatedProjects": ["bad-apple-compression", "charlieplexed-games"]
+  }
+]

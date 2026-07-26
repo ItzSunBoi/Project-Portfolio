@@ -1,0 +1,79 @@
+---
+import type { Project } from "../../schemas/project";
+import BlueprintThumbnail from "./BlueprintThumbnail.astro";
+import StatusBadge from "../common/StatusBadge.astro";
+
+interface Props {
+  project: Project;
+  compact?: boolean;
+  filterable?: boolean;
+}
+
+const { project, compact = false, filterable = false } = Astro.props;
+const categories = [project.category, ...project.secondaryCategories];
+---
+
+<article
+  class:list={["project-card", compact && "project-card-compact"]}
+  data-project-card={filterable ? "" : undefined}
+  data-title={filterable ? project.title : undefined}
+  data-summary={filterable
+    ? `${project.summary} ${project.technologies.join(" ")}`
+    : undefined}
+  data-categories={filterable ? categories.join(",") : undefined}
+  data-status={filterable ? project.status : undefined}
+>
+  <a
+    class="project-card-media"
+    href={`/projects/${project.slug}/`}
+    tabindex="-1"
+    aria-hidden="true"
+  >
+    {
+      project.thumbnail ? (
+        <>
+          <img
+            src={project.thumbnail}
+            alt=""
+            width="720"
+            height="440"
+            loading="lazy"
+            decoding="async"
+            data-project-image
+          />
+          <div data-project-image-fallback hidden>
+            <BlueprintThumbnail
+              category={project.category}
+              title={project.title}
+            />
+          </div>
+        </>
+      ) : (
+        <BlueprintThumbnail category={project.category} title={project.title} />
+      )
+    }
+  </a>
+  <div class="project-card-body">
+    <div class="project-card-meta">
+      <span>{project.year}</span>
+      <StatusBadge status={project.status} />
+    </div>
+    <div>
+      <p class="project-type">{project.category.replace("-", " / ")}</p>
+      <h3>
+        <a href={`/projects/${project.slug}/`}>{project.title}</a>
+      </h3>
+      <p class="project-summary">{project.summary}</p>
+    </div>
+    <div class="tag-list" aria-label="Technologies">
+      {
+        project.technologies
+          .slice(0, compact ? 3 : 4)
+          .map((technology) => <span class="tag">{technology}</span>)
+      }
+    </div>
+    <a class="project-card-link" href={`/projects/${project.slug}/`}>
+      View project <span aria-hidden="true">↗</span>
+    </a>
+  </div>
+</article>

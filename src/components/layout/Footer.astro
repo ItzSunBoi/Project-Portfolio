@@ -1,0 +1,67 @@
+---
+import { currentYear } from "../../lib/dates";
+import { content } from "../../lib/content";
+import SunMark from "../common/SunMark.astro";
+---
+
+<footer class="site-footer">
+  <div class="site-shell footer-grid">
+    <div class="footer-brand">
+      <a
+        class="brand-link"
+        href="/"
+        aria-label={`${content.site.brandName} home`}
+      >
+        <SunMark class="brand-sun" size={34} />
+        <span class="brand-wordmark">
+          <strong>{content.site.brandName}</strong>
+          <small>{content.site.domain}</small>
+        </span>
+      </a>
+      <p>{content.site.footerLine}</p>
+    </div>
+
+    <div class="footer-links">
+      <div>
+        <h2>Navigate</h2>
+        {
+          content.navigation
+            .slice(0, 4)
+            .map((item) => <a href={item.href}>{item.label}</a>)
+        }
+      </div>
+      <div>
+        <h2>Elsewhere</h2>
+        {
+          content.socials
+            .filter((social) => social.visible)
+            .map((social) => (
+              <a href={social.url} rel="me">
+                {social.label}
+              </a>
+            ))
+        }
+        {
+          content.site.github && (
+            <a href={content.site.github} rel="me noreferrer">
+              GitHub
+            </a>
+          )
+        }
+        {
+          content.site.email && (
+            <a href={`mailto:${content.site.email}`}>Email</a>
+          )
+        }
+      </div>
+    </div>
+  </div>
+  <div class="site-shell footer-bottom">
+    <p>
+      {
+        `© ${currentYear()} ${content.site.name}. Built with Astro and stubborn curiosity with a sprinkle of AI.`
+      }
+    </p>
+    <a href="#top">Back to top <span aria-hidden="true">↑</span></a>
+  </div>
+</footer>
