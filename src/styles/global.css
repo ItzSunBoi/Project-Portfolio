@@ -1980,6 +1980,13 @@ a {
     justify-self: center;
   }
 
+  .hero-visual-title {
+    top: 0.9rem;
+    left: 1rem;
+    max-width: calc(100% - 2rem);
+    font-size: 0.6rem;
+  }
+  
   .about-grid,
   .project-hero-grid,
   .contact-layout {
@@ -2052,6 +2059,13 @@ a {
 
   .hero-visual {
     border-radius: 1.4rem;
+  }
+
+  .hero-visual-title {
+    top: 0.9rem;
+    left: 1rem;
+    max-width: calc(100% - 2rem);
+    font-size: 0.6rem;
   }
 
   .projects-grid,
