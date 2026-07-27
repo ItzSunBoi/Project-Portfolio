@@ -1,19 +1,26 @@
 [
   {
-    "id": "laser-triangulator",
-    "slug": "laser-triangulator",
-    "title": "Laser Triangulator",
-    "subtitle": "Compact optical surface measurement system",
-    "summary": "A custom camera and dual-laser system for measuring printed surfaces and extrusion behaviour.",
-    "category": "hardware",
-    "secondaryCategories": ["embedded", "computer-vision", "pcb"],
+    "id": "dual-laser-triangulator",
+    "slug": "dual-laser-triangulator",
+    "title": "Dual Laser Triangulator",
+    "subtitle": "Compact dual-line optical surface profiling",
+    "summary": "I am building an ESP32-S3 and OV9281 module that measures printed surfaces from two projected laser lines and reports profiles over CAN bus.",
+    "category": "computer-vision",
+    "secondaryCategories": ["hardware", "embedded", "pcb"],
     "status": "active",
     "year": 2026,
+    "yearEnd": null,
     "featured": true,
     "visibility": "public",
     "thumbnail": null,
     "thumbnailAlt": null,
-    "technologies": ["ESP32-S3", "OV9281", "Python", "CAN bus", "PCB design"],
+    "technologies": [
+      "ESP32-S3",
+      "OV9281",
+      "Laser triangulation",
+      "CAN bus",
+      "EasyEDA Pro"
+    ],
     "links": {
       "github": null,
       "demo": null,
@@ -22,15 +29,15 @@
     "content": [
       {
         "type": "paragraph",
-        "body": "I want printer-side measurements to be based on captured geometry rather than another test line judged by eye. Fitting that measurement into a compact module makes optical alignment, rail sequencing and on-device processing parts of the same design problem."
+        "body": "I designed the instrument as a small printer-side measurement system rather than a general-purpose camera. The monochrome sensor observes both laser traces, while the local processing path reduces the captured strip into geometry useful to the printer."
       },
       {
         "type": "specificationTable",
-        "title": "System architecture",
+        "title": "Measurement architecture",
         "rows": [
           {
             "label": "Controller",
-            "value": "ESP32-S3"
+            "value": "ESP32-S3-WROOM-1-N16"
           },
           {
             "label": "Image sensor",
@@ -45,172 +52,34 @@
             "value": "CAN bus"
           },
           {
-            "label": "Board input",
+            "label": "Power input",
             "value": "5 V"
           }
         ]
       },
       {
-        "type": "callout",
-        "style": "warning",
-        "title": "Power sequencing",
-        "body": "The sensor rails and I/O levels are being treated as first-class design constraints while the interface is finalised."
-      },
-      {
         "type": "paragraph",
-        "body": "My current work centres on PCB layout, sensor interfacing, optical geometry and a processing path that can extract useful profiles without asking the microcontroller to become a workstation."
-      }
-    ]
-  },
-  {
-    "id": "esp32-hp123-inkjet",
-    "slug": "esp32-hp123-inkjet",
-    "title": "ESP32-S3 HP123 Inkjet Driver",
-    "subtitle": "Parallel waveform generation for a colour cartridge",
-    "summary": "An ESP32-S3 pipeline for queuing nozzle data and driving an HP123 colour cartridge through a timing-critical parallel bus.",
-    "category": "embedded",
-    "secondaryCategories": ["firmware", "hardware"],
-    "status": "active",
-    "year": 2026,
-    "featured": true,
-    "visibility": "public",
-    "thumbnail": null,
-    "thumbnailAlt": null,
-    "technologies": ["ESP32-S3", "ESP-IDF", "DMA", "I80", "C"],
-    "links": {
-      "github": null,
-      "demo": null,
-      "documentation": null
-    },
-    "content": [
-      {
-        "type": "paragraph",
-        "body": "The difficult part is not storing nozzle data; it is delivering each transition inside the cartridge's timing envelope. I am moving the output path from an earlier I²S-parallel approach to the ESP32-S3 LCD I80 peripheral so the transfer model better matches the hardware."
-      },
-      {
-        "type": "specificationTable",
-        "title": "Data path",
-        "rows": [
-          {
-            "label": "MCU",
-            "value": "ESP32-S3-WROOM-1-N16"
-          },
-          {
-            "label": "Framework",
-            "value": "ESP-IDF"
-          },
-          {
-            "label": "Output",
-            "value": "16-bit parallel waveform bus"
-          },
-          {
-            "label": "Transfer model",
-            "value": "Queued data with DMA-backed output"
-          }
-        ]
+        "body": "The PCB combines camera power sequencing, the parallel image interface, laser control and the CAN transceiver within the mechanical limits of the optical assembly."
       },
       {
         "type": "callout",
         "style": "info",
-        "title": "Current blocker",
-        "body": "Bus allocation and transfer validation remain the immediate debugging focus."
+        "title": "Current state",
+        "body": "The design is complete and I am assembling the PCBs before optical alignment and end-to-end profiling tests."
       }
     ]
   },
   {
-    "id": "chromaslicer",
-    "slug": "chromaslicer",
-    "title": "ChromaSlicer",
-    "subtitle": "A full-colour FDM slicing pipeline",
-    "summary": "An OrcaSlicer fork exploring textured model import, colour-aware slicing and per-layer raster generation.",
-    "category": "software",
-    "secondaryCategories": ["manufacturing", "computer-vision"],
+    "id": "gigaplex",
+    "slug": "gigaplex",
+    "title": "Gigaplex",
+    "subtitle": "A complete game console in a 15 × 11 matrix",
+    "summary": "I designed a CR2032-powered keychain console with a charlieplexed display, five buttons, motion input and sound.",
+    "category": "embedded",
+    "secondaryCategories": ["hardware", "firmware", "pcb"],
     "status": "active",
     "year": 2026,
-    "featured": true,
-    "visibility": "public",
-    "thumbnail": null,
-    "thumbnailAlt": null,
-    "technologies": ["C++", "OrcaSlicer", "3MF", "CMYK", "Image processing"],
-    "links": {
-      "github": null,
-      "demo": null,
-      "documentation": null
-    },
-    "content": [
-      {
-        "type": "paragraph",
-        "body": "Colour is only useful if it survives every stage between model import and deposition. I started by giving textured geometry a UV-aware surface representation that can travel with each model volume instead of being discarded before slicing begins."
-      },
-      {
-        "type": "timeline",
-        "title": "Implementation path",
-        "items": [
-          {
-            "title": "Model import",
-            "body": "Texture-backed OBJ geometry reaches the model with UV data intact.",
-            "state": "complete"
-          },
-          {
-            "title": "Raster scaffold",
-            "body": "A per-layer colour-raster pipeline is connected to print processing.",
-            "state": "active"
-          },
-          {
-            "title": "Toolpath integration",
-            "body": "CMYK conversion, persistence and deposition strategy remain future work.",
-            "state": "planned"
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "id": "filament-scale",
-    "slug": "filament-scale",
-    "title": "Filament Scale",
-    "subtitle": "NFC-aware spool tracking with a local interface",
-    "summary": "A standalone ESP32-S3 spool scale combining load-cell measurement, NFC identity, storage and a responsive web UI.",
-    "category": "hardware",
-    "secondaryCategories": ["embedded", "web", "pcb"],
-    "status": "active",
-    "year": 2026,
-    "featured": true,
-    "visibility": "public",
-    "thumbnail": null,
-    "thumbnailAlt": null,
-    "technologies": ["ESP32-S3", "HX711", "NFC", "ST7789", "Spoolman"],
-    "links": {
-      "github": null,
-      "demo": null,
-      "documentation": null
-    },
-    "content": [
-      {
-        "type": "paragraph",
-        "body": "I want the scale to remain useful when Spoolman or another printer service is unavailable. Weight, spool identity and transaction history therefore live locally first, with network services treated as integrations rather than dependencies."
-      },
-      {
-        "type": "heading",
-        "level": 2,
-        "title": "Design priorities"
-      },
-      {
-        "type": "paragraph",
-        "body": "I am shaping the interface around reliable zeroing and calibration, clear recovery from sensor failures, readable long names and a binding flow that does not assume the NFC tag is already known."
-      }
-    ]
-  },
-  {
-    "id": "gigaplex-mini-console",
-    "slug": "gigaplex-mini-console",
-    "title": "Gigaplex Mini Console",
-    "subtitle": "A keychain game system on a 15 × 11 LED matrix",
-    "summary": "A CR2032-powered miniature console with a charlieplexed display, five buttons, an IMU and a buzzer.",
-    "category": "hardware",
-    "secondaryCategories": ["embedded", "firmware", "pcb"],
-    "status": "active",
-    "year": 2026,
+    "yearEnd": null,
     "featured": true,
     "visibility": "public",
     "thumbnail": null,
@@ -218,9 +87,9 @@
     "technologies": [
       "CH32V006",
       "Charlieplexing",
-      "IMU",
-      "CR2032",
-      "Embedded C"
+      "LED matrix",
+      "6-axis IMU",
+      "Embedded games"
     ],
     "links": {
       "github": null,
@@ -230,11 +99,11 @@
     "content": [
       {
         "type": "paragraph",
-        "body": "Gigaplex is an exercise in making severe constraints feel intentional. Every menu, animation and control has to earn its pixels, flash and battery current while the hardware still fits a keychain-sized board."
+        "body": "I reduced the interface to hardware that remains understandable at very low resolution: 165 LEDs, directional controls, one confirmation button and physical motion. The result is small enough to live on a keychain without turning every game into the same blinking square."
       },
       {
         "type": "specificationTable",
-        "title": "Hardware envelope",
+        "title": "Console hardware",
         "rows": [
           {
             "label": "Controller",
@@ -242,48 +111,59 @@
           },
           {
             "label": "Display",
-            "value": "15 × 11 charlieplexed 0603 LED matrix"
+            "value": "15 × 11 charlieplexed LED matrix"
           },
           {
-            "label": "Inputs",
-            "value": "Five buttons and six-axis IMU"
+            "label": "Input",
+            "value": "Five buttons and a 6-axis IMU"
+          },
+          {
+            "label": "Audio",
+            "value": "Piezo buzzer"
           },
           {
             "label": "Power",
-            "value": "CR2032"
+            "value": "CR2032 coin cell"
           },
           {
-            "label": "Board envelope",
+            "label": "Board size",
             "value": "Approximately 35 × 35 mm"
           }
         ]
       },
       {
         "type": "paragraph",
-        "body": "My firmware work includes recognisable low-resolution menus, multi-button input, deterministic sand simulation and compact game logic."
+        "body": "The firmware architecture separates matrix scanning, input polling, game state and buzzer timing so the tiny MCU can keep the display stable while games and IMU-driven effects run."
+      },
+      {
+        "type": "callout",
+        "style": "info",
+        "title": "Current state",
+        "body": "The electrical and mechanical design is finished, and I am now assembling the first PCBs."
       }
     ]
   },
   {
-    "id": "lumenpnp-upgrades",
-    "slug": "lumenpnp-upgrades",
-    "title": "LumenPnP Upgrades",
-    "subtitle": "Vision, tooling and feeder improvements",
-    "summary": "A collection of practical upgrades for component placement, including vision tuning, feeder selection and nozzle tooling.",
-    "category": "manufacturing",
-    "secondaryCategories": ["robotics", "computer-vision", "hardware"],
-    "status": "active",
+    "id": "code-less-dice",
+    "slug": "code-less-dice",
+    "title": "Code-Less Dice",
+    "subtitle": "Electronic randomness without a microcontroller",
+    "summary": "I built an electronic die whose vibration-triggered 555 oscillator cycles six shift-register states before slowing to a stop.",
+    "category": "hardware",
+    "secondaryCategories": ["pcb", "manufacturing"],
+    "status": "completed",
     "year": 2026,
+    "yearEnd": null,
     "featured": true,
     "visibility": "public",
     "thumbnail": null,
     "thumbnailAlt": null,
     "technologies": [
-      "LumenPnP",
-      "OpenPnP",
-      "Machine vision",
-      "Juki nozzles",
-      "Motion systems"
+      "555 timer",
+      "Shift register",
+      "SW-58010PZD-7N11S1",
+      "Analog timing",
+      "LumenPnP"
     ],
     "links": {
       "github": null,
@@ -293,168 +173,55 @@
     "content": [
       {
         "type": "paragraph",
-        "body": "The machine is already capable of moving components; this project is about making pickup, alignment and placement repeatable enough to trust. Mechanical, optical and software changes are evaluated as one placement system."
+        "body": "A brief contact from the vibration switch charges the timing capacitor and starts the roll. The 555 initially clocks the state circuit quickly, then the rate falls with the capacitor voltage until one of the six LED patterns remains visible."
       },
       {
-        "type": "callout",
-        "style": "info",
-        "title": "Acceptance test",
-        "body": "A change only counts as an improvement when it survives actual pickup, alignment and placement."
-      }
-    ]
-  },
-  {
-    "id": "voron-can-upgrades",
-    "slug": "voron-can-upgrades",
-    "title": "Voron 2.4 CAN Upgrades",
-    "subtitle": "Toolhead communication and a serviceable umbilical",
-    "summary": "CAN-bus debugging and wiring improvements for a Voron 2.4 toolhead and Cartographer probe.",
-    "category": "hardware",
-    "secondaryCategories": ["embedded", "manufacturing"],
-    "status": "active",
-    "year": 2026,
-    "featured": false,
-    "visibility": "public",
-    "thumbnail": null,
-    "thumbnailAlt": null,
-    "technologies": ["Voron 2.4", "Klipper", "CAN bus", "Katapult", "SB2209"],
-    "links": {
-      "github": null,
-      "demo": null,
-      "documentation": null
-    },
-    "content": [
-      {
-        "type": "paragraph",
-        "body": "I am making the Voron's toolhead CAN installation dependable under continuous motion. The work combines firmware and bootloader debugging with a redesign of the physical cable path after repeated conductor failures in the drag chain."
-      },
-      {
-        "type": "paragraph",
-        "body": "My revised umbilical approach treats conductor construction, bend radius, strain relief and support-wire behaviour as part of the communication system rather than separate mechanical details."
-      }
-    ]
-  },
-  {
-    "id": "bad-apple-compression",
-    "slug": "bad-apple-compression",
-    "title": "Bad Apple MCU Compression",
-    "subtitle": "2-bit video inside a tiny microcontroller budget",
-    "summary": "A deterministic compression format for 15 × 11 grayscale animation targeting the CH32V006.",
-    "category": "firmware",
-    "secondaryCategories": ["embedded", "software"],
-    "status": "active",
-    "year": 2026,
-    "featured": false,
-    "visibility": "public",
-    "thumbnail": null,
-    "thumbnailAlt": null,
-    "technologies": [
-      "CH32V006",
-      "Python",
-      "Video compression",
-      "Integer decoding",
-      "LED matrix"
-    ],
-    "links": {
-      "github": null,
-      "demo": null,
-      "documentation": null
-    },
-    "content": [
-      {
-        "type": "paragraph",
-        "body": "SBV1 is designed around the decoder that must fit on the microcontroller, not around maximum desktop compression. The format favours predictable integer-only commands and bounded memory while still leaving space for firmware and a separately arranged buzzer score."
-      },
-      {
-        "type": "specificationTable",
-        "title": "Compression result",
-        "rows": [
+        "type": "timeline",
+        "title": "Two sensor iterations",
+        "items": [
           {
-            "label": "Frames",
-            "value": "3,286"
+            "title": "Initial build",
+            "body": "I selected an HX 0805-C2 believing it was a passive vibration contact, but it was a tilt sensor that required active interpretation and could not trigger the circuit as intended.",
+            "date": "Version 1",
+            "state": "complete"
           },
           {
-            "label": "Resolution",
-            "value": "15 × 11"
-          },
-          {
-            "label": "Colour depth",
-            "value": "2-bit grayscale"
-          },
-          {
-            "label": "Raw packed size",
-            "value": "135,548 bytes"
-          },
-          {
-            "label": "Compressed size",
-            "value": "49,439 bytes"
+            "title": "Vibration-switch redesign",
+            "body": "I replaced it with an SW-58010PZD-7N11S1 spring-contact vibration switch and formed its through-hole leads so the part could be mounted flat on the board.",
+            "date": "Version 2",
+            "state": "complete"
           }
         ]
       },
       {
         "type": "callout",
         "style": "success",
-        "title": "Round-trip verified",
-        "body": "The encoded stream was decoded and compared against the source frames before the format was accepted."
+        "title": "Manufacturing result",
+        "body": "The final circuit works and is assembled on my LumenPnP machine."
       }
     ]
   },
   {
-    "id": "firefox-video-capture",
-    "slug": "firefox-video-capture",
-    "title": "Firefox Video Capture Extension",
-    "subtitle": "Reliable capture of browser-delivered video blobs",
-    "summary": "A Firefox extension fork focused on a dependable recording pipeline, recoverable deletion and storage behaviour.",
-    "category": "software",
-    "secondaryCategories": ["web"],
-    "status": "active",
-    "year": 2026,
-    "featured": false,
-    "visibility": "public",
-    "thumbnail": null,
-    "thumbnailAlt": null,
-    "technologies": [
-      "Firefox WebExtensions",
-      "JavaScript",
-      "IndexedDB",
-      "Media capture"
-    ],
-    "links": {
-      "github": null,
-      "demo": null,
-      "documentation": null
-    },
-    "content": [
-      {
-        "type": "paragraph",
-        "body": "I began this extension work with an intermittent failure: a video could be detected without producing any recorded output or useful error. I compared the recording pipeline with a reliable upstream implementation and reworked it around the proven flow."
-      },
-      {
-        "type": "paragraph",
-        "body": "My follow-up work addresses deletion that remains stuck in a clearing state, accumulated site storage and the practical limits of long-running captures."
-      }
-    ]
-  },
-  {
-    "id": "openpnp-vision-tools",
-    "slug": "openpnp-vision-tools",
-    "title": "OpenPnP Vision Tools",
-    "subtitle": "Package-aware detection and calibration workflows",
-    "summary": "Vision-pipeline experiments for fiducials, dark component bodies, transparent tape and bottom-camera alignment.",
-    "category": "computer-vision",
-    "secondaryCategories": ["manufacturing", "software", "robotics"],
+    "id": "lumenpnp-feeders",
+    "slug": "lumenpnp-feeders",
+    "title": "Lumen PnP Feeders",
+    "subtitle": "Common hardware across four tape widths",
+    "summary": "I redesigned the 16 mm and 24 mm LumenPnP feeders around the same hardware and electronics used by the 8 mm and 12 mm versions.",
+    "category": "manufacturing",
+    "secondaryCategories": ["hardware", "pcb", "robotics"],
     "status": "experimental",
     "year": 2026,
+    "yearEnd": null,
     "featured": false,
     "visibility": "public",
     "thumbnail": null,
     "thumbnailAlt": null,
     "technologies": [
-      "OpenPnP",
-      "Image processing",
-      "Hough transforms",
-      "Calibration",
-      "Machine vision"
+      "LumenPnP",
+      "Tape feeders",
+      "EasyEDA Pro",
+      "Mechanical CAD",
+      "Design for assembly"
     ],
     "links": {
       "github": null,
@@ -464,61 +231,121 @@
     "content": [
       {
         "type": "paragraph",
-        "body": "A single threshold is rarely reliable across the packages, tape and lighting found on the machine. I use these experiments to build case-specific pipelines whose intermediate images make each decision visible."
+        "body": "The open-source feeder family originally left the wider sizes with a different assembly burden. I adapted their mechanics so all four widths can share the proven smaller-feeder electronics and as much common hardware as practical."
       },
       {
-        "type": "paragraph",
-        "body": "I prioritise predictable intermediate images and parameters that remain understandable at the machine, where a false positive is more expensive than an untidy preview."
+        "type": "specificationTable",
+        "title": "Design scope",
+        "rows": [
+          {
+            "label": "Existing common sizes",
+            "value": "8 mm and 12 mm"
+          },
+          {
+            "label": "Modified sizes",
+            "value": "16 mm and 24 mm"
+          },
+          {
+            "label": "Primary goal",
+            "value": "Reduce electronics variation and assembly complexity"
+          },
+          {
+            "label": "Design basis",
+            "value": "The open-source LumenPnP feeder hardware"
+          }
+        ]
+      },
+      {
+        "type": "callout",
+        "style": "warning",
+        "title": "Designed, not yet validated",
+        "body": "The shared architecture exists in CAD and PCB form, but it remains experimental until the wider feeders are assembled and tested with tape."
       }
     ]
   },
   {
-    "id": "custom-pcb-development",
-    "slug": "custom-pcb-development",
-    "title": "Custom PCB Development",
-    "subtitle": "Reusable notes from compact embedded boards",
-    "summary": "A developing collection of design, sourcing and assembly lessons from custom embedded hardware.",
-    "category": "pcb",
+    "id": "filament-scale",
+    "slug": "filament-scale",
+    "title": "Filament Scale",
+    "subtitle": "A standalone spool station with identity and history",
+    "summary": "I built an ESP32-S3 filament scale that combines load-cell measurement, NFC spool binding, local records and Spoolman integration.",
+    "category": "embedded",
+    "secondaryCategories": ["hardware", "software"],
+    "status": "completed",
+    "year": 2026,
+    "yearEnd": null,
+    "featured": true,
+    "visibility": "public",
+    "thumbnail": null,
+    "thumbnailAlt": null,
+    "technologies": ["ESP32-S3", "HX711", "NFC", "Spoolman", "ST7789"],
+    "links": {
+      "github": null,
+      "demo": null,
+      "documentation": null
+    },
+    "content": [
+      {
+        "type": "paragraph",
+        "body": "I wanted spool tracking to remain useful even when the printer or network was unavailable. The device therefore performs the weighing and identification locally, records transactions to removable storage and can synchronise with an existing Spoolman installation."
+      },
+      {
+        "type": "specificationTable",
+        "title": "Standalone station",
+        "rows": [
+          {
+            "label": "Controller",
+            "value": "ESP32-S3-N16"
+          },
+          {
+            "label": "Measurement",
+            "value": "Load cell with HX711 interface"
+          },
+          {
+            "label": "Identification",
+            "value": "NFC spool tags"
+          },
+          {
+            "label": "Display",
+            "value": "240 × 240 ST7789 TFT"
+          },
+          {
+            "label": "Time and storage",
+            "value": "DS3231 RTC and microSD logging"
+          },
+          {
+            "label": "Connectivity",
+            "value": "Local web interface and Spoolman synchronisation"
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "body": "The interface guides zeroing, calibration, spool selection and tag binding directly on the device, while the browser view handles configuration without making routine weighing dependent on a phone."
+      }
+    ]
+  },
+  {
+    "id": "smart-reflow-oven",
+    "slug": "smart-reflow-oven",
+    "title": "Smart Reflow Oven",
+    "subtitle": "Repeatable reflow control with a platinum RTD",
+    "summary": "I converted a reflow oven to use PT100 temperature feedback after an NTC-based approach proved too sensitive to drift.",
+    "category": "manufacturing",
     "secondaryCategories": ["hardware", "embedded"],
-    "status": "experimental",
+    "status": "completed",
     "year": 2026,
-    "featured": false,
-    "visibility": "draft",
-    "thumbnail": null,
-    "thumbnailAlt": null,
-    "technologies": ["PCB design", "LCSC", "JLCPCB", "Power design", "DFM"],
-    "links": {
-      "github": null,
-      "demo": null,
-      "documentation": null
-    },
-    "content": [
-      {
-        "type": "paragraph",
-        "body": "I will use this draft to collect cross-project PCB notes once the examples and photographs are ready for public presentation."
-      }
-    ]
-  },
-  {
-    "id": "charlieplexed-games",
-    "slug": "charlieplexed-games",
-    "title": "Charlieplexed LED Matrix Games",
-    "subtitle": "Recognisable interaction at extremely low resolution",
-    "summary": "A compact firmware architecture for games, menus, IMU input and sound on a 15 × 11 LED display.",
-    "category": "firmware",
-    "secondaryCategories": ["embedded", "software"],
-    "status": "experimental",
-    "year": 2026,
+    "yearEnd": null,
     "featured": false,
     "visibility": "public",
     "thumbnail": null,
     "thumbnailAlt": null,
     "technologies": [
-      "CH32V006",
-      "Charlieplexing",
-      "Game logic",
-      "IMU",
-      "Buzzer audio"
+      "PT100",
+      "RTD measurement",
+      "Reflow profiles",
+      "Closed-loop control",
+      "PCB assembly"
     ],
     "links": {
       "github": null,
@@ -528,17 +355,966 @@
     "content": [
       {
         "type": "paragraph",
-        "body": "I split the firmware architecture into input polling, game state, display scanning and buzzer timing so each part can remain small and predictable on the CH32V006."
+        "body": "The first sensing approach made calibration too dependent on thermistor behaviour at reflow temperatures. I changed the final design to a PT100 so the controller could work from a more stable and repeatable resistance curve."
+      },
+      {
+        "type": "specificationTable",
+        "title": "Final sensing decision",
+        "rows": [
+          {
+            "label": "Temperature sensor",
+            "value": "PT100 platinum RTD"
+          },
+          {
+            "label": "Rejected approach",
+            "value": "NTC thermistor feedback"
+          },
+          {
+            "label": "Reason for change",
+            "value": "Reduced drift and better behaviour at higher temperatures"
+          },
+          {
+            "label": "Use",
+            "value": "Controlled PCB reflow profiles"
+          }
+        ]
+      },
+      {
+        "type": "callout",
+        "style": "success",
+        "title": "Completed system",
+        "body": "The PT100-based control system is the finished version of the oven."
+      }
+    ]
+  },
+  {
+    "id": "chroma-klipper",
+    "slug": "chroma-klipper",
+    "title": "Chroma Klipper",
+    "subtitle": "Printer-side coordination for full-colour FDM",
+    "summary": "I am developing the Klipper integration that coordinates ordinary print motion with colour output from the ChromaDye hardware.",
+    "category": "firmware",
+    "secondaryCategories": ["manufacturing", "embedded", "software"],
+    "status": "active",
+    "year": 2025,
+    "yearEnd": "Now",
+    "featured": false,
+    "visibility": "public",
+    "thumbnail": null,
+    "thumbnailAlt": null,
+    "technologies": [
+      "Klipper",
+      "Python",
+      "Full-colour FDM",
+      "Printer integration"
+    ],
+    "links": {
+      "github": null,
+      "demo": null,
+      "documentation": null
+    },
+    "content": [
+      {
+        "type": "paragraph",
+        "body": "This layer turns slicer output into printer behaviour. It has to keep colour deposition aligned with the same motion, timing and state transitions that already govern the underlying FDM print."
+      },
+      {
+        "type": "diagram",
+        "title": "System position",
+        "description": "The integration sits between colour-aware slicing and the physical deposition controller.",
+        "items": [
+          "Chroma Slicer prepares colour data",
+          "Chroma Klipper coordinates the print",
+          "ChromaDye drives the colour hardware"
+        ]
+      },
+      {
+        "type": "callout",
+        "style": "warning",
+        "title": "Dependency",
+        "body": "Development remains active because meaningful printer tests depend on the ChromaDye integration becoming stable."
+      }
+    ]
+  },
+  {
+    "id": "chroma-slicer",
+    "slug": "chroma-slicer",
+    "title": "Chroma Slicer",
+    "subtitle": "Colour-aware slicing from textured model to layer data",
+    "summary": "I extended OrcaSlicer with a working full-colour pipeline for textured model import, colour-preserving geometry and per-layer raster generation.",
+    "category": "software",
+    "secondaryCategories": ["manufacturing", "computer-vision"],
+    "status": "active",
+    "year": 2025,
+    "yearEnd": "Now",
+    "featured": true,
+    "visibility": "public",
+    "thumbnail": null,
+    "thumbnailAlt": null,
+    "technologies": [
+      "C++",
+      "OrcaSlicer",
+      "UV mapping",
+      "3MF",
+      "Image processing"
+    ],
+    "links": {
+      "github": null,
+      "demo": null,
+      "documentation": null
+    },
+    "content": [
+      {
+        "type": "paragraph",
+        "body": "Colour information normally disappears long before a conventional slicer produces toolpaths. I added a surface representation that keeps UV and texture data attached to model volumes so later stages can ask what colour belongs at each sampled point."
+      },
+      {
+        "type": "specificationTable",
+        "title": "Colour pipeline",
+        "rows": [
+          {
+            "label": "Base application",
+            "value": "OrcaSlicer"
+          },
+          {
+            "label": "Model inputs",
+            "value": "Textured geometry with UV coordinates"
+          },
+          {
+            "label": "Internal data",
+            "value": "Colour-aware surface data on model volumes"
+          },
+          {
+            "label": "Layer output",
+            "value": "Rasterised colour information for deposition"
+          }
+        ]
       },
       {
         "type": "callout",
         "style": "info",
-        "title": "Display constraint",
-        "body": "At 15 × 11 pixels, a menu icon has to communicate before it has enough pixels to decorate itself."
+        "title": "Feature complete",
+        "body": "The end-to-end feature works, but I still consider it active while I improve robustness, persistence and integration with the rest of the Chroma toolchain."
+      }
+    ]
+  },
+  {
+    "id": "chromadye",
+    "slug": "chromadye",
+    "title": "ChromaDye",
+    "subtitle": "Timing-critical colour deposition hardware",
+    "summary": "I built the ESP32-S3 cartridge driver that converts colour data into constrained HP123 nozzle pulses for the full-colour printer.",
+    "category": "embedded",
+    "secondaryCategories": ["hardware", "firmware", "manufacturing"],
+    "status": "active",
+    "year": 2025,
+    "yearEnd": "Now",
+    "featured": true,
+    "visibility": "public",
+    "thumbnail": null,
+    "thumbnailAlt": null,
+    "technologies": ["ESP32-S3", "HP123", "ESP-IDF", "DMA", "Parallel bus"],
+    "links": {
+      "github": null,
+      "demo": null,
+      "documentation": null
+    },
+    "content": [
+      {
+        "type": "paragraph",
+        "body": "The controller queues nozzle data and emits a parallel waveform whose pulse widths must stay inside the cartridge limits. The electrical interface is only half the problem; the same timing guarantees have to survive buffering, transfer and printer integration."
+      },
+      {
+        "type": "timeline",
+        "title": "Pulse-limiting revisions",
+        "items": [
+          {
+            "title": "Hardware pulse-time limit",
+            "body": "I first attempted to enforce the maximum firing time entirely in hardware, but that revision did not operate reliably.",
+            "date": "Version 1",
+            "state": "complete"
+          },
+          {
+            "title": "Software-enforced limit",
+            "body": "I moved pulse limiting into the output software and the revised electronics now appear to behave correctly on their own.",
+            "date": "Version 2",
+            "state": "complete"
+          },
+          {
+            "title": "Full-system integration",
+            "body": "The remaining work is connecting the stable hardware path to the slicer and printer control stack without losing timing or colour alignment.",
+            "date": "Current",
+            "state": "active"
+          }
+        ]
+      },
+      {
+        "type": "callout",
+        "style": "warning",
+        "title": "Current blocker",
+        "body": "The board-level behaviour is promising, but the project is still caught in integration work across the complete Chroma system."
+      }
+    ]
+  },
+  {
+    "id": "game-vault",
+    "slug": "game-vault",
+    "title": "Game Vault",
+    "subtitle": "A room-based cooperative game for self-hosting",
+    "summary": "I built a server-hosted cooperative game with multiplayer rooms, intended to run on a small SBC behind a Cloudflare Tunnel.",
+    "category": "web",
+    "secondaryCategories": ["software"],
+    "status": "completed",
+    "year": 2026,
+    "yearEnd": null,
+    "featured": false,
+    "visibility": "public",
+    "thumbnail": null,
+    "thumbnailAlt": null,
+    "technologies": [
+      "Room-based multiplayer",
+      "Self-hosting",
+      "Raspberry Pi",
+      "Cloudflare Tunnel",
+      "Web application"
+    ],
+    "links": {
+      "github": null,
+      "demo": null,
+      "documentation": null
+    },
+    "content": [
+      {
+        "type": "paragraph",
+        "body": "Players join a shared room and cooperate through a centrally hosted game session. I designed deployment around an SBC such as a Raspberry Pi so the server can remain physically local while the tunnel provides the external route."
+      },
+      {
+        "type": "diagram",
+        "title": "Deployment path",
+        "description": "The game keeps its state on the self-hosted server and exposes only the web connection through the tunnel.",
+        "items": [
+          "Browser clients join a named room",
+          "The room runs on the local game server",
+          "Cloudflare Tunnel forwards the service without direct router exposure"
+        ]
       },
       {
         "type": "paragraph",
-        "body": "Current concepts include Tetris, Snake, an IMU-driven sand simulation, dice and compact settings screens designed around the physical 2 mm LED pitch."
+        "body": "The deliberately strange and generic naming originated as camouflage for very basic network filtering—sometimes the least suspicious protocol is apparently a boring noun."
+      }
+    ]
+  },
+  {
+    "id": "parametric-epaper-dashboard",
+    "slug": "parametric-epaper-dashboard",
+    "title": "Parametric EPaper Dashboard",
+    "subtitle": "A JSON-composed image pipeline for low-power displays",
+    "summary": "I wrote a Python and Pillow renderer whose JSON configuration assembles calendar, weather and other modules into one e-paper-ready image.",
+    "category": "software",
+    "secondaryCategories": ["web"],
+    "status": "completed",
+    "year": 2026,
+    "yearEnd": null,
+    "featured": false,
+    "visibility": "public",
+    "thumbnail": null,
+    "thumbnailAlt": null,
+    "technologies": [
+      "Python",
+      "Pillow",
+      "JSON",
+      "Calendar APIs",
+      "Weather data"
+    ],
+    "links": {
+      "github": null,
+      "demo": null,
+      "documentation": null
+    },
+    "content": [
+      {
+        "type": "paragraph",
+        "body": "Instead of fixing the dashboard layout in one script, I made each section a module that reads its parameters from JSON, renders onto a transparent layer and composes itself onto the shared canvas."
+      },
+      {
+        "type": "diagram",
+        "title": "Render pipeline",
+        "description": "Configuration and live data are converted into independent visual layers before Pillow produces the final display bitmap.",
+        "items": [
+          "JSON selects modules, positions and dimensions",
+          "Modules parse one or more calendar accounts or weather sources",
+          "Symbols and text are drawn onto separate layers",
+          "The layers are composited into the final image"
+        ]
+      },
+      {
+        "type": "specificationTable",
+        "title": "Available information",
+        "rows": [
+          {
+            "label": "Schedules",
+            "value": "Events from one or more calendar accounts"
+          },
+          {
+            "label": "Conditions",
+            "value": "Weather values and matching symbols"
+          },
+          {
+            "label": "Layout",
+            "value": "Module placement and sizing controlled through JSON"
+          },
+          {
+            "label": "Output",
+            "value": "A composed image suitable for an e-paper display"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "lucid-gloves-alternate-battery-pcb",
+    "slug": "lucid-gloves-alternate-battery-pcb",
+    "title": "Lucid Gloves Alternate Battery PCB",
+    "subtitle": "Three revisions from bulky connector to onboard charging",
+    "summary": "I redesigned the Lucid Gloves battery interface through PH, SH and charging-board versions until it fit the available space and workflow.",
+    "category": "pcb",
+    "secondaryCategories": ["hardware", "embedded"],
+    "status": "completed",
+    "year": 2024,
+    "yearEnd": 2026,
+    "featured": false,
+    "visibility": "public",
+    "thumbnail": null,
+    "thumbnailAlt": null,
+    "technologies": [
+      "EasyEDA Pro",
+      "PH 2.0 mm",
+      "SH 1.0 mm",
+      "Battery charging",
+      "Compact PCB design"
+    ],
+    "links": {
+      "github": null,
+      "demo": null,
+      "documentation": null
+    },
+    "content": [
+      {
+        "type": "paragraph",
+        "body": "The board began as a connector substitution and became a compact battery subsystem. Each revision answered a physical issue from the previous one rather than adding features without a reason."
+      },
+      {
+        "type": "timeline",
+        "title": "Battery-board revisions",
+        "items": [
+          {
+            "title": "PH 2.0 mm connector",
+            "body": "The first board functioned as a battery adapter, but the connector and resulting assembly were too large for the intended glove packaging.",
+            "date": "Version 1",
+            "state": "complete"
+          },
+          {
+            "title": "SH 1.0 mm connector",
+            "body": "I reduced the connector pitch and produced the version that fit the available space correctly.",
+            "date": "Version 2",
+            "state": "complete"
+          },
+          {
+            "title": "Integrated charging",
+            "body": "The final revision retained the smaller connection and added the battery-charging circuit to complete the interface.",
+            "date": "Version 3",
+            "state": "complete"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "box-turtle-afc-btio",
+    "slug": "box-turtle-afc-btio",
+    "title": "Box Turtle AFC BTIO",
+    "subtitle": "A connector board adapted to my wiring",
+    "summary": "I redesigned the Box Turtle AFC BTIO board in EasyEDA Pro so its connectors matched the layout required by my installation.",
+    "category": "pcb",
+    "secondaryCategories": ["hardware", "manufacturing"],
+    "status": "completed",
+    "year": 2025,
+    "yearEnd": null,
+    "featured": false,
+    "visibility": "public",
+    "thumbnail": null,
+    "thumbnailAlt": null,
+    "technologies": [
+      "EasyEDA Pro",
+      "Connector adaptation",
+      "PCB layout",
+      "Design for assembly"
+    ],
+    "links": {
+      "github": null,
+      "demo": null,
+      "documentation": null
+    },
+    "content": [
+      {
+        "type": "paragraph",
+        "body": "My contribution was deliberately narrow: I took a simple existing interconnect function and redrew the board around the connector choices and cable arrangement I actually needed."
+      },
+      {
+        "type": "callout",
+        "style": "success",
+        "title": "Completed adaptation",
+        "body": "The replacement board resolves the connector mismatch without changing the wider Box Turtle AFC system."
+      }
+    ]
+  },
+  {
+    "id": "esp32-lamp",
+    "slug": "esp32-lamp",
+    "title": "ESP32 Lamp",
+    "subtitle": "A movable tower-crane lamp powered through PCB rails",
+    "summary": "I built a multi-axis lamp shaped like a tower crane, with an ESP32 controller, V-roller motion and cable-chain-free power delivery.",
+    "category": "robotics",
+    "secondaryCategories": ["hardware", "embedded", "pcb"],
+    "status": "completed",
+    "year": 2025,
+    "yearEnd": null,
+    "featured": false,
+    "visibility": "public",
+    "thumbnail": null,
+    "thumbnailAlt": null,
+    "technologies": [
+      "ESP32-WROOM-1U",
+      "Capacitive sensing",
+      "2020 extrusion",
+      "V rollers",
+      "Tunable white LEDs"
+    ],
+    "links": {
+      "github": null,
+      "demo": null,
+      "documentation": null
+    },
+    "content": [
+      {
+        "type": "paragraph",
+        "body": "The mechanical form follows a tower crane: V rollers travel along 2020 extrusion so the light can move through the working area. I avoided a conventional cable chain by passing power through custom PCB interconnects and rails that act as a linear slip contact."
+      },
+      {
+        "type": "specificationTable",
+        "title": "Four custom PCB elements",
+        "rows": [
+          {
+            "label": "Mainboard",
+            "value": "ESP32-WROOM-1U control and power management"
+          },
+          {
+            "label": "Daughterboard",
+            "value": "Capacitive touch-slider sensing"
+          },
+          {
+            "label": "Interconnect",
+            "value": "Moving electrical contact between assemblies"
+          },
+          {
+            "label": "Rails",
+            "value": "Linear power delivery along the extrusion"
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "body": "The end effector combines approximately 2500 K and 6500 K LED arrays. Sliding across the capacitive control blends the two channels to select a colour temperature between them."
+      },
+      {
+        "type": "timeline",
+        "title": "Controller and power revisions",
+        "items": [
+          {
+            "title": "Rushed STM32 board",
+            "body": "The first controller revision was STM32-based and failed outright before it could become a dependable platform.",
+            "date": "Version 1",
+            "state": "complete"
+          },
+          {
+            "title": "ESP32 conversion",
+            "body": "The second board moved control to an ESP32 and operated, but I had selected the external buck-converter module incorrectly.",
+            "date": "Version 2",
+            "state": "complete"
+          },
+          {
+            "title": "Custom power circuitry",
+            "body": "I replaced the unsuitable module with a purpose-designed power stage, producing the final working electronics.",
+            "date": "Version 3",
+            "state": "complete"
+          }
+        ]
+      },
+      {
+        "type": "callout",
+        "style": "success",
+        "title": "Release state",
+        "body": "The lamp is complete; I plan to publish the release material later."
+      }
+    ]
+  },
+  {
+    "id": "nfc-reader",
+    "slug": "nfc-reader",
+    "title": "NFC Reader",
+    "subtitle": "Card UIDs delivered as ordinary keyboard input",
+    "summary": "I built an NFC reader that identifies a tag and types its UID through a USB HID keyboard interface.",
+    "category": "embedded",
+    "secondaryCategories": ["hardware", "firmware"],
+    "status": "completed",
+    "year": 2025,
+    "yearEnd": null,
+    "featured": false,
+    "visibility": "public",
+    "thumbnail": null,
+    "thumbnailAlt": null,
+    "technologies": ["NFC", "USB HID", "Embedded firmware", "PCB design"],
+    "links": {
+      "github": null,
+      "demo": null,
+      "documentation": null
+    },
+    "content": [
+      {
+        "type": "paragraph",
+        "body": "The device presents itself as a standard keyboard, so scanning a card places the identifier directly into whichever text field has focus. That keeps the reader independent of a custom desktop driver or application."
+      },
+      {
+        "type": "diagram",
+        "title": "Input path",
+        "description": "A scan becomes text through a short device-side pipeline.",
+        "items": [
+          "Read the NFC tag UID",
+          "Format the identifier",
+          "Send the characters as HID keyboard events"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "custom-tool-changer",
+    "slug": "custom-tool-changer",
+    "title": "Custom Tool Changer",
+    "subtitle": "Five independent direct-drive tools on one printer",
+    "summary": "I designed a custom printer that mechanically exchanges five CAN-connected direct-drive tools, each with its own heater and extruder motor.",
+    "category": "robotics",
+    "secondaryCategories": ["manufacturing", "hardware", "firmware"],
+    "status": "active",
+    "year": 2025,
+    "yearEnd": "Now",
+    "featured": false,
+    "visibility": "public",
+    "thumbnail": null,
+    "thumbnailAlt": null,
+    "technologies": [
+      "Tool changing",
+      "CAN bus",
+      "Direct drive",
+      "Multi-material printing",
+      "Mechanical latching"
+    ],
+    "links": {
+      "github": null,
+      "demo": null,
+      "documentation": null
+    },
+    "content": [
+      {
+        "type": "paragraph",
+        "body": "The complete machine frame was designed around tool changing rather than adapting a single carriage afterwards. Each docked tool remains an independent print head, allowing inactive heads to preheat and each one to stay configured for a different filament."
+      },
+      {
+        "type": "specificationTable",
+        "title": "Tool system",
+        "rows": [
+          {
+            "label": "Tool count",
+            "value": "Five independent heads"
+          },
+          {
+            "label": "Extrusion",
+            "value": "Direct drive on every tool"
+          },
+          {
+            "label": "Thermal hardware",
+            "value": "A dedicated heater per head"
+          },
+          {
+            "label": "Communication",
+            "value": "CAN bus network"
+          },
+          {
+            "label": "Material range",
+            "value": "Independent soft, rigid and otherwise incompatible filaments"
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "body": "Tool retention uses a latch-and-pin mechanism. The carriage performs the mechanical lock and release without requiring separate actuation electronics on the carriage itself."
+      },
+      {
+        "type": "callout",
+        "style": "info",
+        "title": "Feature complete",
+        "body": "The five-tool exchange works, but refinement and wider machine integration keep the project active."
+      }
+    ]
+  },
+  {
+    "id": "epaper-calendar",
+    "slug": "epaper-calendar",
+    "title": "EPaper Calendar",
+    "subtitle": "A USB-powered tri-colour display with browser uploads",
+    "summary": "I built an ESP32 e-paper display that serves a local upload page and converts images for a 240 × 360 black, red and white panel.",
+    "category": "embedded",
+    "secondaryCategories": ["hardware", "web", "pcb"],
+    "status": "completed",
+    "year": 2023,
+    "yearEnd": 2025,
+    "featured": false,
+    "visibility": "public",
+    "thumbnail": null,
+    "thumbnailAlt": null,
+    "technologies": [
+      "ESP32-WROOM",
+      "E-paper",
+      "USB-C",
+      "Web interface",
+      "Image conversion"
+    ],
+    "links": {
+      "github": null,
+      "demo": null,
+      "documentation": null
+    },
+    "content": [
+      {
+        "type": "paragraph",
+        "body": "When connected to USB-C power, the display hosts a webpage for choosing and converting an image. The ESP32 receives the prepared bitmap and updates the panel; it does not fetch calendar data by itself."
+      },
+      {
+        "type": "specificationTable",
+        "title": "Display system",
+        "rows": [
+          {
+            "label": "Controller",
+            "value": "ESP32-WROOM module"
+          },
+          {
+            "label": "Panel",
+            "value": "240 × 360 tri-colour e-paper"
+          },
+          {
+            "label": "Palette",
+            "value": "Black, red and white"
+          },
+          {
+            "label": "Input method",
+            "value": "Image upload and conversion through a hosted webpage"
+          },
+          {
+            "label": "Power",
+            "value": "USB-C only, with no battery"
+          }
+        ]
+      },
+      {
+        "type": "timeline",
+        "title": "Hardware revisions",
+        "items": [
+          {
+            "title": "Initial design",
+            "body": "The first board used components that were unnecessarily small for hand assembly and made the build impractical.",
+            "date": "Version 1",
+            "state": "complete"
+          },
+          {
+            "title": "Assembly and power redesign",
+            "body": "I revised the component choices and corrected the power problems, producing the finished working display.",
+            "date": "Version 2",
+            "state": "complete"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "digital-signage",
+    "slug": "digital-signage",
+    "title": "Digital Signage",
+    "subtitle": "Central scheduling for browser-based local displays",
+    "summary": "I built a Flask signage server that centrally schedules images and video across Android screens running full-screen browsers.",
+    "category": "web",
+    "secondaryCategories": ["software"],
+    "status": "completed",
+    "year": 2024,
+    "yearEnd": null,
+    "featured": false,
+    "visibility": "public",
+    "thumbnail": null,
+    "thumbnailAlt": null,
+    "technologies": [
+      "Python",
+      "Flask",
+      "Ubuntu Server",
+      "Android",
+      "Digital signage"
+    ],
+    "links": {
+      "github": null,
+      "demo": null,
+      "documentation": null
+    },
+    "content": [
+      {
+        "type": "paragraph",
+        "body": "Each display is deliberately thin: an Android device opens the local signage page in a full-screen browser, while an Ubuntu server owns the media queue, schedules and device-wide control."
+      },
+      {
+        "type": "specificationTable",
+        "title": "Deployment",
+        "rows": [
+          {
+            "label": "Display clients",
+            "value": "Android signage screens with a full-screen browser"
+          },
+          {
+            "label": "Server",
+            "value": "Flask application on Ubuntu Server"
+          },
+          {
+            "label": "Media",
+            "value": "Timed image queues and video playback"
+          },
+          {
+            "label": "Control",
+            "value": "Central management of all connected screens"
+          },
+          {
+            "label": "Tested scale",
+            "value": "Up to 40 displays"
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "body": "Keeping the clients browser-based made replacement and expansion straightforward: the operational logic stayed on one server instead of becoming forty slightly different applications."
+      }
+    ]
+  },
+  {
+    "id": "tide-bound",
+    "slug": "tide-bound",
+    "title": "Tide Bound",
+    "subtitle": "Fishing and exploration on a generated island",
+    "summary": "I created a Unity 6 game about fishing, selling the catch and upgrading equipment on a procedurally generated island.",
+    "category": "software",
+    "secondaryCategories": [],
+    "status": "completed",
+    "year": 2025,
+    "yearEnd": null,
+    "featured": false,
+    "visibility": "public",
+    "thumbnail": null,
+    "thumbnailAlt": null,
+    "technologies": [
+      "Unity 6",
+      "C#",
+      "Procedural generation",
+      "Perlin noise",
+      "Game design"
+    ],
+    "links": {
+      "github": null,
+      "demo": null,
+      "documentation": null
+    },
+    "content": [
+      {
+        "type": "paragraph",
+        "body": "The project grew from a school hackathon theme based on the jungle. I expanded that starting point into an island whose terrain and forests are generated from noise, then added animals and a repeatable fishing economy."
+      },
+      {
+        "type": "specificationTable",
+        "title": "Game loop",
+        "rows": [
+          {
+            "label": "World",
+            "value": "Procedurally generated island and forests"
+          },
+          {
+            "label": "Primary action",
+            "value": "Catch fish"
+          },
+          {
+            "label": "Economy",
+            "value": "Sell fish and purchase better rods"
+          },
+          {
+            "label": "Progression",
+            "value": "Continue until every available upgrade is obtained"
+          },
+          {
+            "label": "Ending",
+            "value": "No separate final objective"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "celestial-feasts",
+    "slug": "celestial-feasts",
+    "title": "Celestial Feasts",
+    "subtitle": "A pizza economy drifting through space",
+    "summary": "I made a school-hackathon game where the player gathers limitless ingredients on a dome, sells pizzas and earns a rocket escape.",
+    "category": "software",
+    "secondaryCategories": [],
+    "status": "completed",
+    "year": 2023,
+    "yearEnd": null,
+    "featured": false,
+    "visibility": "public",
+    "thumbnail": null,
+    "thumbnailAlt": null,
+    "technologies": [
+      "Game development",
+      "Rapid prototyping",
+      "Gameplay systems",
+      "Level design"
+    ],
+    "links": {
+      "github": null,
+      "demo": null,
+      "documentation": null
+    },
+    "content": [
+      {
+        "type": "paragraph",
+        "body": "The hackathon theme combined food with the galactic. I interpreted it as a small resource-and-crafting loop on a spaceborne dome, where the surrounding world is absurdly generous but the ticket home still has a price."
+      },
+      {
+        "type": "specificationTable",
+        "title": "Objective",
+        "rows": [
+          {
+            "label": "Resources",
+            "value": "Infinite ingredient sources around the dome"
+          },
+          {
+            "label": "Production",
+            "value": "Assemble ingredients into pizzas"
+          },
+          {
+            "label": "Income",
+            "value": "Sell the completed food"
+          },
+          {
+            "label": "Win condition",
+            "value": "Reach 1,000 and leave in the rocket"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "raspberry-pi-hologram",
+    "slug": "raspberry-pi-hologram",
+    "title": "Raspberry Pi Hologram",
+    "subtitle": "A compact prism display on a Pi Zero breakout",
+    "summary": "I designed a Raspberry Pi Zero breakout with a 1.3-inch IPS display and RTC for a glass-prism hologram illusion.",
+    "category": "pcb",
+    "secondaryCategories": ["hardware", "embedded"],
+    "status": "completed",
+    "year": 2024,
+    "yearEnd": null,
+    "featured": false,
+    "visibility": "public",
+    "thumbnail": null,
+    "thumbnailAlt": null,
+    "technologies": [
+      "Raspberry Pi Zero",
+      "240 × 240 IPS",
+      "RTC",
+      "EasyEDA Pro",
+      "PCB design"
+    ],
+    "links": {
+      "github": null,
+      "demo": null,
+      "documentation": null
+    },
+    "content": [
+      {
+        "type": "paragraph",
+        "body": "The PCB places a small square display directly on the Pi Zero and provides real-time clock hardware for timekeeping. A transparent prism cube sits above the panel and reflects prepared imagery into a floating four-sided illusion."
+      },
+      {
+        "type": "specificationTable",
+        "title": "Breakout hardware",
+        "rows": [
+          {
+            "label": "Host",
+            "value": "Raspberry Pi Zero"
+          },
+          {
+            "label": "Display",
+            "value": "1.3-inch 240 × 240 IPS panel"
+          },
+          {
+            "label": "Timekeeping",
+            "value": "Onboard real-time clock"
+          },
+          {
+            "label": "Optical element",
+            "value": "Glass prism cube above the screen"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "automatic-chess-robot",
+    "slug": "automatic-chess-robot",
+    "title": "Automatic Chess Robot",
+    "subtitle": "A digital study of sensed chess-piece movement",
+    "summary": "I planned an automatic chess board in CAD and code, using reed switches for piece detection and scripted movement paths.",
+    "category": "robotics",
+    "secondaryCategories": ["hardware", "software"],
+    "status": "experimental",
+    "year": 2023,
+    "yearEnd": null,
+    "featured": false,
+    "visibility": "public",
+    "thumbnail": null,
+    "thumbnailAlt": null,
+    "technologies": [
+      "Mechanical CAD",
+      "Motion planning",
+      "Reed switches",
+      "Robotics"
+    ],
+    "links": {
+      "github": null,
+      "demo": null,
+      "documentation": null
+    },
+    "content": [
+      {
+        "type": "paragraph",
+        "body": "I developed the mechanical layout and the code needed to plan board movement, with a reed-switch grid intended to identify occupied squares. The design never progressed into physical assembly."
+      },
+      {
+        "type": "callout",
+        "style": "warning",
+        "title": "Stopped at the digital stage",
+        "body": "I ended the experiment after buying a Chestnut automatic chess set that already met the practical need behind the project."
       }
     ]
   }

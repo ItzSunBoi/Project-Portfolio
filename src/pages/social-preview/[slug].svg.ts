@@ -1,5 +1,6 @@
 import type { APIRoute, GetStaticPaths } from "astro";
 import { getVisibleProjects } from "../../lib/content";
+import { formatProjectYear } from "../../lib/dates";
 import type { Project } from "../../schemas/project";
 
 export const getStaticPaths = (() =>
@@ -37,6 +38,7 @@ function wrapTitle(title: string) {
 
 export const GET: APIRoute = ({ props }) => {
   const project = props.project as Project;
+  const yearLabel = formatProjectYear(project.year, project.yearEnd);
   const titleLines = wrapTitle(project.title);
   const titleMarkup = titleLines
     .map(
@@ -62,7 +64,7 @@ export const GET: APIRoute = ({ props }) => {
   </g>
   <text x="222" y="112" fill="#A8C0D2" font-family="ui-monospace, SFMono-Regular, monospace" font-size="24" letter-spacing="2">ITZSUNBOI / ${escapeXml(project.category.toUpperCase())}</text>
   ${titleMarkup}
-  <text x="96" y="548" fill="#52B8FA" font-family="ui-monospace, SFMono-Regular, monospace" font-size="22" letter-spacing="2">${escapeXml(project.status.toUpperCase())} · ${project.year}</text>
+  <text x="96" y="548" fill="#52B8FA" font-family="ui-monospace, SFMono-Regular, monospace" font-size="22" letter-spacing="2">${escapeXml(project.status.toUpperCase())} · ${escapeXml(yearLabel)}</text>
   <rect x="92" y="576" width="1016" height="2" fill="#23445C"/>
 </svg>`;
 

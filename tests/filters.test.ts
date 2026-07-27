@@ -6,7 +6,7 @@ describe("project filtering", () => {
   it("matches technologies and summary text", () => {
     const results = filterProjects(content.projects, { query: "OV9281" });
     expect(results.map((project) => project.slug)).toContain(
-      "laser-triangulator",
+      "dual-laser-triangulator",
     );
   });
 
@@ -14,12 +14,12 @@ describe("project filtering", () => {
     const results = filterProjects(content.projects, {
       categories: ["computer-vision"],
     });
-    expect(results.map((project) => project.slug)).toContain("chromaslicer");
+    expect(results.map((project) => project.slug)).toContain("chroma-slicer");
   });
 
   it("combines category and status filters", () => {
     const results = filterProjects(content.projects, {
-      categories: ["firmware"],
+      categories: ["pcb"],
       statuses: ["experimental"],
     });
 
@@ -28,9 +28,7 @@ describe("project filtering", () => {
       results.every(
         (project) =>
           project.status === "experimental" &&
-          [project.category, ...project.secondaryCategories].includes(
-            "firmware",
-          ),
+          [project.category, ...project.secondaryCategories].includes("pcb"),
       ),
     ).toBe(true);
   });

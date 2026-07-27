@@ -79,6 +79,26 @@ describe("portfolio content validation", () => {
     expect(() => validatePortfolioContent(input)).not.toThrow();
   });
 
+  it("accepts finite and ongoing project year ranges", () => {
+    const input = validInput();
+    input.projects[0].year = 2024;
+    input.projects[0].yearEnd = 2026;
+    input.projects[1].year = 2025;
+    input.projects[1].yearEnd = "Now";
+
+    expect(() => validatePortfolioContent(input)).not.toThrow();
+  });
+
+  it("rejects a numeric end year before the start year", () => {
+    const input = validInput();
+    input.projects[0].year = 2026;
+    input.projects[0].yearEnd = 2024;
+
+    expect(() => validatePortfolioContent(input)).toThrow(
+      /end year must be later than the start year/i,
+    );
+  });
+
   it("rejects the removed highlights field", () => {
     const input = validInput();
     Object.assign(input.projects[0], {
@@ -119,8 +139,14 @@ describe("portfolio content validation", () => {
   });
 
   it("hides drafts in production and includes them explicitly in development", () => {
-    const production = getVisibleProjects(content.projects);
-    const development = getVisibleProjects(content.projects, true);
+    const draft = structuredClone(content.projects[0]);
+    draft.id = "visibility-test-draft";
+    draft.slug = "visibility-test-draft";
+    draft.featured = false;
+    draft.visibility = "draft";
+    const projects = [...content.projects, draft];
+    const production = getVisibleProjects(projects);
+    const development = getVisibleProjects(projects, true);
 
     expect(production.some((project) => project.visibility === "draft")).toBe(
       false,

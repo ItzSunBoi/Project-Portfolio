@@ -1,37 +1,69 @@
 [
   {
-    "id": "embedded-systems",
+    "id": "full-colour-fdm",
+    "code": "FDM",
+    "title": "Full-colour FDM",
+    "description": "I am connecting textured model data, printer coordination and cartridge timing into one colour-deposition pipeline.",
+    "relatedProjects": ["chroma-slicer", "chroma-klipper", "chromadye"]
+  },
+  {
+    "id": "measurement-control",
+    "code": "MET",
+    "title": "Measurement & control",
+    "description": "I use optical, force and temperature measurements to replace guesswork with feedback that a machine can act on.",
+    "relatedProjects": [
+      "dual-laser-triangulator",
+      "filament-scale",
+      "smart-reflow-oven"
+    ]
+  },
+  {
+    "id": "compact-embedded",
     "code": "EMB",
-    "title": "Embedded systems",
-    "description": "Designing compact devices where firmware and circuit decisions are made together.",
-    "relatedProjects": ["laser-triangulator", "gigaplex-mini-console"]
+    "title": "Compact embedded devices",
+    "description": "I keep reducing complete interactions until they fit on small boards without losing their physical clarity.",
+    "relatedProjects": ["gigaplex", "code-less-dice", "nfc-reader"]
   },
   {
     "id": "manufacturing-automation",
     "code": "MFG",
     "title": "Manufacturing automation",
-    "description": "Improving feeders, vision, calibration and repeatability in small-scale production.",
-    "relatedProjects": ["lumenpnp-upgrades", "openpnp-vision-tools"]
+    "description": "I standardise feeders, tool changes and moving electrical systems so machines are easier to assemble and operate.",
+    "relatedProjects": [
+      "lumenpnp-feeders",
+      "custom-tool-changer",
+      "esp32-lamp",
+      "box-turtle-afc-btio"
+    ]
   },
   {
-    "id": "computer-vision",
-    "code": "VIS",
-    "title": "Computer vision",
-    "description": "Turning camera data into measurements that can drive physical process changes.",
-    "relatedProjects": ["laser-triangulator", "openpnp-vision-tools"]
+    "id": "configurable-displays",
+    "code": "DSP",
+    "title": "Configurable displays",
+    "description": "I separate rendering and content from the screens that present them, from e-paper panels to a forty-client signage network.",
+    "relatedProjects": [
+      "parametric-epaper-dashboard",
+      "epaper-calendar",
+      "digital-signage",
+      "raspberry-pi-hologram"
+    ]
   },
   {
-    "id": "full-colour-fdm",
-    "code": "FDM",
-    "title": "Full-colour FDM",
-    "description": "Exploring the path from textured models to colour-aware slicing and deposition.",
-    "relatedProjects": ["chromaslicer"]
+    "id": "interactive-software",
+    "code": "GAME",
+    "title": "Interactive software",
+    "description": "I prototype multiplayer, procedural and economy-driven games with enough structure to survive beyond the original prompt.",
+    "relatedProjects": ["game-vault", "tide-bound", "celestial-feasts"]
   },
   {
-    "id": "resource-limited-media",
-    "code": "TINY",
-    "title": "Tiny-device media",
-    "description": "Fitting animation, interaction and sound into strict flash and RAM budgets.",
-    "relatedProjects": ["bad-apple-compression", "charlieplexed-games"]
+    "id": "iterative-pcb-design",
+    "code": "PCB",
+    "title": "Iterative PCB design",
+    "description": "I treat connector fit, assembly effort and failed power choices as design inputs for the next revision.",
+    "relatedProjects": [
+      "lucid-gloves-alternate-battery-pcb",
+      "box-turtle-afc-btio",
+      "esp32-lamp"
+    ]
   }
 ]

@@ -6,6 +6,10 @@ export { projectCategories, projectStatuses };
 export const projectCategorySchema = z.enum(projectCategories);
 export const projectStatusSchema = z.enum(projectStatuses);
 export const projectVisibilitySchema = z.enum(["public", "draft", "hidden"]);
+const projectYearSchema = z.number().int().min(2000).max(2100);
+const projectYearEndSchema = z
+  .union([projectYearSchema, z.literal("Now")])
+  .nullable();
 
 const localOrRemotePath = z
   .string()
@@ -179,7 +183,8 @@ export const projectSchema = z
     category: projectCategorySchema,
     secondaryCategories: z.array(projectCategorySchema).default([]),
     status: projectStatusSchema,
-    year: z.number().int().min(2000).max(2100),
+    year: projectYearSchema,
+    yearEnd: projectYearEndSchema,
     featured: z.boolean(),
     visibility: projectVisibilitySchema,
     thumbnail: localOrRemotePath.nullable(),
@@ -226,6 +231,17 @@ export const projectSchema = z
         code: "custom",
         path: ["secondaryCategories"],
         message: "The primary category should not be repeated",
+      });
+    }
+
+    if (
+      typeof project.yearEnd === "number" &&
+      project.yearEnd <= project.year
+    ) {
+      context.addIssue({
+        code: "custom",
+        path: ["yearEnd"],
+        message: "A numeric end year must be later than the start year",
       });
     }
   });

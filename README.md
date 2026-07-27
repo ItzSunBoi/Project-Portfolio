@@ -34,6 +34,12 @@ bars or suspiciously perfect project histories.
 The generated site is fast, works without a database or CMS, and keeps
 JavaScript limited to interactions that actually need it.
 
+## Maintenance guides
+
+Coding agents should read [`AGENTS.md`](AGENTS.md) before modifying the
+repository. My practical local workflow is documented in `INTERNAL.md`, which
+is deliberately excluded from Git.
+
 ## Modular content model
 
 I keep the public data in `src/content/` so the portfolio can grow without
@@ -52,6 +58,11 @@ duplicating page markup:
 Adding a project means adding one validated object. Astro then creates its card,
 route, metadata, related-project suggestions and fallback artwork. No matching
 page file is required.
+
+The numeric `year` is the start year. `yearEnd` is `null` for a single-year
+project, a later number for a completed range, or `"Now"` for ongoing work.
+Cards, detail pages and social previews format the corresponding label
+automatically.
 
 Each content file has one owner role. Profile URLs are read only from
 `socials.json`, contact details only from `contact.json`, and the portfolio's

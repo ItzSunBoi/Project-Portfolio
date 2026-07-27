@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { content } from "../src/lib/content";
+import { formatProjectYear } from "../src/lib/dates";
 import { absoluteUrl, pageTitle } from "../src/lib/seo";
 import { resolveThemePreference } from "../src/lib/theme";
 
@@ -30,5 +31,13 @@ describe("theme preference resolution", () => {
 
   it("supports an explicit configured fallback", () => {
     expect(resolveThemePreference(null, false, "dark")).toBe("dark");
+  });
+});
+
+describe("project year formatting", () => {
+  it("formats single years, completed ranges and ongoing work", () => {
+    expect(formatProjectYear(2026, null)).toBe("2026");
+    expect(formatProjectYear(2024, 2026)).toBe("2024–2026");
+    expect(formatProjectYear(2025, "Now")).toBe("2025–Now");
   });
 });

@@ -5,6 +5,7 @@ import ProjectCard from "../../components/projects/ProjectCard.astro";
 import StatusBadge from "../../components/common/StatusBadge.astro";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import { content, getVisibleProjects } from "../../lib/content";
+import { formatProjectYear } from "../../lib/dates";
 import { projectCategoryLabels } from "../../lib/project-taxonomy";
 import type { Project } from "../../schemas/project";
 
@@ -23,6 +24,7 @@ interface Props {
 
 const { project } = Astro.props;
 const categories = [project.category, ...project.secondaryCategories];
+const yearLabel = formatProjectYear(project.year, project.yearEnd);
 const relatedProjects = getVisibleProjects()
   .filter(
     (candidate) =>
@@ -74,7 +76,7 @@ const jsonLd = {
           <h1>{project.title}</h1>
           <p class="project-subtitle">{project.subtitle}</p>
           <div class="project-hero-meta">
-            <span class="project-year">{project.year}</span>
+            <span class="project-year">{yearLabel}</span>
             <StatusBadge status={project.status} />
           </div>
         </div>

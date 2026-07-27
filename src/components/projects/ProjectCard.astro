@@ -1,5 +1,6 @@
 ---
 import type { Project } from "../../schemas/project";
+import { formatProjectYear } from "../../lib/dates";
 import { projectCategoryLabels } from "../../lib/project-taxonomy";
 import BlueprintThumbnail from "./BlueprintThumbnail.astro";
 import StatusBadge from "../common/StatusBadge.astro";
@@ -12,6 +13,7 @@ interface Props {
 
 const { project, compact = false, filterable = false } = Astro.props;
 const categories = [project.category, ...project.secondaryCategories];
+const yearLabel = formatProjectYear(project.year, project.yearEnd);
 ---
 
 <article
@@ -59,7 +61,7 @@ const categories = [project.category, ...project.secondaryCategories];
   </a>
   <div class="project-card-body">
     <div class="project-card-meta">
-      <span>{project.year}</span>
+      <span>{yearLabel}</span>
       <StatusBadge status={project.status} />
     </div>
     <div>
