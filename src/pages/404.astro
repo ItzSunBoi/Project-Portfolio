@@ -13,12 +13,48 @@ import BaseLayout from "../layouts/BaseLayout.astro";
       <h1>This trace does not connect anywhere.</h1>
       <p>
         The page may have moved, the link may be incomplete, or the project
-        documentation is still negotiating.
+        documentation is still negotiating. But here is a duck to make it
+        better. :D
       </p>
+
+      <figure class="not-found-duck">
+        <div
+          class="not-found-duck-frame"
+          data-duck-frame
+          data-state="loading"
+          aria-busy="true"
+        >
+          <img
+            data-duck-image
+            alt="A random duck supplied by random-d.uk."
+            decoding="async"
+            referrerpolicy="no-referrer"
+            hidden
+          />
+          <p
+            class="not-found-duck-status"
+            data-duck-status
+            role="status"
+            aria-live="polite"
+          >
+            Fetching emergency duck…
+          </p>
+        </div>
+        <figcaption class="sr-only">
+          A random duck image provided by random-d.uk.
+        </figcaption>
+      </figure>
+
       <div class="hero-actions" style="justify-content: center">
         <a class="button button-primary" href="/">Return home</a>
         <a class="button button-secondary" href="/projects/">Browse projects</a>
       </div>
     </div>
   </section>
+
+  <script>
+    import { initializeRandomDuck } from "../lib/random-duck";
+
+    void initializeRandomDuck(document);
+  </script>
 </BaseLayout>

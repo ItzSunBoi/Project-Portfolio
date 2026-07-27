@@ -33,6 +33,14 @@ describe("hero exploded-render contract", () => {
     );
   });
 
+  it("restores the project title in the original visual-label position", () => {
+    expect(illustration).toContain("Dual Laser Surface Profiler");
+    expect(illustration).toContain('class="hero-visual-title"');
+    expect(styles).toMatch(
+      /\.hero-visual-title\s*\{[^}]*position:\s*absolute;[^}]*z-index:\s*3;[^}]*top:\s*1\.25rem;[^}]*left:\s*1\.4rem;/s,
+    );
+  });
+
   it("removes the superseded build-loop diagram", () => {
     expect(illustration).not.toContain("SYSTEM / BUILD_LOOP");
     expect(illustration).not.toContain("<svg");
