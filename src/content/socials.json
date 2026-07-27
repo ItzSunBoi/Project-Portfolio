@@ -2,13 +2,19 @@
   {
     "id": "github",
     "label": "GitHub",
-    "url": "",
-    "visible": false
+    "url": "https://github.com/ItzSunBoi",
+    "visible": true
   },
   {
-    "id": "linkedin",
-    "label": "LinkedIn",
-    "url": "",
-    "visible": false
+    "id": "tiktok",
+    "label": "TikTok",
+    "url": "https://www.tiktok.com/@sunzheng2010",
+    "visible": true
+  },
+  {
+    "id": "youtube",
+    "label": "YouTube",
+    "url": "https://www.youtube.com/@ItzSunBoi",
+    "visible": true
   }
 ]
