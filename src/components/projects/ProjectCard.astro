@@ -1,5 +1,6 @@
 ---
 import type { Project } from "../../schemas/project";
+import { projectCategoryLabels } from "../../lib/project-taxonomy";
 import BlueprintThumbnail from "./BlueprintThumbnail.astro";
 import StatusBadge from "../common/StatusBadge.astro";
 
@@ -45,7 +46,6 @@ const categories = [project.category, ...project.secondaryCategories];
             <BlueprintThumbnail
               category={project.category}
               secondaryCategories={project.secondaryCategories}
-              title={project.title}
             />
           </div>
         </>
@@ -53,7 +53,6 @@ const categories = [project.category, ...project.secondaryCategories];
         <BlueprintThumbnail
           category={project.category}
           secondaryCategories={project.secondaryCategories}
-          title={project.title}
         />
       )
     }
@@ -64,16 +63,20 @@ const categories = [project.category, ...project.secondaryCategories];
       <StatusBadge status={project.status} />
     </div>
     <div>
-      <p class="project-type">{project.category.replace("-", " / ")}</p>
+      <p class="project-type">{projectCategoryLabels[project.category]}</p>
       <h3>
         <a href={`/projects/${project.slug}/`}>{project.title}</a>
       </h3>
       <p class="project-summary">{project.summary}</p>
     </div>
-    <div class="tag-list" aria-label="Technologies">
+    <div
+      class="tag-list"
+      aria-label="Technologies"
+      hidden={compact ? true : undefined}
+    >
       {
         project.technologies
-          .slice(0, compact ? 3 : 4)
+          .slice(0, 4)
           .map((technology) => <span class="tag">{technology}</span>)
       }
     </div>

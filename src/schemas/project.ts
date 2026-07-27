@@ -78,6 +78,7 @@ const calloutBlockSchema = z
 const specificationTableBlockSchema = z
   .object({
     type: z.literal("specificationTable"),
+    title: z.string().trim().min(1),
     rows: z
       .array(
         z
@@ -94,6 +95,7 @@ const specificationTableBlockSchema = z
 const timelineBlockSchema = z
   .object({
     type: z.literal("timeline"),
+    title: z.string().trim().min(1),
     items: z
       .array(
         z
@@ -190,7 +192,6 @@ export const projectSchema = z
         documentation: z.url().nullable(),
       })
       .strict(),
-    highlights: z.array(z.string().trim().min(1)).default([]),
     content: z.array(projectContentBlockSchema).default([]),
   })
   .strict()

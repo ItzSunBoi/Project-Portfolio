@@ -5,6 +5,7 @@ import ProjectCard from "../../components/projects/ProjectCard.astro";
 import StatusBadge from "../../components/common/StatusBadge.astro";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import { content, getVisibleProjects } from "../../lib/content";
+import { projectCategoryLabels } from "../../lib/project-taxonomy";
 import type { Project } from "../../schemas/project";
 
 export function getStaticPaths() {
@@ -69,22 +70,12 @@ const jsonLd = {
 
       <div class="project-hero-grid">
         <div class="project-hero-copy">
-          <p class="page-kicker">{project.category.replace("-", " / ")}</p>
+          <p class="page-kicker">{projectCategoryLabels[project.category]}</p>
           <h1>{project.title}</h1>
           <p class="project-subtitle">{project.subtitle}</p>
           <div class="project-hero-meta">
             <span class="project-year">{project.year}</span>
-            <span class="project-category-label"
-              >{categories.length} disciplines</span
-            >
             <StatusBadge status={project.status} />
-          </div>
-          <div class="tag-list" style="margin-top: 1.2rem">
-            {
-              project.technologies.map((technology) => (
-                <span class="tag">{technology}</span>
-              ))
-            }
           </div>
         </div>
 
@@ -103,7 +94,6 @@ const jsonLd = {
                   <BlueprintThumbnail
                     category={project.category}
                     secondaryCategories={project.secondaryCategories}
-                    title={project.title}
                   />
                 </div>
               </>
@@ -111,7 +101,6 @@ const jsonLd = {
               <BlueprintThumbnail
                 category={project.category}
                 secondaryCategories={project.secondaryCategories}
-                title={project.title}
               />
             )
           }
@@ -121,31 +110,26 @@ const jsonLd = {
   </header>
 
   <section class="section section-soft">
-    <div class="site-shell project-layout">
+    <div
+      class:list={[
+        "site-shell",
+        "project-layout",
+        externalLinks.length === 0 && "project-layout-single",
+      ]}
+    >
       <ContentBlocks blocks={project.content} />
 
-      <aside class="project-sidebar" aria-label="Project summary">
-        <section class="project-sidebar-card">
-          <h2>Highlights</h2>
-          <ul>
-            {project.highlights.map((highlight) => <li>{highlight}</li>)}
-          </ul>
-        </section>
-        {
-          externalLinks.length > 0 && (
-            <section class="project-sidebar-card">
-              <h2>Project links</h2>
-              <div class="project-sidebar-links" style="margin-top: .85rem">
-                {externalLinks.map(([kind, url]) => (
-                  <a href={url} rel="noreferrer">
-                    {kind.charAt(0).toUpperCase() + kind.slice(1)} ↗
-                  </a>
-                ))}
-              </div>
-            </section>
-          )
-        }
-      </aside>
+      {
+        externalLinks.length > 0 && (
+          <nav class="project-links" aria-label="External project links">
+            {externalLinks.map(([kind, url]) => (
+              <a href={url} rel="noreferrer">
+                {kind.charAt(0).toUpperCase() + kind.slice(1)} ↗
+              </a>
+            ))}
+          </nav>
+        )
+      }
     </div>
   </section>
 
@@ -154,7 +138,6 @@ const jsonLd = {
       <section class="section" aria-labelledby="related-title">
         <div class="site-shell">
           <div class="section-heading">
-            <p class="eyebrow">Continue exploring</p>
             <h2 id="related-title">Related projects</h2>
           </div>
           <div class="related-projects">

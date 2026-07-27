@@ -72,6 +72,7 @@ const { blocks } = Astro.props;
           return (
             <div class="spec-table-wrap">
               <table class="spec-table">
+                <caption>{block.title}</caption>
                 <tbody>
                   {block.rows.map((row) => (
                     <tr>
@@ -85,25 +86,28 @@ const { blocks } = Astro.props;
           );
         case "timeline":
           return (
-            <ol class="content-timeline">
-              {block.items.map((item) => (
-                <li>
-                  <span
-                    class:list={[
-                      "timeline-marker",
-                      item.state && `is-${item.state}`,
-                    ]}
-                  />
-                  <div>
-                    <div class="content-timeline-heading">
-                      <strong>{item.title}</strong>
-                      {item.date && <span>{item.date}</span>}
+            <section class="content-timeline-section">
+              <h2>{block.title}</h2>
+              <ol class="content-timeline">
+                {block.items.map((item) => (
+                  <li>
+                    <span
+                      class:list={[
+                        "timeline-marker",
+                        item.state && `is-${item.state}`,
+                      ]}
+                    />
+                    <div>
+                      <div class="content-timeline-heading">
+                        <strong>{item.title}</strong>
+                        {item.date && <span>{item.date}</span>}
+                      </div>
+                      <p>{item.body}</p>
                     </div>
-                    <p>{item.body}</p>
-                  </div>
-                </li>
-              ))}
-            </ol>
+                  </li>
+                ))}
+              </ol>
+            </section>
           );
         case "linkGroup":
           return (

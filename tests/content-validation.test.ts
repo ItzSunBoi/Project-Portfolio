@@ -79,6 +79,17 @@ describe("portfolio content validation", () => {
     expect(() => validatePortfolioContent(input)).not.toThrow();
   });
 
+  it("rejects the removed highlights field", () => {
+    const input = validInput();
+    Object.assign(input.projects[0], {
+      highlights: ["This would duplicate the detail content"],
+    });
+
+    expect(() => validatePortfolioContent(input)).toThrow(
+      /unrecognized key.*highlights/i,
+    );
+  });
+
   it("rejects legacy profile fields in site metadata", () => {
     const input = validInput();
     Object.assign(input.site, { github: "https://github.com/example" });

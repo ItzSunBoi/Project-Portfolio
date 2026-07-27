@@ -55,6 +55,9 @@ function applyFilters(updateUrl = true) {
     resultCount.textContent = `${visibleCount} project${visibleCount === 1 ? "" : "s"}`;
   }
   if (emptyState) emptyState.hidden = visibleCount !== 0;
+  clearButtons.forEach((button) => {
+    button.hidden = !query && categories.length === 0 && statuses.length === 0;
+  });
 
   if (!updateUrl) return;
 

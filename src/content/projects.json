@@ -19,24 +19,14 @@
       "demo": null,
       "documentation": null
     },
-    "highlights": [
-      "Custom OV9281 camera interface",
-      "Dual laser control",
-      "Compact mixed-signal PCB",
-      "Surface-profile processing"
-    ],
     "content": [
       {
         "type": "paragraph",
-        "body": "I am developing this compact laser-triangulation system as a practical measurement tool for 3D-printing experiments. A monochrome OV9281 sensor observes two controlled laser lines while an ESP32-S3 manages capture, timing and communication."
-      },
-      {
-        "type": "heading",
-        "level": 2,
-        "title": "System outline"
+        "body": "I want printer-side measurements to be based on captured geometry rather than another test line judged by eye. Fitting that measurement into a compact module makes optical alignment, rail sequencing and on-device processing parts of the same design problem."
       },
       {
         "type": "specificationTable",
+        "title": "System architecture",
         "rows": [
           {
             "label": "Controller",
@@ -92,19 +82,14 @@
       "demo": null,
       "documentation": null
     },
-    "highlights": [
-      "16-bit parallel output",
-      "DMA-backed waveform buffers",
-      "Nozzle-data queue",
-      "Timing-focused firmware"
-    ],
     "content": [
       {
         "type": "paragraph",
-        "body": "I am building the inkjet driver to convert queued colour-nozzle data into the precisely timed digital waveforms expected by an HP123 cartridge. I am also replacing an earlier I²S-parallel approach with the ESP32-S3 LCD I80 peripheral."
+        "body": "The difficult part is not storing nozzle data; it is delivering each transition inside the cartridge's timing envelope. I am moving the output path from an earlier I²S-parallel approach to the ESP32-S3 LCD I80 peripheral so the transfer model better matches the hardware."
       },
       {
         "type": "specificationTable",
+        "title": "Data path",
         "rows": [
           {
             "label": "MCU",
@@ -127,8 +112,8 @@
       {
         "type": "callout",
         "style": "info",
-        "title": "Current state",
-        "body": "Bus allocation and transfer validation are active debugging areas; this page deliberately does not present the driver as complete."
+        "title": "Current blocker",
+        "body": "Bus allocation and transfer validation remain the immediate debugging focus."
       }
     ]
   },
@@ -152,19 +137,14 @@
       "demo": null,
       "documentation": null
     },
-    "highlights": [
-      "UV-texture import path",
-      "Colour surface data model",
-      "Layer-raster scaffold",
-      "Full-colour FDM research"
-    ],
     "content": [
       {
         "type": "paragraph",
-        "body": "I am developing ChromaSlicer as an OrcaSlicer fork that carries colour information from textured geometry into the slicing pipeline. The first milestone established UV-aware import and a surface-data representation attached to model volumes."
+        "body": "Colour is only useful if it survives every stage between model import and deposition. I started by giving textured geometry a UV-aware surface representation that can travel with each model volume instead of being discarded before slicing begins."
       },
       {
         "type": "timeline",
+        "title": "Implementation path",
         "items": [
           {
             "title": "Model import",
@@ -205,16 +185,10 @@
       "demo": null,
       "documentation": null
     },
-    "highlights": [
-      "Load-cell measurement",
-      "NFC spool binding",
-      "240 × 240 local display",
-      "Spoolman-oriented workflow"
-    ],
     "content": [
       {
         "type": "paragraph",
-        "body": "I designed the filament scale to work beside a printer without depending on another controller. It combines an HX711 load-cell front end, NFC, a 240 × 240 display, SD-backed transaction logging and an ESP32-S3 web interface."
+        "body": "I want the scale to remain useful when Spoolman or another printer service is unavailable. Weight, spool identity and transaction history therefore live locally first, with network services treated as integrations rather than dependencies."
       },
       {
         "type": "heading",
@@ -224,12 +198,6 @@
       {
         "type": "paragraph",
         "body": "I am shaping the interface around reliable zeroing and calibration, clear recovery from sensor failures, readable long names and a binding flow that does not assume the NFC tag is already known."
-      },
-      {
-        "type": "callout",
-        "style": "info",
-        "title": "Integration status",
-        "body": "Spoolman connectivity, local logging and network-mode behaviour are being developed iteratively."
       }
     ]
   },
@@ -259,19 +227,14 @@
       "demo": null,
       "documentation": null
     },
-    "highlights": [
-      "15 × 11 LED matrix",
-      "Five-button controls",
-      "Motion-aware games",
-      "Keychain-scale PCB"
-    ],
     "content": [
       {
         "type": "paragraph",
-        "body": "I am building Gigaplex around severe display, memory and power constraints. Its 15 × 11 charlieplexed LED matrix is paired with five controls, a six-axis IMU, an ambient-light sensor and a buzzer."
+        "body": "Gigaplex is an exercise in making severe constraints feel intentional. Every menu, animation and control has to earn its pixels, flash and battery current while the hardware still fits a keychain-sized board."
       },
       {
         "type": "specificationTable",
+        "title": "Hardware envelope",
         "rows": [
           {
             "label": "Controller",
@@ -297,7 +260,7 @@
       },
       {
         "type": "paragraph",
-        "body": "My firmware work includes recognisable low-resolution menus, multi-button input, deterministic sand simulation and compact game logic. StarByte is the associated product-brand direction."
+        "body": "My firmware work includes recognisable low-resolution menus, multi-button input, deterministic sand simulation and compact game logic."
       }
     ]
   },
@@ -327,22 +290,16 @@
       "demo": null,
       "documentation": null
     },
-    "highlights": [
-      "Bottom-camera tuning",
-      "Feeder motor selection",
-      "Nozzle and package mapping",
-      "Placement calibration"
-    ],
     "content": [
       {
         "type": "paragraph",
-        "body": "I am improving a LumenPnP-based placement machine as a practical manufacturing tool. The work spans bottom-camera focus and lighting, package-specific vision pipelines, feeder mechanics, nozzle mapping and calibration."
+        "body": "The machine is already capable of moving components; this project is about making pickup, alignment and placement repeatable enough to trust. Mechanical, optical and software changes are evaluated as one placement system."
       },
       {
         "type": "callout",
         "style": "info",
-        "title": "Engineering by feedback loop",
-        "body": "Most changes are validated against actual pickup, alignment and placement behaviour rather than treated as isolated software settings."
+        "title": "Acceptance test",
+        "body": "A change only counts as an improvement when it survives actual pickup, alignment and placement."
       }
     ]
   },
@@ -366,11 +323,6 @@
       "demo": null,
       "documentation": null
     },
-    "highlights": [
-      "CAN fault diagnosis",
-      "Toolhead bootloader work",
-      "Umbilical cable redesign"
-    ],
     "content": [
       {
         "type": "paragraph",
@@ -408,19 +360,14 @@
       "demo": null,
       "documentation": null
     },
-    "highlights": [
-      "3,286 compressed frames",
-      "15 × 11 at 2-bit grayscale",
-      "49,439-byte SBV1 stream",
-      "Deterministic MCU decoder"
-    ],
     "content": [
       {
         "type": "paragraph",
-        "body": "I designed SBV1 to compress 3,286 frames of 15 × 11, 2-bit grayscale animation into 49,439 bytes. That is 36.47% of the raw packed size, leaving room for firmware and a separately arranged buzzer score."
+        "body": "SBV1 is designed around the decoder that must fit on the microcontroller, not around maximum desktop compression. The format favours predictable integer-only commands and bounded memory while still leaving space for firmware and a separately arranged buzzer score."
       },
       {
         "type": "specificationTable",
+        "title": "Compression result",
         "rows": [
           {
             "label": "Frames",
@@ -477,11 +424,6 @@
       "demo": null,
       "documentation": null
     },
-    "highlights": [
-      "Recording-pipeline repair",
-      "Storage lifecycle debugging",
-      "Edge-case capture handling"
-    ],
     "content": [
       {
         "type": "paragraph",
@@ -519,16 +461,10 @@
       "demo": null,
       "documentation": null
     },
-    "highlights": [
-      "Fiducial detection",
-      "Largest-island filtering",
-      "Dark-body component vision",
-      "Tape-feature experiments"
-    ],
     "content": [
       {
         "type": "paragraph",
-        "body": "I use these experiments to tune OpenPnP pipelines for cases that generic thresholding does not solve cleanly: black switch bodies, transparent feeder tape, hole-based fiducials and low-mounted bottom cameras."
+        "body": "A single threshold is rarely reliable across the packages, tape and lighting found on the machine. I use these experiments to build case-specific pipelines whose intermediate images make each decision visible."
       },
       {
         "type": "paragraph",
@@ -556,11 +492,6 @@
       "demo": null,
       "documentation": null
     },
-    "highlights": [
-      "Component selection",
-      "Compact layout",
-      "Assembly-aware design"
-    ],
     "content": [
       {
         "type": "paragraph",
@@ -594,12 +525,6 @@
       "demo": null,
       "documentation": null
     },
-    "highlights": [
-      "Low-resolution menu design",
-      "Tetris and Snake concepts",
-      "Deterministic sand simulation",
-      "Shared input architecture"
-    ],
     "content": [
       {
         "type": "paragraph",

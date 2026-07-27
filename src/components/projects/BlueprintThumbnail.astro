@@ -4,10 +4,9 @@ import type { ProjectCategory } from "../../schemas/project";
 interface Props {
   category: ProjectCategory;
   secondaryCategories?: ProjectCategory[];
-  title: string;
 }
 
-const { category, secondaryCategories = [], title } = Astro.props;
+const { category, secondaryCategories = [] } = Astro.props;
 
 const visualCategory =
   category === "hardware" ||
@@ -37,10 +36,6 @@ const iconKind =
 
 <div class="blueprint-thumbnail" aria-hidden="true">
   <div class="blueprint-grid"></div>
-  <div class="blueprint-header">
-    <span>PROJECT / MODULE</span>
-    <span>{category.replace("-", " / ")}</span>
-  </div>
 
   <div class:list={["blueprint-module", `is-${iconKind}`]}>
     <svg viewBox="0 0 96 96">
@@ -77,10 +72,5 @@ const iconKind =
         )
       }
     </svg>
-  </div>
-
-  <div class="blueprint-title">
-    <span>{title}</span>
-    <i aria-hidden="true"></i>
   </div>
 </div>

@@ -3,27 +3,16 @@ import SectionHeading from "../../components/common/SectionHeading.astro";
 import ProjectCard from "../../components/projects/ProjectCard.astro";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import { getVisibleProjects } from "../../lib/content";
-import { projectCategories, projectStatuses } from "../../lib/project-taxonomy";
+import {
+  projectCategories,
+  projectCategoryLabels,
+  projectStatuses,
+  projectStatusLabels,
+} from "../../lib/project-taxonomy";
 
 const includeDrafts =
   import.meta.env.DEV && import.meta.env.PUBLIC_SHOW_DRAFTS === "true";
 const projects = getVisibleProjects(undefined, includeDrafts);
-const categoryLabels = {
-  hardware: "Hardware",
-  firmware: "Firmware",
-  software: "Software",
-  pcb: "PCB",
-  robotics: "Robotics",
-  "computer-vision": "Computer vision",
-  manufacturing: "Manufacturing",
-  web: "Web",
-  embedded: "Embedded",
-};
-const statusLabels = {
-  completed: "Completed",
-  active: "Active",
-  experimental: "Experimental",
-};
 ---
 
 <BaseLayout
@@ -32,15 +21,12 @@ const statusLabels = {
   canonicalPath="/projects/"
 >
   <header class="site-shell page-header">
-    <div class="page-header-row">
-      <SectionHeading
-        as="h1"
-        eyebrow="Project index"
-        title="Systems, tools and experiments"
-        description="Search by name or technology, then combine categories and status filters."
-      />
-      <p class="page-header-count">{projects.length} public projects</p>
-    </div>
+    <SectionHeading
+      as="h1"
+      eyebrow="Project index"
+      title="Systems, tools and experiments"
+      description="A working archive of machines, embedded systems and software, documented around the problem, decisions and current state."
+    />
   </header>
 
   <section
@@ -65,15 +51,6 @@ const statusLabels = {
             />
           </span>
         </label>
-        <div class="filter-actions">
-          <button
-            class="button button-secondary"
-            type="button"
-            data-clear-filters
-          >
-            Clear filters
-          </button>
-        </div>
       </div>
 
       <div class="filter-groups">
@@ -84,7 +61,7 @@ const statusLabels = {
               projectCategories.map((category) => (
                 <label class="filter-chip">
                   <input type="checkbox" name="category" value={category} />
-                  <span>{categoryLabels[category]}</span>
+                  <span>{projectCategoryLabels[category]}</span>
                 </label>
               ))
             }
@@ -97,7 +74,7 @@ const statusLabels = {
               projectStatuses.map((status) => (
                 <label class="filter-chip">
                   <input type="checkbox" name="status" value={status} />
-                  <span>{statusLabels[status]}</span>
+                  <span>{projectStatusLabels[status]}</span>
                 </label>
               ))
             }
@@ -108,7 +85,7 @@ const statusLabels = {
 
     <div class="results-bar" aria-live="polite">
       <span data-result-count>{projects.length} projects</span>
-      <button class="clear-filters" type="button" data-clear-filters>
+      <button class="clear-filters" type="button" data-clear-filters hidden>
         Reset view
       </button>
     </div>
@@ -121,10 +98,7 @@ const statusLabels = {
       <div>
         <span class="empty-state-icon" aria-hidden="true">∅</span>
         <h2>No matching projects</h2>
-        <p>Try removing a filter or using a broader search term.</p>
-        <button class="button button-primary" type="button" data-clear-filters>
-          Clear filters
-        </button>
+        <p>Broaden the search or reset the active filters above.</p>
       </div>
     </div>
 

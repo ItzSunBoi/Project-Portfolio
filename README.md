@@ -39,15 +39,15 @@ JavaScript limited to interactions that actually need it.
 I keep the public data in `src/content/` so the portfolio can grow without
 duplicating page markup:
 
-| File              | Controls                                                             |
-| ----------------- | -------------------------------------------------------------------- |
-| `projects.json`   | Project cards, detail pages, status, technologies and content blocks |
-| `skills.json`     | Skill groups and toolbox entries                                     |
-| `timeline.json`   | The recurring technical threads connecting projects                  |
-| `navigation.json` | Header and footer navigation                                         |
-| `socials.json`    | External public profile links, never this portfolio itself           |
-| `contact.json`    | Contact-page wording and the configurable public email               |
-| `site.json`       | Portfolio identity, canonical URL, metadata, theme and footer copy   |
+| File              | Controls                                                           |
+| ----------------- | ------------------------------------------------------------------ |
+| `projects.json`   | Project identity, classification, card copy and detail content     |
+| `skills.json`     | Skill groups and toolbox entries                                   |
+| `timeline.json`   | The recurring technical threads connecting projects                |
+| `navigation.json` | Header and footer navigation                                       |
+| `socials.json`    | External public profile links, never this portfolio itself         |
+| `contact.json`    | Contact-page wording and the configurable public email             |
+| `site.json`       | Portfolio identity, canonical URL, metadata, theme and footer copy |
 
 Adding a project means adding one validated object. Astro then creates its card,
 route, metadata, related-project suggestions and fallback artwork. No matching
@@ -59,6 +59,12 @@ canonical address only from `site.json`. Validation rejects duplicate profile
 IDs, duplicate navigation targets, legacy profile fields in `site.json` and any
 attempt to add the portfolio itself as an external profile.
 
+Fields inside each project are also deliberately separated: `summary` supplies
+cards and metadata, `subtitle` labels the detail hero, categories drive
+classification, technologies drive tool tags and search, and `content` owns the
+actual project narrative. There is no second “highlights” list repeating facts
+already stated by the detail content.
+
 Project detail content is assembled from a safe set of typed blocks: paragraphs,
 headings, images, galleries, code, quotes, callouts, specifications, timelines,
 link groups, videos and diagrams. The JSON cannot inject arbitrary HTML.
@@ -67,7 +73,7 @@ link groups, videos and diagrams. The JSON cannot inject arbitrary HTML.
 
 Each project can be `public`, `draft` or `hidden`. Draft and hidden projects do
 not appear in production. Missing images never produce broken cards; the site
-uses a coherent category illustration until I add a real image and accurate alt
+uses a text-free category illustration until I add a real image and accurate alt
 text beneath:
 
 ```text

@@ -1,19 +1,15 @@
 ---
 import type { ProjectStatus } from "../../schemas/project";
+import { projectStatusLabels } from "../../lib/project-taxonomy";
 
 interface Props {
   status: ProjectStatus;
 }
 
 const { status } = Astro.props;
-const labels: Record<ProjectStatus, string> = {
-  active: "Active",
-  completed: "Completed",
-  experimental: "Experimental",
-};
 ---
 
 <span class:list={["status-badge", `status-${status}`]}>
   <span class="status-dot" aria-hidden="true"></span>
-  {labels[status]}
+  {projectStatusLabels[status]}
 </span>
