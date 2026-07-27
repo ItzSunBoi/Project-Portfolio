@@ -11,6 +11,21 @@ function isActive(href: string) {
   if (href === "/") return pathname === "/";
   return pathname.startsWith(href);
 }
+
+function navigationTarget(href: string) {
+  const target = new URL(href, content.site.baseUrl);
+
+  return {
+    pathname: target.pathname,
+    hash: target.hash,
+  };
+}
+
+const navigation = content.navigation.map((item) => ({
+  ...item,
+  ...navigationTarget(item.href),
+  active: isActive(item.href),
+}));
 ---
 
 <header class="site-header" data-site-header>
@@ -29,11 +44,14 @@ function isActive(href: string) {
 
     <nav class="desktop-nav" aria-label="Primary navigation">
       {
-        content.navigation.map((item) => (
+        navigation.map((item) => (
           <a
-            class:list={["nav-link", isActive(item.href) && "is-active"]}
+            class:list={["nav-link", item.active && "is-active"]}
             href={item.href}
-            aria-current={isActive(item.href) ? "page" : undefined}
+            aria-current={item.active ? "page" : undefined}
+            data-nav-link
+            data-nav-pathname={item.pathname}
+            data-nav-hash={item.hash}
           >
             {item.label}
           </a>
@@ -67,14 +85,15 @@ function isActive(href: string) {
         >
           <nav class="site-shell mobile-nav" aria-label="Mobile navigation">
             {
-              content.navigation.map((item, index) => (
+              navigation.map((item, index) => (
                 <a
-                  class:list={[
-                    "mobile-nav-link",
-                    isActive(item.href) && "is-active",
-                  ]}
+                  class:list={["mobile-nav-link", item.active && "is-active"]}
                   href={item.href}
+                  aria-current={item.active ? "page" : undefined}
                   data-mobile-nav-link
+                  data-nav-link
+                  data-nav-pathname={item.pathname}
+                  data-nav-hash={item.hash}
                 >
                   <span class="mobile-nav-index" aria-hidden="true">
                     {String(index + 1).padStart(2, "0")}

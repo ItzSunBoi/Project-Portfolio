@@ -1,6 +1,8 @@
 import { initializeMobileMenu } from "../lib/mobile-menu";
+import { initializeNavigationState } from "../lib/navigation-state";
 
 initializeMobileMenu();
+initializeNavigationState();
 
 const root = document.documentElement;
 const themeButtons = document.querySelectorAll<HTMLButtonElement>(
