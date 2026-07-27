@@ -1,6 +1,7 @@
 [
   {
     "id": "embedded-firmware",
+    "code": "EMB",
     "title": "Embedded & firmware",
     "description": "Low-level systems, compact devices and the protocols connecting them.",
     "skills": [
@@ -10,7 +11,6 @@
       "RP2040",
       "C",
       "C++",
-      "Python",
       "Real-time systems",
       "CAN bus",
       "I²C",
@@ -20,6 +20,7 @@
   },
   {
     "id": "electronics-pcb",
+    "code": "PCB",
     "title": "Electronics & PCB design",
     "description": "Schematics and layouts shaped around electrical, mechanical and assembly constraints.",
     "skills": [
@@ -37,6 +38,7 @@
   },
   {
     "id": "robotics-manufacturing",
+    "code": "MFG",
     "title": "Robotics & manufacturing",
     "description": "Machines, motion systems and vision workflows that make physical things repeatably.",
     "skills": [
@@ -54,6 +56,7 @@
   },
   {
     "id": "software",
+    "code": "SFT",
     "title": "Software",
     "description": "Tools and interfaces that expose, process and automate engineering work.",
     "skills": [

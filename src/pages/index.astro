@@ -53,16 +53,14 @@ const homeJsonLd = {
       <SectionHeading
         eyebrow="Skills & toolbox"
         title="A practical stack for making systems work"
-        description="Grouped by the work they enable—without invented proficiency percentages or a wall of logos."
+        description="Grouped by the work they enable."
       />
       <div class="skills-grid">
         {
-          content.skills.map((group, index) => (
+          content.skills.map((group) => (
             <article class="skill-group">
               <div class="skill-group-heading">
-                <span class="skill-group-number">
-                  {String(index + 1).padStart(2, "0")}
-                </span>
+                <span class="skill-group-number">{group.code}</span>
                 <h3>{group.title}</h3>
                 <p>{group.description}</p>
               </div>
@@ -87,11 +85,9 @@ const homeJsonLd = {
       />
       <div class="exploration-grid">
         {
-          content.timeline.map((item, index) => (
+          content.timeline.map((item) => (
             <article class="exploration-item">
-              <span class="exploration-marker">
-                {String(index + 1).padStart(2, "0")}
-              </span>
+              <span class="exploration-marker">{item.code}</span>
               <div>
                 <h3>{item.title}</h3>
                 <p>{item.description}</p>
@@ -100,7 +96,7 @@ const homeJsonLd = {
                     const project = projectById.get(projectId);
                     return project ? (
                       <a href={`/projects/${project.slug}/`}>
-                        {project.title} ↗
+                        {project.title} →
                       </a>
                     ) : null;
                   })}
@@ -113,33 +109,7 @@ const homeJsonLd = {
     </div>
   </section>
 
-  <section class="section section-soft" aria-labelledby="about-title">
-    <div class="site-shell about-grid">
-      <div class="about-copy">
-        <p class="eyebrow">About the process</p>
-        <h2 id="about-title">Build, learn, test, improve.</h2>
-        <p>
-          I enjoy building practical systems that combine electronics, firmware,
-          mechanics and software. My projects often begin with a problem that
-          existing tools do not solve cleanly, followed by a custom PCB, several
-          firmware revisions, a Python utility and at least one component
-          ordered in the wrong package.
-        </p>
-      </div>
-      <div class="principles-grid">
-        {
-          ["Build", "Learn", "Test", "Improve"].map((principle, index) => (
-            <article class="principle">
-              <span>{String(index + 1).padStart(2, "0")}</span>
-              <h3>{principle}</h3>
-            </article>
-          ))
-        }
-      </div>
-    </div>
-  </section>
-
-  <section class="section">
+  <section class="section section-soft">
     <div class="site-shell cta-band">
       <div>
         <p class="eyebrow">Find a project</p>

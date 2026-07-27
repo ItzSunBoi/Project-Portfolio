@@ -36,6 +36,10 @@ export const navigationItemSchema = z
 export const skillGroupSchema = z
   .object({
     id: z.string().trim().min(1),
+    code: z
+      .string()
+      .trim()
+      .regex(/^[A-Z]{2,4}$/),
     title: z.string().trim().min(1),
     description: z.string().trim().min(1),
     skills: z.array(z.string().trim().min(1)).min(1),
@@ -45,6 +49,10 @@ export const skillGroupSchema = z
 export const timelineItemSchema = z
   .object({
     id: z.string().trim().min(1),
+    code: z
+      .string()
+      .trim()
+      .regex(/^[A-Z]{2,4}$/),
     title: z.string().trim().min(1),
     description: z.string().trim().min(1),
     relatedProjects: z.array(z.string().trim().min(1)),

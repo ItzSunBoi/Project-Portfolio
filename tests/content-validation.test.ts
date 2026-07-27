@@ -33,6 +33,20 @@ describe("portfolio content validation", () => {
     expect(() => validatePortfolioContent(input)).toThrow(/duplicate value/);
   });
 
+  it("rejects repeated project narrative copy", () => {
+    const input = validInput();
+    input.projects[1].summary = input.projects[0].summary;
+
+    expect(() => validatePortfolioContent(input)).toThrow(/projects\.copy/i);
+  });
+
+  it("rejects duplicated skills across groups", () => {
+    const input = validInput();
+    input.skills[1].skills.push(input.skills[0].skills[0]);
+
+    expect(() => validatePortfolioContent(input)).toThrow(/skills\.entries/i);
+  });
+
   it("rejects a featured hidden project", () => {
     const input = validInput();
     input.projects[0].visibility = "hidden";

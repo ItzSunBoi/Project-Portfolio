@@ -28,7 +28,7 @@
     "content": [
       {
         "type": "paragraph",
-        "body": "This project explores compact laser triangulation as a practical measurement tool for 3D-printing experiments. A monochrome OV9281 sensor observes two controlled laser lines while an ESP32-S3 manages capture, timing and communication."
+        "body": "I am developing this compact laser-triangulation system as a practical measurement tool for 3D-printing experiments. A monochrome OV9281 sensor observes two controlled laser lines while an ESP32-S3 manages capture, timing and communication."
       },
       {
         "type": "heading",
@@ -68,7 +68,7 @@
       },
       {
         "type": "paragraph",
-        "body": "The current work centres on PCB layout, sensor interfacing, optical geometry and a processing path that can extract useful profiles without asking the microcontroller to become a workstation."
+        "body": "My current work centres on PCB layout, sensor interfacing, optical geometry and a processing path that can extract useful profiles without asking the microcontroller to become a workstation."
       }
     ]
   },
@@ -101,7 +101,7 @@
     "content": [
       {
         "type": "paragraph",
-        "body": "The inkjet driver converts queued colour-nozzle data into the precisely timed digital waveforms expected by an HP123 cartridge. The current firmware migration replaces an earlier I²S-parallel approach with the ESP32-S3 LCD I80 peripheral."
+        "body": "I am building the inkjet driver to convert queued colour-nozzle data into the precisely timed digital waveforms expected by an HP123 cartridge. I am also replacing an earlier I²S-parallel approach with the ESP32-S3 LCD I80 peripheral."
       },
       {
         "type": "specificationTable",
@@ -161,7 +161,7 @@
     "content": [
       {
         "type": "paragraph",
-        "body": "ChromaSlicer is a working fork of OrcaSlicer aimed at carrying colour information from textured geometry into the slicing pipeline. The first milestone established UV-aware import and a surface-data representation attached to model volumes."
+        "body": "I am developing ChromaSlicer as an OrcaSlicer fork that carries colour information from textured geometry into the slicing pipeline. The first milestone established UV-aware import and a surface-data representation attached to model volumes."
       },
       {
         "type": "timeline",
@@ -214,7 +214,7 @@
     "content": [
       {
         "type": "paragraph",
-        "body": "The filament scale is designed to work beside a printer without depending on another controller. It combines an HX711 load-cell front end, NFC, a 240 × 240 display, SD-backed transaction logging and an ESP32-S3 web interface."
+        "body": "I designed the filament scale to work beside a printer without depending on another controller. It combines an HX711 load-cell front end, NFC, a 240 × 240 display, SD-backed transaction logging and an ESP32-S3 web interface."
       },
       {
         "type": "heading",
@@ -223,7 +223,7 @@
       },
       {
         "type": "paragraph",
-        "body": "The interface is being shaped around reliable zeroing and calibration, clear recovery from sensor failures, readable long names and a binding flow that does not assume the NFC tag is already known."
+        "body": "I am shaping the interface around reliable zeroing and calibration, clear recovery from sensor failures, readable long names and a binding flow that does not assume the NFC tag is already known."
       },
       {
         "type": "callout",
@@ -268,7 +268,7 @@
     "content": [
       {
         "type": "paragraph",
-        "body": "Gigaplex is a compact game system built around severe display, memory and power constraints. Its 15 × 11 charlieplexed LED matrix is paired with five controls, a six-axis IMU, an ambient-light sensor and a buzzer."
+        "body": "I am building Gigaplex around severe display, memory and power constraints. Its 15 × 11 charlieplexed LED matrix is paired with five controls, a six-axis IMU, an ambient-light sensor and a buzzer."
       },
       {
         "type": "specificationTable",
@@ -297,7 +297,7 @@
       },
       {
         "type": "paragraph",
-        "body": "The firmware work includes recognisable low-resolution menus, multi-button input, deterministic sand simulation and compact game logic. StarByte is the associated product-brand direction."
+        "body": "My firmware work includes recognisable low-resolution menus, multi-button input, deterministic sand simulation and compact game logic. StarByte is the associated product-brand direction."
       }
     ]
   },
@@ -336,7 +336,7 @@
     "content": [
       {
         "type": "paragraph",
-        "body": "This work improves a LumenPnP-based placement machine as a real manufacturing tool. It spans bottom-camera focus and lighting, package-specific vision pipelines, feeder mechanics, nozzle mapping and calibration."
+        "body": "I am improving a LumenPnP-based placement machine as a practical manufacturing tool. The work spans bottom-camera focus and lighting, package-specific vision pipelines, feeder mechanics, nozzle mapping and calibration."
       },
       {
         "type": "callout",
@@ -374,11 +374,11 @@
     "content": [
       {
         "type": "paragraph",
-        "body": "The Voron work focuses on making a toolhead CAN installation dependable under continuous motion. It combines firmware and bootloader debugging with a redesign of the physical cable path after repeated conductor failures in the drag chain."
+        "body": "I am making the Voron's toolhead CAN installation dependable under continuous motion. The work combines firmware and bootloader debugging with a redesign of the physical cable path after repeated conductor failures in the drag chain."
       },
       {
         "type": "paragraph",
-        "body": "The revised umbilical approach treats conductor construction, bend radius, strain relief and support-wire behaviour as part of the communication system rather than separate mechanical details."
+        "body": "My revised umbilical approach treats conductor construction, bend radius, strain relief and support-wire behaviour as part of the communication system rather than separate mechanical details."
       }
     ]
   },
@@ -417,7 +417,7 @@
     "content": [
       {
         "type": "paragraph",
-        "body": "The SBV1 format compresses 3,286 frames of 15 × 11, 2-bit grayscale animation into 49,439 bytes. That is 36.47% of the raw packed size, leaving room for firmware and a separately arranged buzzer score."
+        "body": "I designed SBV1 to compress 3,286 frames of 15 × 11, 2-bit grayscale animation into 49,439 bytes. That is 36.47% of the raw packed size, leaving room for firmware and a separately arranged buzzer score."
       },
       {
         "type": "specificationTable",
@@ -485,11 +485,11 @@
     "content": [
       {
         "type": "paragraph",
-        "body": "This extension work began with an intermittent failure: a video could be detected without producing any recorded output or useful error. The recording pipeline was compared with a reliable upstream implementation and reworked around the proven flow."
+        "body": "I began this extension work with an intermittent failure: a video could be detected without producing any recorded output or useful error. I compared the recording pipeline with a reliable upstream implementation and reworked it around the proven flow."
       },
       {
         "type": "paragraph",
-        "body": "Follow-up work addresses deletion that remains stuck in a clearing state, accumulated site storage and the practical limits of long-running captures."
+        "body": "My follow-up work addresses deletion that remains stuck in a clearing state, accumulated site storage and the practical limits of long-running captures."
       }
     ]
   },
@@ -528,11 +528,11 @@
     "content": [
       {
         "type": "paragraph",
-        "body": "These experiments tune OpenPnP pipelines for the difficult cases that generic thresholding does not solve cleanly: black switch bodies, transparent feeder tape, hole-based fiducials and low-mounted bottom cameras."
+        "body": "I use these experiments to tune OpenPnP pipelines for cases that generic thresholding does not solve cleanly: black switch bodies, transparent feeder tape, hole-based fiducials and low-mounted bottom cameras."
       },
       {
         "type": "paragraph",
-        "body": "The emphasis is on predictable intermediate images and parameters that remain understandable at the machine, where a false positive is more expensive than an untidy preview."
+        "body": "I prioritise predictable intermediate images and parameters that remain understandable at the machine, where a false positive is more expensive than an untidy preview."
       }
     ]
   },
@@ -564,7 +564,7 @@
     "content": [
       {
         "type": "paragraph",
-        "body": "This draft will collect cross-project PCB notes once the examples and photographs are ready for public presentation."
+        "body": "I will use this draft to collect cross-project PCB notes once the examples and photographs are ready for public presentation."
       }
     ]
   },
@@ -603,7 +603,7 @@
     "content": [
       {
         "type": "paragraph",
-        "body": "The firmware architecture separates input polling, game state, display scanning and buzzer timing so each can remain small and predictable on the CH32V006."
+        "body": "I split the firmware architecture into input polling, game state, display scanning and buzzer timing so each part can remain small and predictable on the CH32V006."
       },
       {
         "type": "callout",

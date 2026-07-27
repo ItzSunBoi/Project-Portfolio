@@ -3,17 +3,34 @@ import type { ProjectCategory } from "../../schemas/project";
 
 interface Props {
   category: ProjectCategory;
+  secondaryCategories?: ProjectCategory[];
   title: string;
 }
 
-const { category, title } = Astro.props;
+const { category, secondaryCategories = [], title } = Astro.props;
+
+const visualCategory =
+  category === "hardware" ||
+  category === "embedded" ||
+  category === "firmware" ||
+  category === "pcb"
+    ? (secondaryCategories.find((candidate) =>
+        [
+          "computer-vision",
+          "robotics",
+          "manufacturing",
+          "software",
+          "web",
+        ].includes(candidate),
+      ) ?? category)
+    : category;
 
 const iconKind =
-  category === "software" || category === "web"
+  visualCategory === "software" || visualCategory === "web"
     ? "code"
-    : category === "robotics" || category === "manufacturing"
+    : visualCategory === "robotics" || visualCategory === "manufacturing"
       ? "motion"
-      : category === "computer-vision"
+      : visualCategory === "computer-vision"
         ? "vision"
         : "chip";
 ---

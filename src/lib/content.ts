@@ -46,6 +46,28 @@ function findDuplicates(values: string[], label: string) {
   return [...duplicates].map((value) => `${label}: duplicate value "${value}"`);
 }
 
+function projectNarrativeCopy(project: Project) {
+  const copy = [project.subtitle, project.summary];
+
+  for (const block of project.content) {
+    switch (block.type) {
+      case "paragraph":
+      case "quote":
+      case "callout":
+        copy.push(block.body);
+        break;
+      case "timeline":
+        copy.push(...block.items.map((item) => item.body));
+        break;
+      case "diagram":
+        copy.push(block.description);
+        break;
+    }
+  }
+
+  return copy.map((value) => value.trim().toLocaleLowerCase());
+}
+
 export function validatePortfolioContent(input: {
   site: unknown;
   contact: unknown;
@@ -97,6 +119,10 @@ export function validatePortfolioContent(input: {
         projectsResult.data.map((project) => project.slug),
         "projects.slug",
       ),
+      ...findDuplicates(
+        projectsResult.data.flatMap(projectNarrativeCopy),
+        "projects.copy",
+      ),
     );
   }
 
@@ -106,6 +132,16 @@ export function validatePortfolioContent(input: {
         skillsResult.data.map((skill) => skill.id),
         "skills.id",
       ),
+      ...findDuplicates(
+        skillsResult.data.map((skill) => skill.code),
+        "skills.code",
+      ),
+      ...findDuplicates(
+        skillsResult.data.flatMap((group) =>
+          group.skills.map((skill) => skill.toLocaleLowerCase()),
+        ),
+        "skills.entries",
+      ),
     );
   }
 
@@ -114,6 +150,10 @@ export function validatePortfolioContent(input: {
       ...findDuplicates(
         timelineResult.data.map((item) => item.id),
         "timeline.id",
+      ),
+      ...findDuplicates(
+        timelineResult.data.map((item) => item.code),
+        "timeline.code",
       ),
     );
   }

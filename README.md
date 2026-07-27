@@ -86,9 +86,9 @@ Git.
 
 ## Deployment
 
-The production build is a static `dist/` directory suitable for Cloudflare
-Pages. The portfolio's canonical address is configured as
-`www.ItzSunBoi.dev`.
+Run `npm ci` followed by `npm run build`. The verified static output is written
+to `dist/`, ready for Cloudflare Pages or another static host. The portfolio's
+canonical address is configured as `www.ItzSunBoi.dev`.
 
 ## Licence
 

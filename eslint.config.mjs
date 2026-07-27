@@ -4,13 +4,7 @@ import typescriptEslint from "typescript-eslint";
 
 export default [
   {
-    ignores: [
-      ".astro/**",
-      ".sites-runtime/**",
-      ".wrangler/**",
-      "dist/**",
-      "node_modules/**",
-    ],
+    ignores: [".astro/**", ".wrangler/**", "dist/**", "node_modules/**"],
   },
   ...typescriptEslint.configs.recommended,
   ...eslintPluginAstro.configs["flat/recommended"],

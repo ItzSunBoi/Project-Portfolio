@@ -1,7 +1,6 @@
 ---
 import SectionHeading from "../components/common/SectionHeading.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
-import { content } from "../lib/content";
 ---
 
 <BaseLayout
@@ -65,36 +64,6 @@ import { content } from "../lib/content";
   </section>
 
   <section class="section">
-    <div class="site-shell">
-      <SectionHeading
-        eyebrow="Toolbox"
-        title="The tools change; the integration work remains"
-        description="A compact view of the fields that recur across current projects."
-      />
-      <div class="skills-grid">
-        {
-          content.skills.map((group, index) => (
-            <article class="skill-group">
-              <div class="skill-group-heading">
-                <span class="skill-group-number">
-                  {String(index + 1).padStart(2, "0")}
-                </span>
-                <h3>{group.title}</h3>
-                <p>{group.description}</p>
-              </div>
-              <div class="skill-list">
-                {group.skills.map((skill) => (
-                  <span class="skill-pill">{skill}</span>
-                ))}
-              </div>
-            </article>
-          ))
-        }
-      </div>
-    </div>
-  </section>
-
-  <section class="section section-soft">
     <div class="site-shell cta-band">
       <div>
         <p class="eyebrow">Current work</p>

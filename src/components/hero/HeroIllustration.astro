@@ -1,75 +1,43 @@
-<div
+<figure
   class="hero-visual"
-  aria-label="Engineering workflow from sensing to a physical result"
+  role="img"
+  aria-labelledby="exploded-build-title"
+  aria-describedby="exploded-build-description"
 >
-  <div class="visual-label">SYSTEM / BUILD_LOOP</div>
-  <svg viewBox="0 0 660 560" role="img" aria-labelledby="hero-diagram-title">
-    <title id="hero-diagram-title">
-      A three-stage engineering workflow connecting sensing, embedded control
-      and a physical machine
-    </title>
+  <figcaption id="exploded-build-title" class="hero-visual-title">
+    Dual Laser Surface Profiler
+  </figcaption>
 
-    <g class="diagram-grid" aria-hidden="true">
-      <path
-        d="M40 80H620M40 160H620M40 240H620M40 320H620M40 400H620M40 480H620"
-      ></path>
-      <path
-        d="M80 40V520M160 40V520M240 40V520M320 40V520M400 40V520M480 40V520M560 40V520"
-      ></path>
-    </g>
+  <span id="exploded-build-description" class="sr-only">
+    An exploded view of the custom PCB, top case, OV9281 camera sensor, dual
+    line lasers and bottom case.
+  </span>
 
-    <g class="workflow-path" aria-hidden="true">
-      <path d="M194 270h66"></path>
-      <path d="M400 270h66"></path>
-      <path class="workflow-feedback" d="M535 362v53H125v-53"></path>
-      <path d="m247 259 13 11-13 11"></path>
-      <path d="m453 259 13 11-13 11"></path>
-    </g>
-
-    <g class="workflow-card workflow-sense">
-      <rect x="55" y="184" width="140" height="178" rx="22"></rect>
-      <text class="workflow-step" x="78" y="216">01 / SENSE</text>
-      <circle cx="125" cy="270" r="35"></circle>
-      <circle class="workflow-accent" cx="125" cy="270" r="14"></circle>
-      <path d="M86 326h78"></path>
-      <text class="workflow-title" x="125" y="343" text-anchor="middle"
-        >VISION</text
-      >
-    </g>
-
-    <g class="workflow-card workflow-control">
-      <rect x="260" y="158" width="140" height="228" rx="22"></rect>
-      <text class="workflow-step" x="283" y="190">02 / CONTROL</text>
-      <rect class="workflow-chip" x="296" y="220" width="68" height="68" rx="12"
-      ></rect>
-      <path
-        d="M308 211v9M330 211v9M352 211v9M308 288v9M330 288v9M352 288v9M287 232h9M287 254h9M287 276h9M364 232h9M364 254h9M364 276h9"
-      ></path>
-      <circle class="workflow-accent" cx="330" cy="254" r="10"></circle>
-      <path d="M291 326h78"></path>
-      <text class="workflow-title" x="330" y="343" text-anchor="middle"
-        >FIRMWARE</text
-      >
-    </g>
-
-    <g class="workflow-card workflow-build">
-      <rect x="465" y="184" width="140" height="178" rx="22"></rect>
-      <text class="workflow-step" x="488" y="216">03 / BUILD</text>
-      <path d="M495 244h80v42h-80zM511 286h48l-8 24h-32zM535 310v18"></path>
-      <circle class="workflow-accent" cx="535" cy="328" r="6"></circle>
-      <path d="M496 326h78"></path>
-      <text class="workflow-title" x="535" y="343" text-anchor="middle"
-        >MACHINE</text
-      >
-    </g>
-
-    <g class="workflow-loop-label">
-      <rect x="253" y="400" width="154" height="31" rx="15"></rect>
-      <text x="330" y="420" text-anchor="middle">MEASURE / REPEAT</text>
-    </g>
-  </svg>
-  <div class="visual-readout">
-    <span><i></i> System loop active</span>
-    <span>03 stages · 01 goal</span>
-  </div>
-</div>
+  <img
+    class="exploded-layer exploded-base"
+    src="/images/hero/exploded-base.png"
+    width="2048"
+    height="2048"
+    alt=""
+    aria-hidden="true"
+    fetchpriority="high"
+  />
+  <img
+    class="exploded-layer exploded-labels exploded-labels-light"
+    src="/images/hero/exploded-text-black.png"
+    width="2048"
+    height="2048"
+    alt=""
+    aria-hidden="true"
+    fetchpriority="high"
+  />
+  <img
+    class="exploded-layer exploded-labels exploded-labels-dark"
+    src="/images/hero/exploded-text-white.png"
+    width="2048"
+    height="2048"
+    alt=""
+    aria-hidden="true"
+    fetchpriority="high"
+  />
+</figure>

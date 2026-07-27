@@ -1,13 +1,13 @@
 {
   "name": "itzsunboi-portfolio",
-  "version": "1.1.2",
+  "version": "1.2.1",
   "private": true,
   "description": "My modular hardware, firmware and software project portfolio.",
   "engines": {
     "node": ">=22.13.0"
   },
   "scripts": {
-    "install:ci": "bash scripts/install-ci.sh",
+    "install:ci": "npm ci",
     "dev": "astro dev",
     "build": "bash scripts/build-verified.sh",
     "build:astro": "astro build",

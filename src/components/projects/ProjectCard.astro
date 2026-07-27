@@ -44,12 +44,17 @@ const categories = [project.category, ...project.secondaryCategories];
           <div data-project-image-fallback hidden>
             <BlueprintThumbnail
               category={project.category}
+              secondaryCategories={project.secondaryCategories}
               title={project.title}
             />
           </div>
         </>
       ) : (
-        <BlueprintThumbnail category={project.category} title={project.title} />
+        <BlueprintThumbnail
+          category={project.category}
+          secondaryCategories={project.secondaryCategories}
+          title={project.title}
+        />
       )
     }
   </a>
@@ -73,7 +78,7 @@ const categories = [project.category, ...project.secondaryCategories];
       }
     </div>
     <a class="project-card-link" href={`/projects/${project.slug}/`}>
-      View project <span aria-hidden="true">↗</span>
+      View project <span aria-hidden="true">→</span>
     </a>
   </div>
 </article>

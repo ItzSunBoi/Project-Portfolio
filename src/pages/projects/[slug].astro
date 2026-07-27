@@ -72,7 +72,6 @@ const jsonLd = {
           <p class="page-kicker">{project.category.replace("-", " / ")}</p>
           <h1>{project.title}</h1>
           <p class="project-subtitle">{project.subtitle}</p>
-          <p class="project-hero-summary">{project.summary}</p>
           <div class="project-hero-meta">
             <span class="project-year">{project.year}</span>
             <span class="project-category-label"
@@ -103,6 +102,7 @@ const jsonLd = {
                 <div data-project-image-fallback hidden>
                   <BlueprintThumbnail
                     category={project.category}
+                    secondaryCategories={project.secondaryCategories}
                     title={project.title}
                   />
                 </div>
@@ -110,6 +110,7 @@ const jsonLd = {
             ) : (
               <BlueprintThumbnail
                 category={project.category}
+                secondaryCategories={project.secondaryCategories}
                 title={project.title}
               />
             )
@@ -130,24 +131,20 @@ const jsonLd = {
             {project.highlights.map((highlight) => <li>{highlight}</li>)}
           </ul>
         </section>
-        <section class="project-sidebar-card">
-          <h2>Project links</h2>
-          <div class="project-sidebar-links" style="margin-top: .85rem">
-            {
-              externalLinks.length ? (
-                externalLinks.map(([kind, url]) => (
+        {
+          externalLinks.length > 0 && (
+            <section class="project-sidebar-card">
+              <h2>Project links</h2>
+              <div class="project-sidebar-links" style="margin-top: .85rem">
+                {externalLinks.map(([kind, url]) => (
                   <a href={url} rel="noreferrer">
                     {kind.charAt(0).toUpperCase() + kind.slice(1)} ↗
                   </a>
-                ))
-              ) : (
-                <p style="margin: 0; color: var(--text-secondary); font-size: .82rem">
-                  Public links are not configured yet.
-                </p>
-              )
-            }
-          </div>
-        </section>
+                ))}
+              </div>
+            </section>
+          )
+        }
       </aside>
     </div>
   </section>
