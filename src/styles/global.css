@@ -1052,6 +1052,13 @@ a {
   max-width: 760px;
 }
 
+.about-heading {
+  margin: 0.55rem 0 0;
+  font-size: clamp(2rem, 4vw, 3.65rem);
+  line-height: 1.08;
+  letter-spacing: -0.045em;
+}
+
 .about-copy > p:not(.eyebrow) {
   margin: 1.2rem 0 0;
   color: var(--text-secondary);
