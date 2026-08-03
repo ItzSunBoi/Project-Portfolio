@@ -5,6 +5,7 @@ import {
   getVisibleProjects,
   validatePortfolioContent,
 } from "../src/lib/content";
+import type { ProjectContentBlock } from "../src/schemas/project";
 
 function validInput() {
   return {
@@ -77,6 +78,35 @@ describe("portfolio content validation", () => {
     };
 
     expect(() => validatePortfolioContent(input)).not.toThrow();
+  });
+
+  it("accepts described photo placeholders and rejects an empty shot brief", () => {
+    const input = validInput();
+    const photoPlan: ProjectContentBlock = {
+      type: "photoPlan",
+      title: "Test photography",
+      items: [
+        {
+          title: "Controller detail",
+          description:
+            "Photograph the controller at a shallow angle so the connector labels remain legible.",
+          kind: "detail",
+        },
+      ],
+    };
+    input.projects[0].content.push(structuredClone(photoPlan));
+
+    expect(() => validatePortfolioContent(input)).not.toThrow();
+
+    const invalidPhotoPlan = structuredClone(photoPlan);
+    if (invalidPhotoPlan.type !== "photoPlan") {
+      throw new Error("Expected a photo-plan test fixture");
+    }
+    invalidPhotoPlan.items[0].description = "";
+    input.projects[0].content.push(invalidPhotoPlan);
+    expect(() => validatePortfolioContent(input)).toThrow(
+      /description.*too small/i,
+    );
   });
 
   it("accepts finite and ongoing project year ranges", () => {

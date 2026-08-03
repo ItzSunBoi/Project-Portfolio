@@ -78,7 +78,8 @@ already stated by the detail content.
 
 Project detail content is assembled from a safe set of typed blocks: paragraphs,
 headings, images, galleries, code, quotes, callouts, specifications, timelines,
-link groups, videos and diagrams. The JSON cannot inject arbitrary HTML.
+link groups, videos, diagrams and described photo plans. The JSON cannot inject
+arbitrary HTML.
 
 ## Project visibility and media
 
@@ -90,6 +91,11 @@ text beneath:
 ```text
 public/images/projects/<project-slug>/
 ```
+
+Until that media exists, project pages render the validated `photoPlan` entries
+as shoot briefs. Each slot says what evidence to capture and which export class
+to use, so an absent photograph remains an explicit documentation task rather
+than an invented asset path.
 
 ## Privacy choices
 

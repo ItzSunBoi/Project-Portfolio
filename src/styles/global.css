@@ -1409,6 +1409,101 @@ a {
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
+.content-photo-plan {
+  margin: 2.6rem 0;
+}
+
+.content-photo-plan > h3 {
+  margin: 0 0 1rem;
+}
+
+.photo-plan-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.photo-plan-item {
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 1rem;
+  background: var(--surface);
+}
+
+.photo-placeholder-frame {
+  position: relative;
+  display: grid;
+  overflow: hidden;
+  aspect-ratio: 3 / 2;
+  place-items: center;
+  border-bottom: 1px solid var(--border);
+  background:
+    linear-gradient(
+      135deg,
+      transparent calc(50% - 0.5px),
+      var(--border) 50%,
+      transparent calc(50% + 0.5px)
+    ),
+    linear-gradient(
+      45deg,
+      transparent calc(50% - 0.5px),
+      var(--border) 50%,
+      transparent calc(50% + 0.5px)
+    ),
+    var(--secondary-bg);
+}
+
+.photo-kind-portrait .photo-placeholder-frame {
+  aspect-ratio: 4 / 5;
+}
+
+.photo-kind-screenshot .photo-placeholder-frame {
+  aspect-ratio: 16 / 10;
+}
+
+.photo-kind-diagram .photo-placeholder-frame {
+  aspect-ratio: 16 / 9;
+}
+
+.photo-placeholder-frame span {
+  position: relative;
+  z-index: 1;
+  border: 1px solid var(--border-strong);
+  border-radius: 999px;
+  background: var(--surface);
+  padding: 0.35rem 0.6rem;
+  color: var(--text-secondary);
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.photo-plan-copy {
+  padding: 1rem;
+}
+
+.photo-plan-copy strong {
+  display: block;
+  font-size: 0.95rem;
+}
+
+.photo-plan-copy p {
+  margin: 0.45rem 0 0;
+  color: var(--text-secondary);
+  font-size: 0.84rem;
+  line-height: 1.6;
+}
+
+.photo-plan-copy small {
+  display: block;
+  margin-top: 0.8rem;
+  color: var(--primary-strong);
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+}
+
 .project-content pre {
   overflow-x: auto;
   border: 1px solid var(--border);
@@ -2083,6 +2178,10 @@ a {
   }
 
   .content-gallery {
+    grid-template-columns: 1fr;
+  }
+
+  .photo-plan-grid {
     grid-template-columns: 1fr;
   }
 

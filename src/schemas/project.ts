@@ -150,6 +150,30 @@ const diagramBlockSchema = z
   })
   .strict();
 
+const photoPlanBlockSchema = z
+  .object({
+    type: z.literal("photoPlan"),
+    title: z.string().trim().min(1),
+    items: z
+      .array(
+        z
+          .object({
+            title: z.string().trim().min(1),
+            description: z.string().trim().min(1),
+            kind: z.enum([
+              "cover",
+              "detail",
+              "portrait",
+              "screenshot",
+              "diagram",
+            ]),
+          })
+          .strict(),
+      )
+      .min(1),
+  })
+  .strict();
+
 export const projectContentBlockSchema = z.discriminatedUnion("type", [
   paragraphBlockSchema,
   headingBlockSchema,
@@ -163,6 +187,7 @@ export const projectContentBlockSchema = z.discriminatedUnion("type", [
   linkGroupBlockSchema,
   videoBlockSchema,
   diagramBlockSchema,
+  photoPlanBlockSchema,
 ]);
 
 export const projectSchema = z

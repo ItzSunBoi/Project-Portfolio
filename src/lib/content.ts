@@ -62,6 +62,9 @@ function projectNarrativeCopy(project: Project) {
       case "diagram":
         copy.push(block.description);
         break;
+      case "photoPlan":
+        copy.push(...block.items.map((item) => item.description));
+        break;
     }
   }
 

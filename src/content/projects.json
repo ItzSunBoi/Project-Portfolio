@@ -28,8 +28,84 @@
     },
     "content": [
       {
+        "type": "heading",
+        "level": 2,
+        "title": "Why I built it"
+      },
+      {
         "type": "paragraph",
         "body": "I designed the instrument as a small printer-side measurement system rather than a general-purpose camera. The monochrome sensor observes both laser traces, while the local processing path reduces the captured strip into geometry useful to the printer."
+      },
+      {
+        "type": "paragraph",
+        "body": "The practical requirement was not simply to see a laser line. I needed a compact head that could acquire two lines, reduce the image locally and return useful surface data without sending a full camera stream through the printer."
+      },
+      {
+        "type": "paragraph",
+        "body": "I treated the camera, illumination, processing and communication as one instrument. That forced the optical geometry and the PCB outline to develop together: moving a laser or connector by a few millimetres could solve one routing problem while creating an alignment problem elsewhere."
+      },
+      {
+        "type": "photoPlan",
+        "title": "Opening views to capture",
+        "items": [
+          {
+            "title": "Assembled optical head",
+            "description": "Take the cover photograph at a three-quarter angle with the camera, both laser apertures and the PCB enclosure visible in one clean view.",
+            "kind": "cover"
+          },
+          {
+            "title": "Printer-side scale",
+            "description": "Photograph the module beside the intended print-head or carriage area so its true size and mounting constraints are immediately understandable.",
+            "kind": "portrait"
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "level": 2,
+        "title": "Build diary"
+      },
+      {
+        "type": "timeline",
+        "title": "From optical requirement to first assembled boards",
+        "items": [
+          {
+            "title": "Define the measurement strip",
+            "body": "I narrowed the task to a strip of the OV9281 image containing two projected lines, which kept the processing target tied to surface profiling rather than general vision.",
+            "date": "Step 1",
+            "state": "complete"
+          },
+          {
+            "title": "Map the exposed camera interface",
+            "body": "I traced the 24-pin FFC signals, retained the ten parallel data bits and allocated the clock, control and sensor power connections around the ESP32-S3.",
+            "date": "Step 2",
+            "state": "complete"
+          },
+          {
+            "title": "Separate sensor and laser power",
+            "body": "I designed the 5 V input around switchable camera rails and independent laser control so bring-up could isolate one subsystem at a time.",
+            "date": "Step 3",
+            "state": "complete"
+          },
+          {
+            "title": "Route the compact controller",
+            "body": "The camera bus, CAN interface, power stages and two laser channels were fitted into the mechanical envelope established by the optical assembly.",
+            "date": "Step 4",
+            "state": "complete"
+          },
+          {
+            "title": "Assemble and inspect the PCBs",
+            "body": "The current work is board assembly followed by rail checks, camera communication and laser-driver tests before the optics are energised together.",
+            "date": "Current",
+            "state": "active"
+          },
+          {
+            "title": "Calibrate the two-line geometry",
+            "body": "After electrical bring-up I will align both lines, record known-height targets and derive the conversion from image position to measured profile.",
+            "date": "Next",
+            "state": "planned"
+          }
+        ]
       },
       {
         "type": "specificationTable",
@@ -62,10 +138,92 @@
         "body": "The PCB combines camera power sequencing, the parallel image interface, laser control and the CAN transceiver within the mechanical limits of the optical assembly."
       },
       {
+        "type": "heading",
+        "level": 2,
+        "title": "Problems, decisions and small fixes"
+      },
+      {
+        "type": "paragraph",
+        "body": "The sensor interface created the densest part of the board. Ten data lines plus timing, configuration and power sequencing had to stay readable enough to debug, so I kept test access and rail enables even when a smaller schematic would have looked tidier."
+      },
+      {
+        "type": "paragraph",
+        "body": "The camera I/O voltage also needed deliberate treatment. I checked the exposed module connections instead of assuming that every OV9281 board used the same rail arrangement, then designed the power domains around the actual FFC rather than a generic sensor diagram."
+      },
+      {
+        "type": "paragraph",
+        "body": "Optical alignment remains the main unknown. The electronics can prove that a frame arrived and a laser switched, but only a calibration target can show whether the two views produce consistent geometry across the required working distance."
+      },
+      {
+        "type": "photoPlan",
+        "title": "Components and process to document",
+        "items": [
+          {
+            "title": "Controller PCB front",
+            "description": "Use a macro view square to the board, with the ESP32-S3, camera connector, CAN section and laser outputs all in focus and their silkscreen labels readable.",
+            "kind": "detail"
+          },
+          {
+            "title": "Power and routing side",
+            "description": "Photograph the reverse side under diffuse light to show the compact routing, camera-rail circuitry and any assembly corrections without glare hiding the traces.",
+            "kind": "detail"
+          },
+          {
+            "title": "OV9281 and FFC seating",
+            "description": "Capture the camera module connected to the 24-pin FFC, concentrating on connector orientation, strain relief and the relationship between sensor and PCB.",
+            "kind": "detail"
+          },
+          {
+            "title": "Dual-laser geometry",
+            "description": "Photograph the two laser modules and camera from the target's point of view so the baseline and opposing projection angles can be understood visually.",
+            "kind": "detail"
+          },
+          {
+            "title": "Power and CAN connection",
+            "description": "Show the four-wire 5 V, ground, CAN-H and CAN-L interface at the board edge, including the cable exit and the available mounting clearance.",
+            "kind": "detail"
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "level": 2,
+        "title": "Result and present state"
+      },
+      {
         "type": "callout",
         "style": "info",
         "title": "Current state",
         "body": "The design is complete and I am assembling the PCBs before optical alignment and end-to-end profiling tests."
+      },
+      {
+        "type": "paragraph",
+        "body": "A successful first bring-up will be deliberately staged: verify every rail, confirm sensor configuration, capture an unlit frame, switch each laser separately, then test both together. That sequence makes a wrong image distinguishable from a wrong power rail."
+      },
+      {
+        "type": "paragraph",
+        "body": "The project is not complete when two red lines appear. The useful milestone is a repeatable surface profile over CAN with enough diagnostic output to explain a bad reading rather than silently returning polished nonsense."
+      },
+      {
+        "type": "photoPlan",
+        "title": "Testing and outcome to document",
+        "items": [
+          {
+            "title": "Two lines on a calibration target",
+            "description": "Photograph a flat stepped or ruled target with both laser traces visible, keeping the camera head and projected lines in the same contextual frame.",
+            "kind": "detail"
+          },
+          {
+            "title": "Raw sensor strip",
+            "description": "Save a native screenshot of the acquired monochrome strip with both line peaks visible and annotate the crop used by the profile extraction.",
+            "kind": "screenshot"
+          },
+          {
+            "title": "Derived surface profile",
+            "description": "Export the measured height plot for a known target with axes, units and the two-line agreement visible rather than presenting an unlabelled curve.",
+            "kind": "diagram"
+          }
+        ]
       }
     ]
   },
@@ -98,8 +256,78 @@
     },
     "content": [
       {
+        "type": "heading",
+        "level": 2,
+        "title": "Why I built it"
+      },
+      {
         "type": "paragraph",
         "body": "I reduced the interface to hardware that remains understandable at very low resolution: 165 LEDs, directional controls, one confirmation button and physical motion. The result is small enough to live on a keychain without turning every game into the same blinking square."
+      },
+      {
+        "type": "paragraph",
+        "body": "The design started with a severe interface budget: a 15 × 11 display, five buttons, a buzzer and motion sensing, all in roughly 35 mm square and powered from a coin cell. Every menu and game mechanic therefore had to earn its pixels and its current draw."
+      },
+      {
+        "type": "paragraph",
+        "body": "The matrix is charlieplexed rather than driven by a large display IC. That saves board area, but it moves complexity into scanning, brightness control and pin-state safety; one careless output state can light the wrong path through several LEDs."
+      },
+      {
+        "type": "photoPlan",
+        "title": "Opening views to capture",
+        "items": [
+          {
+            "title": "Finished console in hand",
+            "description": "Use the cover image to show the complete keychain console in a hand with a recognisable face or game sprite lit on the 15 × 11 matrix.",
+            "kind": "cover"
+          },
+          {
+            "title": "Keychain proportions",
+            "description": "Photograph the console hanging from its keychain beside a CR2032 cell so the thickness and genuinely pocket-sized scale are clear.",
+            "kind": "portrait"
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "level": 2,
+        "title": "Build diary"
+      },
+      {
+        "type": "timeline",
+        "title": "Fitting a console into 165 pixels",
+        "items": [
+          {
+            "title": "Fix the physical pixel budget",
+            "body": "I committed to the 15 × 11 matrix and 2 mm LED pitch first, then designed icons and game screens at that exact resolution instead of shrinking desktop artwork afterwards.",
+            "date": "Step 1",
+            "state": "complete"
+          },
+          {
+            "title": "Allocate the charlieplex network",
+            "body": "Fourteen matrix lines were arranged to address the LEDs while leaving enough MCU pins for five independent buttons, the buzzer, IMU and light sensing.",
+            "date": "Step 2",
+            "state": "complete"
+          },
+          {
+            "title": "Choose interactions that survive low resolution",
+            "body": "Directional buttons handle exact input, while tilt, shake and rotation give the IMU a reason to exist in games such as the sand simulation and dice mode.",
+            "date": "Step 3",
+            "state": "complete"
+          },
+          {
+            "title": "Plan deterministic firmware",
+            "body": "Display scanning, button polling, game updates and buzzer timing were separated so a slow game routine cannot leave the matrix flickering or a note stuck on.",
+            "date": "Step 4",
+            "state": "complete"
+          },
+          {
+            "title": "Assemble the first boards",
+            "body": "The PCB and mechanical design are complete. Assembly now has to confirm LED orientation, matrix isolation and acceptable peak current from the CR2032.",
+            "date": "Current",
+            "state": "active"
+          }
+        ]
       },
       {
         "type": "specificationTable",
@@ -136,10 +364,87 @@
         "body": "The firmware architecture separates matrix scanning, input polling, game state and buzzer timing so the tiny MCU can keep the display stable while games and IMU-driven effects run."
       },
       {
+        "type": "heading",
+        "level": 2,
+        "title": "Problems, decisions and small fixes"
+      },
+      {
+        "type": "paragraph",
+        "body": "The menu was harder than the games. At this resolution two icons that look distinct on a monitor can merge after the real LED pitch, diffusion and viewing distance are considered, so I repeatedly simplified silhouettes and increased empty space."
+      },
+      {
+        "type": "paragraph",
+        "body": "Memory is another design constraint rather than a late optimisation. Frame data, games and audio must share a small MCU, which is why the video experiments use compact row and delta commands and a deterministic integer-only decoder."
+      },
+      {
+        "type": "paragraph",
+        "body": "The coin cell cannot be treated like a bench supply. The scan pattern and brightness levels need to limit instantaneous load while still making a partially lit frame look stable, especially when the buzzer or IMU is active at the same time."
+      },
+      {
+        "type": "photoPlan",
+        "title": "Components and process to document",
+        "items": [
+          {
+            "title": "LED face before enclosure",
+            "description": "Photograph the bare front PCB straight on with all 165 LEDs visible so the matrix spacing, button openings and keychain cut-out can be inspected.",
+            "kind": "detail"
+          },
+          {
+            "title": "Controller and battery side",
+            "description": "Capture the rear PCB with the CH32V006, CR2032 holder, programming points and supporting components labelled by the board silkscreen.",
+            "kind": "detail"
+          },
+          {
+            "title": "Five-button layout",
+            "description": "Take a close angled view showing the four directions and confirmation button, including how far each cap stands above the board.",
+            "kind": "detail"
+          },
+          {
+            "title": "IMU and buzzer hardware",
+            "description": "Use a macro photograph to show the motion sensor and piezo buzzer in relation to the board edge and available enclosure height.",
+            "kind": "detail"
+          },
+          {
+            "title": "Matrix scan evidence",
+            "description": "Capture an oscilloscope or logic-analyser view of several charlieplex scan lines with timing labels and a note identifying the displayed test pattern.",
+            "kind": "screenshot"
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "level": 2,
+        "title": "Result and present state"
+      },
+      {
         "type": "callout",
         "style": "info",
         "title": "Current state",
         "body": "The electrical and mechanical design is finished, and I am now assembling the first PCBs."
+      },
+      {
+        "type": "paragraph",
+        "body": "The first assembly milestone is a matrix test that visits every LED individually and checks for shorts, reversed parts and ghost paths. Only after that will the buttons, motion input and sound be layered into the same timing loop."
+      },
+      {
+        "type": "paragraph",
+        "body": "The console is intended to feel deliberately tiny rather than compromised. A successful game should read in a glance, respond immediately and make the player forget that the entire screen contains fewer pixels than one modern desktop icon."
+      },
+      {
+        "type": "photoPlan",
+        "title": "Testing and outcome to document",
+        "items": [
+          {
+            "title": "Recognisable game frame",
+            "description": "Photograph one finished game in progress with the player's fingers on the controls, choosing a frame that remains understandable without a caption.",
+            "kind": "detail"
+          },
+          {
+            "title": "Motion-driven sand simulation",
+            "description": "Record the console tilted in front of a simple background while the illuminated particles collect along the new gravity direction.",
+            "kind": "detail"
+          }
+        ]
       }
     ]
   },
@@ -172,8 +477,78 @@
     },
     "content": [
       {
+        "type": "heading",
+        "level": 2,
+        "title": "Why I built it"
+      },
+      {
         "type": "paragraph",
         "body": "A brief contact from the vibration switch charges the timing capacitor and starts the roll. The 555 initially clocks the state circuit quickly, then the rate falls with the capacitor voltage until one of the six LED patterns remains visible."
+      },
+      {
+        "type": "paragraph",
+        "body": "I wanted the behaviour to be visible in the circuit itself. A vibration does not wake firmware or request a random number; it injects energy into an analogue timing network, and the falling clock rate is both the animation and the stopping mechanism."
+      },
+      {
+        "type": "paragraph",
+        "body": "The six die faces are encoded as hardware states. While the oscillator is fast they blur into a roll, then the slowing clock makes the sequence readable before it settles on the state present at the final transition."
+      },
+      {
+        "type": "photoPlan",
+        "title": "Opening views to capture",
+        "items": [
+          {
+            "title": "Final illuminated die",
+            "description": "Take the cover photograph in a dim but not black setting with the complete board visible and one stable pip pattern illuminated clearly.",
+            "kind": "cover"
+          },
+          {
+            "title": "Die face straight on",
+            "description": "Photograph the finished LED layout perpendicular to the board so the pip geometry and correspondence to a physical die are immediately readable.",
+            "kind": "detail"
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "level": 2,
+        "title": "Build diary"
+      },
+      {
+        "type": "timeline",
+        "title": "From a vibration pulse to one held face",
+        "items": [
+          {
+            "title": "Store the trigger energy",
+            "body": "A momentary contact from the vibration switch charges a capacitor, turning a brief mechanical shock into a timing event long enough to run the roll.",
+            "date": "Stage 1",
+            "state": "complete"
+          },
+          {
+            "title": "Generate a decaying clock",
+            "body": "The 555 timer starts at a rapid rate and slows as the stored voltage changes, producing the visible deceleration without any programmed delay table.",
+            "date": "Stage 2",
+            "state": "complete"
+          },
+          {
+            "title": "Cycle six display states",
+            "body": "The clock advances the state circuit through the six valid pip patterns rather than allowing electrically convenient but invalid LED combinations.",
+            "date": "Stage 3",
+            "state": "complete"
+          },
+          {
+            "title": "Hold the last transition",
+            "body": "When the oscillator stops, the state remains latched so the die shows a stable result until another vibration starts the cycle.",
+            "date": "Stage 4",
+            "state": "complete"
+          },
+          {
+            "title": "Move assembly onto the LumenPnP",
+            "body": "After the sensor revision worked, I prepared the board for repeatable pick-and-place assembly while retaining the manually formed vibration switch.",
+            "date": "Stage 5",
+            "state": "complete"
+          }
+        ]
       },
       {
         "type": "timeline",
@@ -194,10 +569,82 @@
         ]
       },
       {
+        "type": "heading",
+        "level": 2,
+        "title": "Problems, decisions and small fixes"
+      },
+      {
+        "type": "paragraph",
+        "body": "The first failure came from trusting a part description too quickly. The HX 0805-C2 behaved as a tilt sensor that needed active interpretation, not the passive contact closure required by the analogue trigger circuit."
+      },
+      {
+        "type": "paragraph",
+        "body": "The replacement SW-58010PZD-7N11S1 had the right spring-contact behaviour but the wrong mechanical format. I bent and trimmed its through-hole leads so the cylindrical body could sit flat and behave like a surface-mounted part."
+      },
+      {
+        "type": "paragraph",
+        "body": "The stopping action needed tuning as well as randomness. If the clock falls too quickly there is barely an animation; if it falls too slowly the result feels predetermined by a long, repetitive sequence. The capacitor and timing resistance set that character directly."
+      },
+      {
+        "type": "photoPlan",
+        "title": "Components and process to document",
+        "items": [
+          {
+            "title": "555 and state circuitry",
+            "description": "Use a board-level macro photograph that keeps the timer, shift-register section and timing capacitor in one plane of focus.",
+            "kind": "detail"
+          },
+          {
+            "title": "Formed vibration switch",
+            "description": "Photograph the cylindrical SW-58010PZD-7N11S1 from the side to show how its through-hole leads were bent into flat surface-mount contacts.",
+            "kind": "detail"
+          },
+          {
+            "title": "Rejected and final sensors",
+            "description": "Place the HX 0805-C2 beside the replacement vibration switch with labels and a scale, making the mechanical difference between both revisions obvious.",
+            "kind": "detail"
+          },
+          {
+            "title": "Signal-flow schematic",
+            "description": "Export a simplified diagram from trigger contact through timing capacitor, 555 clock, state circuit and LED faces using arrows and readable net names.",
+            "kind": "diagram"
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "level": 2,
+        "title": "Result and present state"
+      },
+      {
         "type": "callout",
         "style": "success",
         "title": "Manufacturing result",
         "body": "The final circuit works and is assembled on my LumenPnP machine."
+      },
+      {
+        "type": "paragraph",
+        "body": "The finished circuit now reacts to a shake, visibly decelerates and holds one of six valid faces without software. The interesting part is not that a 555 can blink LEDs; it is that the energy from the user's movement shapes the whole interaction."
+      },
+      {
+        "type": "paragraph",
+        "body": "Because the standard components can be placed by machine, the only unusual production step is forming and soldering the vibration switch. That makes the final revision practical to reproduce rather than a one-off breadboard demonstration."
+      },
+      {
+        "type": "photoPlan",
+        "title": "Testing and outcome to document",
+        "items": [
+          {
+            "title": "Deceleration sequence",
+            "description": "Make a composite of several frames from one roll, arranged from fast cycling to the final held face with equal time spacing noted underneath.",
+            "kind": "diagram"
+          },
+          {
+            "title": "LumenPnP assembly",
+            "description": "Photograph the board on the pick-and-place bed during assembly with feeders and fiducials visible, but keep the dice PCB as the clear subject.",
+            "kind": "detail"
+          }
+        ]
       }
     ]
   },
@@ -230,8 +677,78 @@
     },
     "content": [
       {
+        "type": "heading",
+        "level": 2,
+        "title": "Why I built it"
+      },
+      {
         "type": "paragraph",
         "body": "The open-source feeder family originally left the wider sizes with a different assembly burden. I adapted their mechanics so all four widths can share the proven smaller-feeder electronics and as much common hardware as practical."
+      },
+      {
+        "type": "paragraph",
+        "body": "The wider 16 mm and 24 mm feeders were not merely scaled versions of the smaller units. Their separate architecture increased the number of hardware variants I would need to source, assemble and maintain."
+      },
+      {
+        "type": "paragraph",
+        "body": "My redesign keeps the open-source feeder's drive and peel functions but adapts the wider mechanics around the electronics and common parts already used by the 8 mm and 12 mm versions. The benefit is mostly operational: fewer unique assemblies, fewer spares and fewer ways to build the wrong board."
+      },
+      {
+        "type": "photoPlan",
+        "title": "Opening views to capture",
+        "items": [
+          {
+            "title": "Four-width feeder family",
+            "description": "Arrange the 8 mm, 12 mm, 16 mm and 24 mm feeders in increasing order for the cover image, with their tape entrances aligned for direct comparison.",
+            "kind": "cover"
+          },
+          {
+            "title": "Wide feeder pair",
+            "description": "Photograph the redesigned 16 mm and 24 mm bodies together from above so the shared architecture and different tape widths are easy to compare.",
+            "kind": "detail"
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "level": 2,
+        "title": "Build diary"
+      },
+      {
+        "type": "timeline",
+        "title": "Reducing four feeder sizes to one electronics family",
+        "items": [
+          {
+            "title": "Compare the two architectures",
+            "body": "I separated width-driven mechanical differences from historical electronics differences so the redesign would not preserve complexity merely because it already existed.",
+            "date": "Step 1",
+            "state": "complete"
+          },
+          {
+            "title": "Choose the common hardware baseline",
+            "body": "The 8 mm and 12 mm feeder hardware became the reference because it was already the assembly I planned to build and support in quantity.",
+            "date": "Step 2",
+            "state": "complete"
+          },
+          {
+            "title": "Adapt the 16 mm tape path",
+            "body": "I widened the body and tape guidance while retaining the positions and interfaces needed by the shared drive and peel hardware.",
+            "date": "Step 3",
+            "state": "complete"
+          },
+          {
+            "title": "Repeat the approach at 24 mm",
+            "body": "The largest feeder was redrawn around the same common assembly, with the wider tape path treated as a mechanical constraint rather than an electronics exception.",
+            "date": "Step 4",
+            "state": "complete"
+          },
+          {
+            "title": "Validate in CAD and PCB",
+            "body": "The revised parts and board interfaces are designed, but physical tolerance, peeling force and indexing accuracy still require assembled feeders.",
+            "date": "Current",
+            "state": "active"
+          }
+        ]
       },
       {
         "type": "specificationTable",
@@ -256,10 +773,82 @@
         ]
       },
       {
+        "type": "heading",
+        "level": 2,
+        "title": "Problems, decisions and small fixes"
+      },
+      {
+        "type": "paragraph",
+        "body": "Common electronics do not make the mechanics identical. Wider tape changes stiffness, cover-film behaviour and the distance over which the tape must remain guided, so the body cannot simply be stretched sideways."
+      },
+      {
+        "type": "paragraph",
+        "body": "The useful measure of success is not whether a motor turns. Each feeder must advance one pitch, keep the pocket centred and peel the cover without disturbing the component, using the same controller assumptions as the smaller sizes."
+      },
+      {
+        "type": "paragraph",
+        "body": "I also kept assembly access in mind. A perfectly compact CAD model is unhelpful if the motor screws, connector or tape path become inaccessible once the two halves are printed."
+      },
+      {
+        "type": "photoPlan",
+        "title": "Components and process to document",
+        "items": [
+          {
+            "title": "Shared electronics comparison",
+            "description": "Place one smaller and one redesigned wider feeder controller side by side, highlighting the identical board and connector positions with simple labels.",
+            "kind": "detail"
+          },
+          {
+            "title": "Exploded CAD assembly",
+            "description": "Export an exploded render of the 24 mm feeder showing the printed body, drive hardware, peel hardware, controller and tape path as separate layers.",
+            "kind": "diagram"
+          },
+          {
+            "title": "Wide tape path",
+            "description": "Photograph 24 mm component tape threaded through the open feeder with the pocket rail, drive engagement and exit route all visible.",
+            "kind": "detail"
+          },
+          {
+            "title": "Drive and peel area",
+            "description": "Use a close angled view of both motor-driven functions so the sprocket advance and cover-film take-up can be understood without removing the feeder.",
+            "kind": "detail"
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "level": 2,
+        "title": "Result and present state"
+      },
+      {
         "type": "callout",
         "style": "warning",
         "title": "Designed, not yet validated",
         "body": "The shared architecture exists in CAD and PCB form, but it remains experimental until the wider feeders are assembled and tested with tape."
+      },
+      {
+        "type": "paragraph",
+        "body": "The project is complete at the digital design stage: both wider sizes now follow the common hardware strategy. I am keeping the status experimental until printed parts, assembled electronics and real tape demonstrate that the design is more than a tidy CAD family."
+      },
+      {
+        "type": "paragraph",
+        "body": "Validation will start with empty tape and slow single-step moves, then progress to loaded pockets and repeated indexing. That sequence should expose mechanical drag before it becomes a tray of launched components."
+      },
+      {
+        "type": "photoPlan",
+        "title": "Testing and outcome to document",
+        "items": [
+          {
+            "title": "Feeders installed on the machine",
+            "description": "Photograph all four widths mounted on the LumenPnP rail with cables dressed normally and enough surrounding machine visible to show working clearances.",
+            "kind": "detail"
+          },
+          {
+            "title": "Indexed pocket sequence",
+            "description": "Create a three-frame close-up showing a marked tape pocket before advance, after one pitch and after cover-film peeling to document repeatability.",
+            "kind": "diagram"
+          }
+        ]
       }
     ]
   },
@@ -286,8 +875,84 @@
     },
     "content": [
       {
+        "type": "heading",
+        "level": 2,
+        "title": "Why I built it"
+      },
+      {
         "type": "paragraph",
         "body": "I wanted spool tracking to remain useful even when the printer or network was unavailable. The device therefore performs the weighing and identification locally, records transactions to removable storage and can synchronise with an existing Spoolman installation."
+      },
+      {
+        "type": "paragraph",
+        "body": "I wanted the scale to be a station rather than a peripheral. A spool can be identified, weighed and recorded at the device even if the printer is busy or the network is unavailable, while network services add synchronisation instead of basic functionality."
+      },
+      {
+        "type": "paragraph",
+        "body": "That choice shaped both the electronics and the interface. The display and three buttons handle routine operations locally; the browser is reserved for configuration, network setup and the larger data views that are awkward on a 240-pixel square."
+      },
+      {
+        "type": "photoPlan",
+        "title": "Opening views to capture",
+        "items": [
+          {
+            "title": "Complete spool station",
+            "description": "Take the cover photograph with a labelled filament spool sitting naturally on the finished scale and the display showing a stable weight or spool identity.",
+            "kind": "cover"
+          },
+          {
+            "title": "Vertical mechanical profile",
+            "description": "Photograph the unloaded device from the side so the spool support, load path, enclosure thickness and centre of gravity are visible.",
+            "kind": "portrait"
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "level": 2,
+        "title": "Build diary"
+      },
+      {
+        "type": "timeline",
+        "title": "Turning a load cell into a standalone spool workflow",
+        "items": [
+          {
+            "title": "Build a predictable load path",
+            "body": "I arranged the spool support so force reaches the load cell without the enclosure rubbing or carrying part of the weight around the sensor.",
+            "date": "Step 1",
+            "state": "complete"
+          },
+          {
+            "title": "Bring up the local display",
+            "body": "The ST7789 required the correct SPI mode, colour mode, inversion and memory orientation before interface work could begin on a trustworthy image.",
+            "date": "Step 2",
+            "state": "complete"
+          },
+          {
+            "title": "Add zeroing and calibration",
+            "body": "The device guides an unloaded zero and a known-mass calibration instead of hiding those operations in a developer-only command.",
+            "date": "Step 3",
+            "state": "complete"
+          },
+          {
+            "title": "Bind physical spools with NFC",
+            "body": "A tag UID is associated with a spool record so identification becomes a tap rather than a search through a long list.",
+            "date": "Step 4",
+            "state": "complete"
+          },
+          {
+            "title": "Record transactions locally",
+            "body": "Time-stamped operations are stored on microSD with RTC support, preserving a history when the network or external service is unavailable.",
+            "date": "Step 5",
+            "state": "complete"
+          },
+          {
+            "title": "Connect the wider ecosystem",
+            "body": "The final device adds AP and LAN configuration, printer selection and Spoolman synchronisation around the local weighing workflow.",
+            "date": "Step 6",
+            "state": "complete"
+          }
+        ]
       },
       {
         "type": "specificationTable",
@@ -322,6 +987,83 @@
       {
         "type": "paragraph",
         "body": "The interface guides zeroing, calibration, spool selection and tag binding directly on the device, while the browser view handles configuration without making routine weighing dependent on a phone."
+      },
+      {
+        "type": "heading",
+        "level": 2,
+        "title": "Problems, decisions and small fixes"
+      },
+      {
+        "type": "paragraph",
+        "body": "Early weight readings moved more than the mechanical system justified. I traced part of that behaviour to the HX711 connection and part to an averaging window that was too short, so electrical integrity and filtering were treated as separate problems."
+      },
+      {
+        "type": "paragraph",
+        "body": "The display also looked wrong until the exact controller settings were found. Rotation alone was not enough; SPI mode, colour format, inversion and memory-access order all affected whether a nominally correct frame appeared with correct colours."
+      },
+      {
+        "type": "paragraph",
+        "body": "Network configuration created a different class of failure. Switching between station and access-point modes, refreshing the browser status and returning from failed operations all needed explicit states so the interface did not appear to succeed while the device had quietly fallen offline."
+      },
+      {
+        "type": "photoPlan",
+        "title": "Components and process to document",
+        "items": [
+          {
+            "title": "Load cell and force path",
+            "description": "Photograph the scale with its top support removed, using arrows or a second annotated copy to show where spool weight enters and where the load cell is fixed.",
+            "kind": "detail"
+          },
+          {
+            "title": "Controller and HX711 wiring",
+            "description": "Use a sharp internal view showing the ESP32-S3, HX711 board, repaired connections and cable routing without the enclosure obscuring the load-cell wiring.",
+            "kind": "detail"
+          },
+          {
+            "title": "NFC tag interaction",
+            "description": "Capture a spool tag held at the reader position while the screen displays the corresponding bind or identification prompt.",
+            "kind": "detail"
+          },
+          {
+            "title": "Local user interface",
+            "description": "Photograph the 240 × 240 display head-on on a representative spool page with button labels or physical controls also visible.",
+            "kind": "detail"
+          },
+          {
+            "title": "RTC and microSD section",
+            "description": "Take a close view of the timekeeping and removable-storage hardware, including connector orientation and access when the case is assembled.",
+            "kind": "detail"
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "level": 2,
+        "title": "Result and present state"
+      },
+      {
+        "type": "paragraph",
+        "body": "The completed device can perform its core job without borrowing a printer screen or a phone: identify the spool, measure it, show the result and preserve the event. External integration then updates the same record instead of creating a parallel source of truth."
+      },
+      {
+        "type": "paragraph",
+        "body": "The remaining evidence worth collecting is long-term rather than dramatic: repeat readings of the same reference mass, a reconnect after lost Wi-Fi and matching entries between the local log and Spoolman."
+      },
+      {
+        "type": "photoPlan",
+        "title": "Testing and outcome to document",
+        "items": [
+          {
+            "title": "Browser configuration view",
+            "description": "Save a native screenshot showing network mode, Spoolman address and printer selection with private addresses or credentials replaced by neutral examples.",
+            "kind": "screenshot"
+          },
+          {
+            "title": "Spoolman synchronisation",
+            "description": "Capture the same spool identity and remaining mass on both the physical display and the Spoolman record in one composed comparison.",
+            "kind": "screenshot"
+          }
+        ]
       }
     ]
   },
@@ -354,8 +1096,78 @@
     },
     "content": [
       {
+        "type": "heading",
+        "level": 2,
+        "title": "Why I built it"
+      },
+      {
         "type": "paragraph",
         "body": "The first sensing approach made calibration too dependent on thermistor behaviour at reflow temperatures. I changed the final design to a PT100 so the controller could work from a more stable and repeatable resistance curve."
+      },
+      {
+        "type": "paragraph",
+        "body": "The first version could heat an oven, but useful reflow depends on knowing the board temperature well enough to repeat a profile. An NTC that changes behaviour with mounting, calibration and high-temperature drift made the controller look more precise than the measurement actually was."
+      },
+      {
+        "type": "paragraph",
+        "body": "I changed the final sensing chain to a PT100 platinum RTD. The point was not to chase an impressive decimal place; it was to make calibration and repeated high-temperature cycles behave consistently enough that profile tuning meant something."
+      },
+      {
+        "type": "photoPlan",
+        "title": "Opening views to capture",
+        "items": [
+          {
+            "title": "Finished oven and controller",
+            "description": "Take the cover image with the complete reflow oven, controller and display visible, using a clean bench setup rather than hiding the wiring that makes it a working tool.",
+            "kind": "cover"
+          },
+          {
+            "title": "Loaded oven chamber",
+            "description": "Photograph a PCB positioned for reflow with the temperature probe placed as it is during a real run, while the heaters are safely off.",
+            "kind": "detail"
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "level": 2,
+        "title": "Build diary"
+      },
+      {
+        "type": "timeline",
+        "title": "Replacing plausible temperature with repeatable temperature",
+        "items": [
+          {
+            "title": "Control the original heating hardware",
+            "body": "I first established that the controller could drive a complete warm-up, soak, peak and cool-down sequence through the converted oven.",
+            "date": "Step 1",
+            "state": "complete"
+          },
+          {
+            "title": "Characterise the NTC approach",
+            "body": "Repeated runs exposed enough drift and high-temperature uncertainty that adjusting the control loop could not be separated from questioning the sensor.",
+            "date": "Step 2",
+            "state": "complete"
+          },
+          {
+            "title": "Move to a PT100",
+            "body": "I replaced the thermistor with a platinum RTD and an appropriate resistance-measurement interface for a more stable temperature reference.",
+            "date": "Step 3",
+            "state": "complete"
+          },
+          {
+            "title": "Revisit probe placement",
+            "body": "The RTD was positioned to follow the board environment rather than a convenient patch of oven air, reducing the difference between controller temperature and solder-joint conditions.",
+            "date": "Step 4",
+            "state": "complete"
+          },
+          {
+            "title": "Tune against recorded profiles",
+            "body": "I compared target and measured curves over complete cycles, then adjusted the controller around the oven's real heating and cooling lag.",
+            "date": "Step 5",
+            "state": "complete"
+          }
+        ]
       },
       {
         "type": "specificationTable",
@@ -380,10 +1192,82 @@
         ]
       },
       {
+        "type": "heading",
+        "level": 2,
+        "title": "Problems, decisions and small fixes"
+      },
+      {
+        "type": "paragraph",
+        "body": "Changing sensor technology did not remove thermal lag. The RTD still needs a repeatable attachment and representative location; otherwise a very accurate sensor faithfully measures the wrong part of the oven."
+      },
+      {
+        "type": "paragraph",
+        "body": "The cooling segment also matters. Heater power can be reduced instantly, but the chamber and tray retain energy, so the profile logic must anticipate overshoot instead of waiting for the measured peak before reacting."
+      },
+      {
+        "type": "paragraph",
+        "body": "I treated profile plots as debugging records, not decoration. A run is useful when it shows the target, actual temperature and phase boundaries together, including the parts where the oven cannot follow the ideal curve exactly."
+      },
+      {
+        "type": "photoPlan",
+        "title": "Components and process to document",
+        "items": [
+          {
+            "title": "PT100 mounting",
+            "description": "Use a close photograph showing the RTD body, attachment method and its exact location relative to the PCB or tray used during reflow.",
+            "kind": "detail"
+          },
+          {
+            "title": "Temperature interface electronics",
+            "description": "Photograph the RTD measurement section and its connector with enough resolution to follow the sensor wiring and distinguish it from the power-control area.",
+            "kind": "detail"
+          },
+          {
+            "title": "Controller internals",
+            "description": "Capture the complete control enclosure open on an unpowered bench, showing low-voltage sensing separated from mains or heater switching hardware.",
+            "kind": "detail"
+          },
+          {
+            "title": "Sensor revision comparison",
+            "description": "Place the rejected NTC and final PT100 beside each other with captions explaining which version each belonged to and why the change was made.",
+            "kind": "detail"
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "level": 2,
+        "title": "Result and present state"
+      },
+      {
         "type": "callout",
         "style": "success",
         "title": "Completed system",
         "body": "The PT100-based control system is the finished version of the oven."
+      },
+      {
+        "type": "paragraph",
+        "body": "The PT100-based revision is the completed oven. Its value is repeatability: I can adjust a profile in response to recorded behaviour and expect the next run to use the same temperature reference."
+      },
+      {
+        "type": "paragraph",
+        "body": "The best demonstration is a set of ordinary boards with evenly reflowed joints and a measured curve that explains how they got there. A controller animation without the actual thermal record would miss the engineering result."
+      },
+      {
+        "type": "photoPlan",
+        "title": "Testing and outcome to document",
+        "items": [
+          {
+            "title": "Measured reflow profile",
+            "description": "Export a labelled plot of target and measured temperature with preheat, soak, reflow and cooling regions marked and the time axis left readable.",
+            "kind": "diagram"
+          },
+          {
+            "title": "Board before and after reflow",
+            "description": "Create a matched macro pair of the same PCB area before heating and after cooling, keeping lighting and magnification consistent for solder-joint comparison.",
+            "kind": "detail"
+          }
+        ]
       }
     ]
   },
@@ -415,8 +1299,78 @@
     },
     "content": [
       {
+        "type": "heading",
+        "level": 2,
+        "title": "Why I built it"
+      },
+      {
         "type": "paragraph",
         "body": "This layer turns slicer output into printer behaviour. It has to keep colour deposition aligned with the same motion, timing and state transitions that already govern the underlying FDM print."
+      },
+      {
+        "type": "paragraph",
+        "body": "A colour-aware slicer and a working cartridge driver are still two separate demonstrations until the printer can coordinate them with motion. Chroma Klipper is the layer that turns colour output into part of the print state rather than an unrelated stream running beside it."
+      },
+      {
+        "type": "paragraph",
+        "body": "I am keeping this integration narrow. It should translate the slicer's colour plan into timed device actions, expose enough state to diagnose alignment and leave ordinary Klipper motion behaviour intact wherever colour is not involved."
+      },
+      {
+        "type": "photoPlan",
+        "title": "Opening views to capture",
+        "items": [
+          {
+            "title": "Full-colour print in progress",
+            "description": "For the eventual cover, photograph the printer during a colour job with the moving tool, deposited colour and control screen all visible without staging a result that the integration cannot yet produce.",
+            "kind": "cover"
+          },
+          {
+            "title": "Chroma system on one bench",
+            "description": "Photograph the printer, ChromaDye controller and host computer together so the physical boundary between motion control and colour hardware is clear.",
+            "kind": "detail"
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "level": 2,
+        "title": "Build diary"
+      },
+      {
+        "type": "timeline",
+        "title": "Connecting layer colour to printer motion",
+        "items": [
+          {
+            "title": "Define the hand-off from the slicer",
+            "body": "I separated ordinary toolpath information from the additional colour data so the integration can consume a stable contract rather than depend on slicer internals.",
+            "date": "Step 1",
+            "state": "complete"
+          },
+          {
+            "title": "Map colour state onto print state",
+            "body": "The planned commands need to follow layer changes, extrusion and motion boundaries closely enough that colour remains attached to the intended material.",
+            "date": "Step 2",
+            "state": "complete"
+          },
+          {
+            "title": "Design a buffered output path",
+            "body": "The printer host must feed ChromaDye ahead of demand while retaining a known relationship between queued colour and the movement that will use it.",
+            "date": "Step 3",
+            "state": "complete"
+          },
+          {
+            "title": "Expose timing diagnostics",
+            "body": "I planned logs and state checks around queue position, command timing and device readiness so integration failures can be located instead of appearing as a vague colour shift.",
+            "date": "Step 4",
+            "state": "complete"
+          },
+          {
+            "title": "Wait for stable device integration",
+            "body": "End-to-end work remains active because the ChromaDye output path has to be dependable before printer-side timing can be judged fairly.",
+            "date": "Current",
+            "state": "active"
+          }
+        ]
       },
       {
         "type": "diagram",
@@ -429,10 +1383,77 @@
         ]
       },
       {
+        "type": "heading",
+        "level": 2,
+        "title": "Problems, decisions and small fixes"
+      },
+      {
+        "type": "paragraph",
+        "body": "The main difficulty is ownership of time. The slicer knows where colour belongs geometrically, Klipper owns motion scheduling and ChromaDye owns the final nozzle waveform; none of those clocks can be allowed to drift into an independent interpretation of the print."
+      },
+      {
+        "type": "paragraph",
+        "body": "A second issue is recovery. Pauses, restarts and empty queues must not resume with colour data offset from extrusion, so the integration needs explicit checkpoints rather than assuming that every print runs uninterrupted from byte zero."
+      },
+      {
+        "type": "paragraph",
+        "body": "I am resisting the temptation to hide device problems in increasingly clever host code. If the cartridge path cannot accept data deterministically, the correct fix belongs in ChromaDye before Chroma Klipper compensates for it."
+      },
+      {
+        "type": "photoPlan",
+        "title": "Components and process to document",
+        "items": [
+          {
+            "title": "Integration architecture",
+            "description": "Draw the slicer, Klipper host, MCU controller and cartridge as separate blocks with the data, timing and acknowledgement paths labelled in both directions.",
+            "kind": "diagram"
+          },
+          {
+            "title": "Klipper configuration",
+            "description": "Save a cropped configuration screenshot showing the Chroma integration section with machine-specific addresses and identifiers replaced by neutral examples.",
+            "kind": "screenshot"
+          },
+          {
+            "title": "Queued colour commands",
+            "description": "Capture a diagnostic view that pairs several queued colour records with the matching layer or extrusion positions instead of showing an unfiltered terminal wall.",
+            "kind": "screenshot"
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "level": 2,
+        "title": "Result and present state"
+      },
+      {
         "type": "callout",
         "style": "warning",
         "title": "Dependency",
         "body": "Development remains active because meaningful printer tests depend on the ChromaDye integration becoming stable."
+      },
+      {
+        "type": "paragraph",
+        "body": "The project remains active rather than feature complete because its success can only be judged on a physical print. A clean configuration page is not evidence that colour arrived at the right place."
+      },
+      {
+        "type": "paragraph",
+        "body": "The final validation will use a deliberately simple pattern with hard colour boundaries. That makes a constant offset, queue slip or layer-transition error easier to see than a complex model designed to look impressive."
+      },
+      {
+        "type": "photoPlan",
+        "title": "Testing and outcome to document",
+        "items": [
+          {
+            "title": "Motion-to-colour timing plot",
+            "description": "Export a shared time-axis plot of extrusion activity, queued colour state and cartridge output so any fixed delay or accumulating offset is visible.",
+            "kind": "diagram"
+          },
+          {
+            "title": "Alignment test print",
+            "description": "Photograph a simple printed calibration pattern beside its expected raster, using straight colour boundaries that reveal both position error and colour bleed.",
+            "kind": "detail"
+          }
+        ]
       }
     ]
   },
@@ -465,8 +1486,84 @@
     },
     "content": [
       {
+        "type": "heading",
+        "level": 2,
+        "title": "Why I built it"
+      },
+      {
         "type": "paragraph",
         "body": "Colour information normally disappears long before a conventional slicer produces toolpaths. I added a surface representation that keeps UV and texture data attached to model volumes so later stages can ask what colour belongs at each sampled point."
+      },
+      {
+        "type": "paragraph",
+        "body": "A conventional slicer is very good at reducing geometry to paths, but textured colour is usually discarded before those paths are generated. My first task was therefore preservation: keep the relationship between triangle, UV coordinate and texture alive inside the model instead of trying to reconstruct it after slicing."
+      },
+      {
+        "type": "paragraph",
+        "body": "I built the work as an OrcaSlicer fork so the colour pipeline sits beside mature mesh repair, slicing and preview behaviour. That also means every new data structure must survive existing transformations without making non-colour projects less reliable."
+      },
+      {
+        "type": "photoPlan",
+        "title": "Opening views to capture",
+        "items": [
+          {
+            "title": "Textured model in Chroma Slicer",
+            "description": "Use the cover screenshot to show a recognisably textured model in the real slicer viewport with the colour feature enabled and normal application chrome retained for context.",
+            "kind": "cover"
+          },
+          {
+            "title": "Input asset set",
+            "description": "Arrange the source OBJ, texture image and a small UV layout preview in one clean composite so the three parts of the imported asset are obvious.",
+            "kind": "screenshot"
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "level": 2,
+        "title": "Build diary"
+      },
+      {
+        "type": "timeline",
+        "title": "Keeping colour alive through the slicing pipeline",
+        "items": [
+          {
+            "title": "Trace where colour disappears",
+            "body": "I followed model import through volume creation and slicing to identify the earliest point where UV and texture ownership needed a permanent representation.",
+            "date": "Step 1",
+            "state": "complete"
+          },
+          {
+            "title": "Add colour-aware surface data",
+            "body": "I attached a FullColor surface representation to each model volume so triangles can retain UV-backed texture information after import.",
+            "date": "Step 2",
+            "state": "complete"
+          },
+          {
+            "title": "Correct UV triangulation",
+            "body": "The import path was adjusted so triangulated faces and their UV coordinates remain paired rather than producing a valid mesh with scrambled colour.",
+            "date": "Step 3",
+            "state": "complete"
+          },
+          {
+            "title": "Gate the unfinished interface",
+            "body": "A setting and development environment flag keep the feature opt-in while the surrounding UI and persistence behaviour are still changing.",
+            "date": "Step 4",
+            "state": "complete"
+          },
+          {
+            "title": "Generate per-layer colour data",
+            "body": "The raster scaffold samples the colour-aware surface at layer height and produces image data that the downstream print system can consume.",
+            "date": "Step 5",
+            "state": "complete"
+          },
+          {
+            "title": "Harden persistence and integration",
+            "body": "The feature works end to end, but 3MF persistence, output packaging and the contract with the printer remain active refinement work.",
+            "date": "Current",
+            "state": "active"
+          }
+        ]
       },
       {
         "type": "specificationTable",
@@ -491,10 +1588,87 @@
         ]
       },
       {
+        "type": "heading",
+        "level": 2,
+        "title": "Problems, decisions and small fixes"
+      },
+      {
+        "type": "paragraph",
+        "body": "The first useful import log reported textured geometry with UV data but no vertex colours. That was not a failure: it confirmed that this asset's colour lived in the texture path and prevented me from debugging the wrong representation."
+      },
+      {
+        "type": "paragraph",
+        "body": "Triangulation was a subtle failure mode because the geometry could still look correct while texture coordinates belonged to the wrong corners. I used deliberately asymmetric test textures so a rotated or mirrored mapping could not pass as visually plausible."
+      },
+      {
+        "type": "paragraph",
+        "body": "The macOS build environment introduced unrelated friction around dependency versions, signing and startup behaviour. I kept those problems separate from colour correctness so a toolchain issue did not become a reason to rewrite the raster pipeline."
+      },
+      {
+        "type": "photoPlan",
+        "title": "Components and process to document",
+        "items": [
+          {
+            "title": "UV import evidence",
+            "description": "Capture the asymmetric texture correctly wrapped on a simple triangulated model, with a small inset of the UV layout that proves orientation and corner order.",
+            "kind": "screenshot"
+          },
+          {
+            "title": "Colour-aware surface view",
+            "description": "Save a debug viewport or overlay that shows sampled colour attached to the actual model surface rather than only displaying the original texture file.",
+            "kind": "screenshot"
+          },
+          {
+            "title": "Import diagnostics",
+            "description": "Crop the structured import log around triangle count, texture count and UV availability, excluding unrelated paths or personal filesystem names.",
+            "kind": "screenshot"
+          },
+          {
+            "title": "Pipeline data flow",
+            "description": "Diagram the route from textured asset through model volume, colour surface, sliced layer and raster output, naming the data retained at each boundary.",
+            "kind": "diagram"
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "level": 2,
+        "title": "Result and present state"
+      },
+      {
         "type": "callout",
         "style": "info",
         "title": "Feature complete",
         "body": "The end-to-end feature works, but I still consider it active while I improve robustness, persistence and integration with the rest of the Chroma toolchain."
+      },
+      {
+        "type": "paragraph",
+        "body": "I describe the slicer as feature complete because the essential capability exists: a textured model can enter the fork with its colour intact and produce per-layer colour information. It remains active because a feature can work once and still be unpleasant to maintain."
+      },
+      {
+        "type": "paragraph",
+        "body": "The next evidence needs to connect software output to physical deposition. Until then I am using small, asymmetric models and inspectable layer rasters, which are much better at exposing coordinate errors than a complicated showcase model."
+      },
+      {
+        "type": "photoPlan",
+        "title": "Testing and outcome to document",
+        "items": [
+          {
+            "title": "Single-layer raster",
+            "description": "Export one native colour raster beside the corresponding model slice, preserving pixel edges and labelling the layer height used to create it.",
+            "kind": "screenshot"
+          },
+          {
+            "title": "Layer-by-layer progression",
+            "description": "Create a contact sheet of several separated layer rasters from bottom to top so changes in outline and colour region can be followed visually.",
+            "kind": "diagram"
+          },
+          {
+            "title": "Expected physical output",
+            "description": "Render a simple calibration model with the intended deposited colours and place it beside the slicer preview as the target for later printer testing.",
+            "kind": "diagram"
+          }
+        ]
       }
     ]
   },
@@ -521,8 +1695,78 @@
     },
     "content": [
       {
+        "type": "heading",
+        "level": 2,
+        "title": "Why I built it"
+      },
+      {
         "type": "paragraph",
         "body": "The controller queues nozzle data and emits a parallel waveform whose pulse widths must stay inside the cartridge limits. The electrical interface is only half the problem; the same timing guarantees have to survive buffering, transfer and printer integration."
+      },
+      {
+        "type": "paragraph",
+        "body": "An inkjet cartridge is an unforgiving actuator. The driver has to provide the required supply domains and select many nozzles quickly, while also guaranteeing that no software stall can leave a firing pulse active long enough to damage the heater."
+      },
+      {
+        "type": "paragraph",
+        "body": "I therefore split the problem into waveform generation, buffered transport and physical integration. Each layer can look correct alone and still fail at the boundary, which is why most of the diary is about proving where data stops rather than repeatedly changing the whole design."
+      },
+      {
+        "type": "photoPlan",
+        "title": "Opening views to capture",
+        "items": [
+          {
+            "title": "Cartridge driver test rig",
+            "description": "Take the cover photograph with the HP123 cartridge, driver PCB, power system and oscilloscope probes arranged as they are for a real waveform test.",
+            "kind": "cover"
+          },
+          {
+            "title": "Controller-to-cartridge path",
+            "description": "Photograph the complete electrical chain from ESP32-S3 board to cartridge connector with every intermediate cable and adapter visible.",
+            "kind": "detail"
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "level": 2,
+        "title": "Build diary"
+      },
+      {
+        "type": "timeline",
+        "title": "Bringing up a timing-critical cartridge path",
+        "items": [
+          {
+            "title": "Translate nozzle data into waveforms",
+            "body": "I began with a queue and buffer-filling model that expands compact colour or nozzle commands into the parallel signal states required by the cartridge.",
+            "date": "Stage 1",
+            "state": "complete"
+          },
+          {
+            "title": "Move the parallel output to ESP32-S3",
+            "body": "The original I2S-style path did not map cleanly to the S3, so I migrated the transfer toward the ESP-IDF LCD/I80 peripheral and its DMA model.",
+            "date": "Stage 2",
+            "state": "complete"
+          },
+          {
+            "title": "Validate bus width and transfer size",
+            "body": "Bring-up exposed invalid GPIO entries, draw-buffer allocation failures and zero-length transfers that had to be eliminated before a scope trace meant anything.",
+            "date": "Stage 3",
+            "state": "complete"
+          },
+          {
+            "title": "Enforce pulse limits in software",
+            "body": "After the hardware-only limiter revision failed, I moved the maximum firing duration into deterministic waveform generation and revised the electronics around it.",
+            "date": "Stage 4",
+            "state": "complete"
+          },
+          {
+            "title": "Integrate with the printer stack",
+            "body": "The board-level path now appears sound, but reliable delivery from Chroma Slicer through Chroma Klipper remains the active system-level task.",
+            "date": "Current",
+            "state": "active"
+          }
+        ]
       },
       {
         "type": "timeline",
@@ -549,10 +1793,92 @@
         ]
       },
       {
+        "type": "heading",
+        "level": 2,
+        "title": "Problems, decisions and small fixes"
+      },
+      {
+        "type": "paragraph",
+        "body": "The most misleading failure produced one initial transfer and then silence. Because there was no obvious exception, I had to distinguish an ISR that never ran, a queue that emptied, a DMA descriptor that was invalid and a peripheral that had never been started correctly."
+      },
+      {
+        "type": "paragraph",
+        "body": "Porting the output was not a name-for-name driver replacement. Buffer ownership, callback signatures, maximum transfer size and the meaning of a completed transaction all changed, so I added explicit size and GPIO checks before allowing data into the hardware path."
+      },
+      {
+        "type": "paragraph",
+        "body": "Power testing was handled cautiously because cartridge faults can draw real energy. I separated logic, boosted supplies and the attached cartridge during bring-up so a wiring mistake would not be diagnosed by the traditional smell-based interface."
+      },
+      {
+        "type": "photoPlan",
+        "title": "Components and process to document",
+        "items": [
+          {
+            "title": "Driver PCB front",
+            "description": "Use a perpendicular macro view showing the ESP32-S3 module, cartridge outputs and main connectors with component references legible.",
+            "kind": "detail"
+          },
+          {
+            "title": "Power and level-shifting section",
+            "description": "Photograph the boosted cartridge supplies, switching devices and level-interface area closely enough that high-current paths can be followed.",
+            "kind": "detail"
+          },
+          {
+            "title": "Cartridge connector",
+            "description": "Capture the HP123 contact interface and mechanical retention from an angle that shows both the electrical contacts and alignment features.",
+            "kind": "detail"
+          },
+          {
+            "title": "Parallel bus wiring",
+            "description": "Photograph the active logic-analyser or oscilloscope connections at the board, keeping probe ground leads and channel assignments visible.",
+            "kind": "detail"
+          },
+          {
+            "title": "DMA and queue trace",
+            "description": "Save a concise diagnostic screenshot showing queued words, submitted transfer length and completion callback around one successful output burst.",
+            "kind": "screenshot"
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "level": 2,
+        "title": "Result and present state"
+      },
+      {
         "type": "callout",
         "style": "warning",
         "title": "Current blocker",
         "body": "The board-level behaviour is promising, but the project is still caught in integration work across the complete Chroma system."
+      },
+      {
+        "type": "paragraph",
+        "body": "The revised hardware and software limiter now form a credible stand-alone driver, but the project remains active because a cartridge waveform on a scope is only one boundary of the full-colour printer."
+      },
+      {
+        "type": "paragraph",
+        "body": "My next validation pattern will fire a deliberately small, known nozzle set. That minimises cartridge risk and makes it possible to compare requested nozzle data, captured bus states and the physical ink result one event at a time."
+      },
+      {
+        "type": "photoPlan",
+        "title": "Testing and outcome to document",
+        "items": [
+          {
+            "title": "Firing waveform",
+            "description": "Capture the clock, synchronisation and at least one nozzle-select signal on a shared scope time base with pulse width and repetition rate measurements enabled.",
+            "kind": "screenshot"
+          },
+          {
+            "title": "Known-nozzle ink test",
+            "description": "Photograph a controlled output made from a small documented nozzle pattern, including the target paper and cartridge position rather than only a cropped ink mark.",
+            "kind": "detail"
+          },
+          {
+            "title": "Installed colour system",
+            "description": "Photograph the driver mounted on the printer with cartridge, cabling and motion hardware visible once integration is safe enough for a complete run.",
+            "kind": "detail"
+          }
+        ]
       }
     ]
   },
@@ -585,8 +1911,78 @@
     },
     "content": [
       {
+        "type": "heading",
+        "level": 2,
+        "title": "Why I built it"
+      },
+      {
         "type": "paragraph",
         "body": "Players join a shared room and cooperate through a centrally hosted game session. I designed deployment around an SBC such as a Raspberry Pi so the server can remain physically local while the tunnel provides the external route."
+      },
+      {
+        "type": "paragraph",
+        "body": "The project began as a way to make a cooperative browser game easy to join from several devices without requiring each player to install or configure a client. A room name is the hand-off: one player creates the shared state and the others enter the same space."
+      },
+      {
+        "type": "paragraph",
+        "body": "I designed deployment for a small self-hosted computer such as a Raspberry Pi. The game server remains under local control, while a Cloudflare Tunnel can provide the external route without turning the home router configuration into part of the game manual."
+      },
+      {
+        "type": "photoPlan",
+        "title": "Opening views to capture",
+        "items": [
+          {
+            "title": "Two players in one room",
+            "description": "Use the cover image to show the same cooperative session open on two different devices, with each player's distinct view visible and no private room code exposed.",
+            "kind": "cover"
+          },
+          {
+            "title": "Self-hosted setup",
+            "description": "Photograph the SBC running the server beside a laptop or phone client so the modest physical deployment matches the software description.",
+            "kind": "detail"
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "level": 2,
+        "title": "Build diary"
+      },
+      {
+        "type": "timeline",
+        "title": "From local cooperative idea to room-based service",
+        "items": [
+          {
+            "title": "Choose a room boundary",
+            "body": "I made each session a named room so players can meet without accounts and the server can keep unrelated games isolated.",
+            "date": "Step 1",
+            "state": "complete"
+          },
+          {
+            "title": "Centralise the shared state",
+            "body": "The authoritative game session runs on the server, allowing every browser to work from the same cooperative state instead of negotiating ownership peer to peer.",
+            "date": "Step 2",
+            "state": "complete"
+          },
+          {
+            "title": "Build browser clients",
+            "body": "The client path was kept install-free so joining a room is a matter of opening the page and entering the agreed identifier.",
+            "date": "Step 3",
+            "state": "complete"
+          },
+          {
+            "title": "Package for an SBC",
+            "body": "I kept the hosting requirements suitable for a Raspberry Pi-class computer rather than assuming a large managed server.",
+            "date": "Step 4",
+            "state": "complete"
+          },
+          {
+            "title": "Expose the service through a tunnel",
+            "body": "The external route is forwarded through Cloudflare Tunnel while the actual game process continues to run on the local host.",
+            "date": "Step 5",
+            "state": "complete"
+          }
+        ]
       },
       {
         "type": "diagram",
@@ -601,6 +1997,73 @@
       {
         "type": "paragraph",
         "body": "The deliberately strange and generic naming originated as camouflage for very basic network filtering—sometimes the least suspicious protocol is apparently a boring noun."
+      },
+      {
+        "type": "heading",
+        "level": 2,
+        "title": "Problems, decisions and small fixes"
+      },
+      {
+        "type": "paragraph",
+        "body": "Room lifecycle is small but important. A room must be created, joined, used and retired without one abandoned session becoming permanent shared state for the next group of players."
+      },
+      {
+        "type": "paragraph",
+        "body": "The strange, generic naming was deliberate. It originated as camouflage for very basic network filtering, a reminder that sometimes the deployment environment is less sophisticated than the software trying to cross it."
+      },
+      {
+        "type": "paragraph",
+        "body": "Self-hosting also means accepting ordinary interruptions. The interface needs to make a lost server or expired room understandable to players rather than leaving every browser waiting forever on a session that no longer exists."
+      },
+      {
+        "type": "photoPlan",
+        "title": "Components and process to document",
+        "items": [
+          {
+            "title": "Landing and room controls",
+            "description": "Save a native screenshot of the create and join controls with sample room names, making the path into a game understandable before showing gameplay.",
+            "kind": "screenshot"
+          },
+          {
+            "title": "Room lobby",
+            "description": "Capture the lobby after two players have joined, with neutral display names and a visible ready or connection state.",
+            "kind": "screenshot"
+          },
+          {
+            "title": "Server deployment diagram",
+            "description": "Diagram browser clients, the Cloudflare edge, the tunnel process and the local game server, clearly separating public and local connections.",
+            "kind": "diagram"
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "level": 2,
+        "title": "Result and present state"
+      },
+      {
+        "type": "paragraph",
+        "body": "The completed project provides the room-based cooperative flow and the intended self-hosting path. The strongest demonstration is two devices affecting one session while the server remains a small local box rather than a hidden cloud dependency."
+      },
+      {
+        "type": "paragraph",
+        "body": "For public screenshots I will use fresh rooms and neutral test data. Room identifiers are not valuable secrets, but publishing a live one would be an unnecessarily creative invitation."
+      },
+      {
+        "type": "photoPlan",
+        "title": "Testing and outcome to document",
+        "items": [
+          {
+            "title": "Active cooperative session",
+            "description": "Capture both players performing complementary actions in the same room, choosing a moment where cooperation is visible rather than two duplicated screens.",
+            "kind": "screenshot"
+          },
+          {
+            "title": "Server status",
+            "description": "Save a clean deployment-status screenshot showing the game process and tunnel healthy, with hostnames, tokens and network addresses removed.",
+            "kind": "screenshot"
+          }
+        ]
       }
     ]
   },
@@ -633,8 +2096,78 @@
     },
     "content": [
       {
+        "type": "heading",
+        "level": 2,
+        "title": "Why I built it"
+      },
+      {
         "type": "paragraph",
         "body": "Instead of fixing the dashboard layout in one script, I made each section a module that reads its parameters from JSON, renders onto a transparent layer and composes itself onto the shared canvas."
+      },
+      {
+        "type": "paragraph",
+        "body": "A fixed dashboard script becomes difficult to reuse as soon as the display size, calendar mix or information priority changes. I moved those decisions into JSON so the renderer describes a composition rather than one hard-coded screen."
+      },
+      {
+        "type": "paragraph",
+        "body": "Each module receives its own parameters and data, renders onto a transparent Pillow layer and returns that layer to the shared canvas. Calendar and weather sections can therefore change independently while the final output remains one image for the display."
+      },
+      {
+        "type": "photoPlan",
+        "title": "Opening views to capture",
+        "items": [
+          {
+            "title": "Complete generated dashboard",
+            "description": "Use the cover image to show one finished high-contrast dashboard with calendar events, weather and clear module boundaries at the target e-paper aspect ratio.",
+            "kind": "cover"
+          },
+          {
+            "title": "Dashboard on a physical panel",
+            "description": "If the renderer is connected to a display, photograph the full e-paper panel straight on in natural light with the bezel and real scale visible.",
+            "kind": "detail"
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "level": 2,
+        "title": "Build diary"
+      },
+      {
+        "type": "timeline",
+        "title": "Building a dashboard from independent image layers",
+        "items": [
+          {
+            "title": "Separate layout from rendering code",
+            "body": "I moved module position, size and options into JSON so changing a dashboard does not require editing the drawing functions.",
+            "date": "Step 1",
+            "state": "complete"
+          },
+          {
+            "title": "Define a module contract",
+            "body": "Each module parses its own configuration and data, draws within an assigned area and returns an image layer for composition.",
+            "date": "Step 2",
+            "state": "complete"
+          },
+          {
+            "title": "Add multiple calendar sources",
+            "body": "The event module can combine entries from more than one account while still presenting a single ordered schedule.",
+            "date": "Step 3",
+            "state": "complete"
+          },
+          {
+            "title": "Render weather with symbols",
+            "body": "Weather values are paired with compact icons so the limited display area communicates conditions without long sentences.",
+            "date": "Step 4",
+            "state": "complete"
+          },
+          {
+            "title": "Composite the final image",
+            "body": "Pillow layers are placed on the base canvas in configuration order and exported as one display-ready bitmap.",
+            "date": "Step 5",
+            "state": "complete"
+          }
+        ]
       },
       {
         "type": "diagram",
@@ -666,6 +2199,78 @@
           {
             "label": "Output",
             "value": "A composed image suitable for an e-paper display"
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "level": 2,
+        "title": "Problems, decisions and small fixes"
+      },
+      {
+        "type": "paragraph",
+        "body": "Module independence only works if every module respects its allocated rectangle. Long event titles, missing weather fields and large icons have to clip, wrap or fall back locally rather than shifting neighbouring sections."
+      },
+      {
+        "type": "paragraph",
+        "body": "E-paper rewards a different visual hierarchy from a backlit screen. I used strong shape, spacing and contrast so a module remains readable after palette reduction and under ordinary room light."
+      },
+      {
+        "type": "paragraph",
+        "body": "JSON made experimentation faster but also made invalid layouts easier to request. Clear defaults and bounds are important because a syntactically valid configuration can still place two useful modules directly on top of each other."
+      },
+      {
+        "type": "photoPlan",
+        "title": "Components and process to document",
+        "items": [
+          {
+            "title": "Annotated module grid",
+            "description": "Export the final canvas with coloured or outlined boxes naming each module, its origin and its allocated dimensions.",
+            "kind": "diagram"
+          },
+          {
+            "title": "JSON layout configuration",
+            "description": "Capture a short, well-formatted configuration excerpt that shows module type, position and size without including account tokens or private calendar URLs.",
+            "kind": "screenshot"
+          },
+          {
+            "title": "Calendar layer alone",
+            "description": "Export the calendar module on transparency or a checkerboard with several neutral sample events to show what it contributes before composition.",
+            "kind": "screenshot"
+          },
+          {
+            "title": "Weather layer alone",
+            "description": "Export the weather module separately with icon, temperature and conditions visible at the exact size used in the finished dashboard.",
+            "kind": "screenshot"
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "level": 2,
+        "title": "Result and present state"
+      },
+      {
+        "type": "paragraph",
+        "body": "The renderer is complete as a configurable image generator. New dashboards can be assembled by changing JSON and selecting modules instead of copying the whole script into another slightly different version."
+      },
+      {
+        "type": "paragraph",
+        "body": "The most useful future evidence is variation: the same module code producing two layouts for different display shapes or information priorities. That demonstrates the parametric design more honestly than one polished screen."
+      },
+      {
+        "type": "photoPlan",
+        "title": "Testing and outcome to document",
+        "items": [
+          {
+            "title": "Layer-composition sequence",
+            "description": "Create a four-stage image showing blank canvas, calendar layer, weather layer and final composition with identical framing between stages.",
+            "kind": "diagram"
+          },
+          {
+            "title": "Alternative configuration",
+            "description": "Place two dashboards generated from different JSON layouts side by side while keeping their shared modules and data recognisable.",
+            "kind": "screenshot"
           }
         ]
       }
@@ -700,8 +2305,78 @@
     },
     "content": [
       {
+        "type": "heading",
+        "level": 2,
+        "title": "Why I built it"
+      },
+      {
         "type": "paragraph",
         "body": "The board began as a connector substitution and became a compact battery subsystem. Each revision answered a physical issue from the previous one rather than adding features without a reason."
+      },
+      {
+        "type": "paragraph",
+        "body": "This project was driven by packaging rather than a missing electrical function. The first adapter could connect the battery, but the PH 2.0 mm connector consumed too much of the space available on the glove and made the surrounding assembly unnecessarily bulky."
+      },
+      {
+        "type": "paragraph",
+        "body": "I treated every revision as a response to a physical observation. The second board reduced the connector, and the third kept the working footprint while adding charging so the battery interface no longer needed a separate subsystem."
+      },
+      {
+        "type": "photoPlan",
+        "title": "Opening views to capture",
+        "items": [
+          {
+            "title": "Three revisions in order",
+            "description": "Arrange the PH, SH and charging versions from left to right for the cover, aligned at one board edge with labels that identify Versions 1, 2 and 3.",
+            "kind": "cover"
+          },
+          {
+            "title": "Final board in the glove",
+            "description": "Photograph the charging revision installed in its real glove position, showing nearby structure and wiring so the size constraint is visible.",
+            "kind": "portrait"
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "level": 2,
+        "title": "Build diary"
+      },
+      {
+        "type": "timeline",
+        "title": "Shrinking the battery interface without losing usability",
+        "items": [
+          {
+            "title": "Adapt the original battery connection",
+            "body": "The first PCB provided the required electrical interface using a PH 2.0 mm connector and established the basic board shape.",
+            "date": "Version 1",
+            "state": "complete"
+          },
+          {
+            "title": "Test the assembly volume",
+            "body": "A physical fit check showed that the connector and cable bend occupied too much room even though the schematic functioned.",
+            "date": "Version 1 finding",
+            "state": "complete"
+          },
+          {
+            "title": "Move to SH 1.0 mm",
+            "body": "I redrew the adapter around the smaller connector and produced a board that fit the glove packaging correctly.",
+            "date": "Version 2",
+            "state": "complete"
+          },
+          {
+            "title": "Integrate battery charging",
+            "body": "The final revision retained the compact connection and added the charging circuit to complete the battery workflow on one PCB.",
+            "date": "Version 3",
+            "state": "complete"
+          },
+          {
+            "title": "Verify installed access",
+            "body": "The completed layout was checked with the actual cable and glove parts so charging and connection remain usable after assembly.",
+            "date": "Final",
+            "state": "complete"
+          }
+        ]
       },
       {
         "type": "timeline",
@@ -724,6 +2399,78 @@
             "body": "The final revision retained the smaller connection and added the battery-charging circuit to complete the interface.",
             "date": "Version 3",
             "state": "complete"
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "level": 2,
+        "title": "Problems, decisions and small fixes"
+      },
+      {
+        "type": "paragraph",
+        "body": "Connector pitch was only part of the fit problem. Cable exit direction and minimum bend radius determined how much volume the assembled interface occupied, so the comparison had to be made with a plugged-in cable rather than bare PCBs."
+      },
+      {
+        "type": "paragraph",
+        "body": "The smaller connector solved space at the cost of more delicate assembly. I kept the board and surrounding pads accessible enough for inspection and rework instead of allowing compactness to make the final interface disposable."
+      },
+      {
+        "type": "paragraph",
+        "body": "Adding charging changed the board from a passive adapter into a power subsystem. I kept the revision history visible because that functional jump explains why the final PCB is not simply Version 2 with a different connector label."
+      },
+      {
+        "type": "photoPlan",
+        "title": "Components and process to document",
+        "items": [
+          {
+            "title": "PH 2.0 mm revision",
+            "description": "Photograph Version 1 alone with the large connector plugged in and a ruler or grid showing why the combined board and cable were too bulky.",
+            "kind": "detail"
+          },
+          {
+            "title": "SH 1.0 mm revision",
+            "description": "Photograph Version 2 in the same orientation and scale as Version 1 so the reduction in connector and cable footprint can be compared directly.",
+            "kind": "detail"
+          },
+          {
+            "title": "Charging revision",
+            "description": "Use a sharp top-down macro of Version 3 with the charge input, battery connection and added power components identified by unobtrusive labels.",
+            "kind": "detail"
+          },
+          {
+            "title": "Board-outline overlay",
+            "description": "Export a CAD overlay of all three board outlines and connector envelopes from the same origin, using separate colours and a dimension scale.",
+            "kind": "diagram"
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "level": 2,
+        "title": "Result and present state"
+      },
+      {
+        "type": "paragraph",
+        "body": "Version 3 is the completed board because it satisfies both constraints that emerged during the project: it fits the glove and it supports the full charge-and-use workflow."
+      },
+      {
+        "type": "paragraph",
+        "body": "The revision set is worth showing together. A photograph of only the final PCB would hide the most useful engineering lesson, which was that a working connector can still be the wrong component once the cable is included."
+      },
+      {
+        "type": "photoPlan",
+        "title": "Testing and outcome to document",
+        "items": [
+          {
+            "title": "Connected final assembly",
+            "description": "Photograph the final PCB with both battery and charge connections attached in the installed orientation, showing that neither cable collides with the glove structure.",
+            "kind": "detail"
+          },
+          {
+            "title": "Charging indication",
+            "description": "Capture the board safely charging a battery with the status indication visible and the power source, connector orientation and supported battery clearly contextualised.",
+            "kind": "detail"
           }
         ]
       }
@@ -757,14 +2504,142 @@
     },
     "content": [
       {
+        "type": "heading",
+        "level": 2,
+        "title": "Why I built it"
+      },
+      {
         "type": "paragraph",
         "body": "My contribution was deliberately narrow: I took a simple existing interconnect function and redrew the board around the connector choices and cable arrangement I actually needed."
+      },
+      {
+        "type": "paragraph",
+        "body": "The original board already performed a simple interconnect job. My contribution was to preserve that function while changing the connector arrangement to match the cables and installation I actually intended to build."
+      },
+      {
+        "type": "paragraph",
+        "body": "This is a small project, but it is a useful example of designing around the whole harness. Connector family, orientation, pin order and cable exit all matter more here than adding another controller or feature."
+      },
+      {
+        "type": "photoPlan",
+        "title": "Opening views to capture",
+        "items": [
+          {
+            "title": "Completed BTIO adaptation",
+            "description": "Take the cover image as a clean three-quarter macro of the assembled board with every connector populated by a short, neatly routed example cable.",
+            "kind": "cover"
+          },
+          {
+            "title": "Board beside its installation",
+            "description": "Photograph the adapter next to the Box Turtle AFC mounting location so its scale, connector access and cable directions are obvious.",
+            "kind": "detail"
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "level": 2,
+        "title": "Build diary"
+      },
+      {
+        "type": "timeline",
+        "title": "Redrawing a simple board around the real harness",
+        "items": [
+          {
+            "title": "Record the required connections",
+            "body": "I began from the signals the BTIO needed to pass through, separating electrical requirements from the original connector choices.",
+            "date": "Step 1",
+            "state": "complete"
+          },
+          {
+            "title": "Choose the replacement connectors",
+            "body": "The new parts were selected around my cable set, installation direction and available assembly tools rather than inherited by default.",
+            "date": "Step 2",
+            "state": "complete"
+          },
+          {
+            "title": "Redraw the schematic in EasyEDA Pro",
+            "body": "I recreated the interconnect with explicit pin numbering so the revised footprints could be checked against the intended harness.",
+            "date": "Step 3",
+            "state": "complete"
+          },
+          {
+            "title": "Route for readable assembly",
+            "body": "The PCB was laid out to keep connector labels visible and to avoid trace crossings that would make a simple pass-through board unnecessarily difficult to inspect.",
+            "date": "Step 4",
+            "state": "complete"
+          },
+          {
+            "title": "Fit the completed board",
+            "body": "The assembled replacement was installed and confirmed to resolve the connector mismatch without changing the wider AFC system.",
+            "date": "Final",
+            "state": "complete"
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "level": 2,
+        "title": "Problems, decisions and small fixes"
+      },
+      {
+        "type": "paragraph",
+        "body": "The main risk was pin-order confidence. A board this simple offers very little debugging information, so connector drawings, cable orientation and schematic numbering had to agree before manufacturing."
+      },
+      {
+        "type": "paragraph",
+        "body": "Mechanical access was the other constraint. I left enough room to insert and remove each plug in the assembled system instead of optimising only the unpopulated PCB outline."
+      },
+      {
+        "type": "paragraph",
+        "body": "I deliberately stopped after solving the mismatch. Adding active electronics would have made the board more impressive on paper and less interchangeable in the actual machine."
+      },
+      {
+        "type": "photoPlan",
+        "title": "Components and process to document",
+        "items": [
+          {
+            "title": "Connector labels and pin order",
+            "description": "Use a top-down macro with all silkscreen labels readable and add a separate annotated copy that identifies pin one on every connector.",
+            "kind": "detail"
+          },
+          {
+            "title": "PCB routing view",
+            "description": "Export the EasyEDA Pro layout with copper layers, board outline and connector courtyards visible while hiding unrelated editor panels.",
+            "kind": "screenshot"
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "level": 2,
+        "title": "Result and present state"
       },
       {
         "type": "callout",
         "style": "success",
         "title": "Completed adaptation",
         "body": "The replacement board resolves the connector mismatch without changing the wider Box Turtle AFC system."
+      },
+      {
+        "type": "paragraph",
+        "body": "The finished board is a completed adaptation rather than a new AFC controller. Its value is that the wiring now matches my installation cleanly and remains understandable to assemble or replace later."
+      },
+      {
+        "type": "photoPlan",
+        "title": "Testing and outcome to document",
+        "items": [
+          {
+            "title": "Original and adapted connection",
+            "description": "Create a side-by-side comparison of the original connector expectation and the revised board with the changed cable directions marked.",
+            "kind": "diagram"
+          },
+          {
+            "title": "Installed AFC board",
+            "description": "Photograph the completed adapter mounted in the Box Turtle AFC with normal cable routing and nearby covers or moving parts in place.",
+            "kind": "detail"
+          }
+        ]
       }
     ]
   },
@@ -797,8 +2672,84 @@
     },
     "content": [
       {
+        "type": "heading",
+        "level": 2,
+        "title": "Why I built it"
+      },
+      {
         "type": "paragraph",
         "body": "The mechanical form follows a tower crane: V rollers travel along 2020 extrusion so the light can move through the working area. I avoided a conventional cable chain by passing power through custom PCB interconnects and rails that act as a linear slip contact."
+      },
+      {
+        "type": "paragraph",
+        "body": "The lamp is built like a small tower crane rather than a fixed arm. V rollers move along 2020 extrusion, and the lighting head can be positioned around the workspace without a cable chain following every movement."
+      },
+      {
+        "type": "paragraph",
+        "body": "Avoiding that chain created the central electrical idea: custom PCB rails carry power along the extrusion, while a moving interconnect collects it for the carriage and end effector. The mainboard, touch daughterboard, interconnect and rails were therefore designed as one system."
+      },
+      {
+        "type": "photoPlan",
+        "title": "Opening views to capture",
+        "items": [
+          {
+            "title": "Complete tower-crane lamp",
+            "description": "Take the cover image from a working-height three-quarter angle with the base, vertical structure, moving carriage and illuminated end effector all visible.",
+            "kind": "cover"
+          },
+          {
+            "title": "Full movement envelope",
+            "description": "Photograph the lamp from the side with the carriage at an extreme position so the rail length, V-roller travel and usable reach can be judged.",
+            "kind": "portrait"
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "level": 2,
+        "title": "Build diary"
+      },
+      {
+        "type": "timeline",
+        "title": "Combining moving structure, power rails and tunable light",
+        "items": [
+          {
+            "title": "Build the crane geometry",
+            "body": "I used 2020 extrusion and V rollers to create a rigid but manually repositionable structure with a recognisable tower-crane form.",
+            "date": "Stage 1",
+            "state": "complete"
+          },
+          {
+            "title": "Remove the moving cable chain",
+            "body": "Custom rail PCBs and a sliding interconnect were designed to carry power along the motion axis while the carriage remains free to travel.",
+            "date": "Stage 2",
+            "state": "complete"
+          },
+          {
+            "title": "Create the tunable-white head",
+            "body": "The end effector combines 2500 K and 6500 K LED arrays so their relative drive can select intermediate colour temperatures.",
+            "date": "Stage 3",
+            "state": "complete"
+          },
+          {
+            "title": "Add a capacitive control surface",
+            "body": "A separate daughterboard reads a touch slider and turns position along the control into the blend between the two LED channels.",
+            "date": "Stage 4",
+            "state": "complete"
+          },
+          {
+            "title": "Revise the controller and power stage",
+            "body": "After the rushed STM32 board and unsuitable buck module, I moved to an ESP32-WROOM-1U mainboard with purpose-designed power circuitry.",
+            "date": "Stage 5",
+            "state": "complete"
+          },
+          {
+            "title": "Integrate all four PCB types",
+            "body": "The final assembly joins controller, touch board, moving contact and rail sections into the completed lamp.",
+            "date": "Final",
+            "state": "complete"
+          }
+        ]
       },
       {
         "type": "specificationTable",
@@ -851,10 +2802,92 @@
         ]
       },
       {
+        "type": "heading",
+        "level": 2,
+        "title": "Problems, decisions and small fixes"
+      },
+      {
+        "type": "paragraph",
+        "body": "The first controller failed because it was rushed, not because an STM32 was fundamentally unsuitable. I kept that distinction in the diary: changing MCU families solved the schedule I had created, while the later custom power stage solved an actual electrical specification error."
+      },
+      {
+        "type": "paragraph",
+        "body": "The external buck module in Version 2 was incorrectly selected. Replacing it with circuitry designed for the real input, load and board constraints removed an awkward module dependency and produced the final reliable mainboard."
+      },
+      {
+        "type": "paragraph",
+        "body": "The PCB rails behave like a linear slip contact, so mechanical alignment and contact pressure matter as much as copper width. The moving pickup has to maintain power without binding, excessive wear or a brief interruption that resets the controller."
+      },
+      {
+        "type": "photoPlan",
+        "title": "Components and process to document",
+        "items": [
+          {
+            "title": "ESP32 mainboard",
+            "description": "Photograph the final ESP32-WROOM-1U board straight on with the custom power stage, rail output and external connections legible.",
+            "kind": "detail"
+          },
+          {
+            "title": "Capacitive touch daughterboard",
+            "description": "Use a close view of the touch-slider PCB and its installed surface, showing the relationship between the sensing electrode and the user's finger.",
+            "kind": "detail"
+          },
+          {
+            "title": "Moving interconnect",
+            "description": "Photograph the carriage pickup from below or the side so its contacts, mounting compliance and connection to the lamp head are visible.",
+            "kind": "detail"
+          },
+          {
+            "title": "PCB power rails",
+            "description": "Capture a long perspective down the extrusion with both custom rail boards visible, keeping joins and mounting points in focus.",
+            "kind": "portrait"
+          },
+          {
+            "title": "V-roller carriage",
+            "description": "Take a mechanical close-up of the rollers gripping the 2020 extrusion, including adjustment hardware and clearance to the power contacts.",
+            "kind": "detail"
+          },
+          {
+            "title": "Tunable-white LED head",
+            "description": "Photograph the end effector unlit under diffuse light so the two LED arrays, thermal mounting and cable-free connection are clearly visible.",
+            "kind": "detail"
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "level": 2,
+        "title": "Result and present state"
+      },
+      {
         "type": "callout",
         "style": "success",
         "title": "Release state",
         "body": "The lamp is complete; I plan to publish the release material later."
+      },
+      {
+        "type": "paragraph",
+        "body": "The completed lamp can be moved through its working area while the rail system supplies the light head, and the capacitive slider blends between the two colour-temperature endpoints."
+      },
+      {
+        "type": "paragraph",
+        "body": "I plan to publish the design later, but the documentation should preserve all three controller revisions. The final board makes more sense when the failed rush and the incorrectly specified module remain part of the engineering record."
+      },
+      {
+        "type": "photoPlan",
+        "title": "Testing and outcome to document",
+        "items": [
+          {
+            "title": "Colour-temperature endpoints",
+            "description": "Make a matched split image of the same neutral object lit at the 2500 K and 6500 K endpoints using locked camera exposure and white balance.",
+            "kind": "diagram"
+          },
+          {
+            "title": "Slider controlling the light",
+            "description": "Photograph a hand moving across the capacitive slider while the lamp illuminates the workspace, with the control and light head both visible.",
+            "kind": "detail"
+          }
+        ]
       }
     ]
   },
@@ -881,8 +2914,78 @@
     },
     "content": [
       {
+        "type": "heading",
+        "level": 2,
+        "title": "Why I built it"
+      },
+      {
         "type": "paragraph",
         "body": "The device presents itself as a standard keyboard, so scanning a card places the identifier directly into whichever text field has focus. That keeps the reader independent of a custom desktop driver or application."
+      },
+      {
+        "type": "paragraph",
+        "body": "I built the reader around the simplest useful desktop interface: a keyboard. When a tag is scanned, the device formats its UID and types the characters into the field that already has focus."
+      },
+      {
+        "type": "paragraph",
+        "body": "That removes the need for a custom driver, background service or application-specific integration. Any system that accepts ordinary keyboard input can receive the identifier, which makes testing as simple as opening a text editor."
+      },
+      {
+        "type": "photoPlan",
+        "title": "Opening views to capture",
+        "items": [
+          {
+            "title": "Tag being scanned",
+            "description": "Use the cover image to show a hand presenting an NFC card or tag to the finished reader while a computer text field waits in the background.",
+            "kind": "cover"
+          },
+          {
+            "title": "Reader enclosure and cable",
+            "description": "Photograph the complete device from a low three-quarter angle with the USB connection, scan area and physical size visible.",
+            "kind": "detail"
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "level": 2,
+        "title": "Build diary"
+      },
+      {
+        "type": "timeline",
+        "title": "Turning a tag UID into ordinary keystrokes",
+        "items": [
+          {
+            "title": "Read a stable UID",
+            "body": "I first established a consistent byte order and representation for the identifier returned by the NFC hardware.",
+            "date": "Step 1",
+            "state": "complete"
+          },
+          {
+            "title": "Choose a text format",
+            "body": "The firmware converts the UID into a predictable character sequence so repeated scans of the same tag produce identical input.",
+            "date": "Step 2",
+            "state": "complete"
+          },
+          {
+            "title": "Enumerate as USB HID",
+            "body": "The controller presents itself as a standard keyboard and sends the formatted characters as keyboard events.",
+            "date": "Step 3",
+            "state": "complete"
+          },
+          {
+            "title": "Package the scan area",
+            "body": "The PCB and enclosure place the antenna close to the marked surface while keeping the USB connection mechanically accessible.",
+            "date": "Step 4",
+            "state": "complete"
+          },
+          {
+            "title": "Test with ordinary applications",
+            "body": "I verified the reader by scanning into normal text fields rather than relying on a developer console that could hide desktop integration problems.",
+            "date": "Final",
+            "state": "complete"
+          }
+        ]
       },
       {
         "type": "diagram",
@@ -892,6 +2995,64 @@
           "Read the NFC tag UID",
           "Format the identifier",
           "Send the characters as HID keyboard events"
+        ]
+      },
+      {
+        "type": "heading",
+        "level": 2,
+        "title": "Problems, decisions and small fixes"
+      },
+      {
+        "type": "paragraph",
+        "body": "HID deliberately trades application awareness for universality. The reader cannot know whether the correct field has focus, so the physical interaction and host interface need to make the scan moment obvious to the user."
+      },
+      {
+        "type": "paragraph",
+        "body": "UID formatting also had to remain stable. Changing byte order, letter case or separators later would make the same physical tag appear to be a different identity to software that stores the typed value."
+      },
+      {
+        "type": "paragraph",
+        "body": "The antenna area should not be treated like spare enclosure space. Metal, dense wiring and the user's exact tag position affect coupling, so I kept the marked scan surface aligned with the reader hardware."
+      },
+      {
+        "type": "photoPlan",
+        "title": "Components and process to document",
+        "items": [
+          {
+            "title": "PCB and NFC antenna",
+            "description": "Photograph the bare board with the antenna region, controller and USB interface visible, using lighting that reveals copper geometry without severe reflection.",
+            "kind": "detail"
+          },
+          {
+            "title": "Antenna-to-tag spacing",
+            "description": "Take a side view with the enclosure open and a tag held at the marked scan surface to show the real separation from the antenna.",
+            "kind": "detail"
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "level": 2,
+        "title": "Result and present state"
+      },
+      {
+        "type": "paragraph",
+        "body": "The reader is complete and behaves like an input appliance: present a tag and receive its UID wherever text is accepted. The absence of a dedicated desktop program is the feature, not missing polish."
+      },
+      {
+        "type": "photoPlan",
+        "title": "Testing and outcome to document",
+        "items": [
+          {
+            "title": "UID typed into a text field",
+            "description": "Capture a neutral test UID appearing in a plain text editor immediately after a scan, with no personal identifiers or real access credentials shown.",
+            "kind": "screenshot"
+          },
+          {
+            "title": "USB HID recognition",
+            "description": "Save a system information screenshot that identifies the device as a keyboard-class peripheral while hiding unrelated device serial numbers.",
+            "kind": "screenshot"
+          }
         ]
       }
     ]
@@ -925,8 +3086,84 @@
     },
     "content": [
       {
+        "type": "heading",
+        "level": 2,
+        "title": "Why I built it"
+      },
+      {
         "type": "paragraph",
         "body": "The complete machine frame was designed around tool changing rather than adapting a single carriage afterwards. Each docked tool remains an independent print head, allowing inactive heads to preheat and each one to stay configured for a different filament."
+      },
+      {
+        "type": "paragraph",
+        "body": "I designed the printer frame around five independent tools from the start. Each tool is a complete direct-drive print head with its own heater and extruder motor, so parking a tool does not turn it into passive plumbing."
+      },
+      {
+        "type": "paragraph",
+        "body": "That independence allows inactive tools to preheat and lets each dock remain configured for a different filament, including combinations of soft and rigid material that are awkward to route through one shared extrusion path."
+      },
+      {
+        "type": "photoPlan",
+        "title": "Opening views to capture",
+        "items": [
+          {
+            "title": "Complete five-tool printer",
+            "description": "Take the cover image wide enough to show the custom frame, moving carriage and all five docked tools, while keeping the machine rather than the room as the subject.",
+            "kind": "cover"
+          },
+          {
+            "title": "Tool rack at working height",
+            "description": "Photograph the five heads straight on in their docks with tool numbers, filament paths and equal spacing visible.",
+            "kind": "portrait"
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "level": 2,
+        "title": "Build diary"
+      },
+      {
+        "type": "timeline",
+        "title": "Designing the machine around the tool exchange",
+        "items": [
+          {
+            "title": "Set the five-tool requirement",
+            "body": "The frame, dock spacing and carriage travel were sized around five complete direct-drive heads rather than leaving tool count as a later extension.",
+            "date": "Stage 1",
+            "state": "complete"
+          },
+          {
+            "title": "Make every head electrically independent",
+            "body": "Each tool received its own heater, extrusion motor and CAN-connected electronics so it can be identified, heated and driven while other tools remain parked.",
+            "date": "Stage 2",
+            "state": "complete"
+          },
+          {
+            "title": "Develop the latch-and-pin coupling",
+            "body": "The carriage uses mechanical pins for repeatable location and a latch for retention, avoiding a separate powered actuator on the carriage.",
+            "date": "Stage 3",
+            "state": "complete"
+          },
+          {
+            "title": "Shape the docking motion",
+            "body": "Pickup and return paths were tuned around the passive latch so the carriage itself performs engagement and release through controlled movement.",
+            "date": "Stage 4",
+            "state": "complete"
+          },
+          {
+            "title": "Coordinate heating and tool identity",
+            "body": "The control system keeps every CAN tool distinct, allowing the next head to preheat without confusing its heater or extruder with the active one.",
+            "date": "Stage 5",
+            "state": "complete"
+          },
+          {
+            "title": "Refine a working five-tool system",
+            "body": "All five tools can be exchanged mechanically; continued work focuses on reliability, calibration and broader multi-material use.",
+            "date": "Current",
+            "state": "active"
+          }
+        ]
       },
       {
         "type": "specificationTable",
@@ -959,10 +3196,92 @@
         "body": "Tool retention uses a latch-and-pin mechanism. The carriage performs the mechanical lock and release without requiring separate actuation electronics on the carriage itself."
       },
       {
+        "type": "heading",
+        "level": 2,
+        "title": "Problems, decisions and small fixes"
+      },
+      {
+        "type": "paragraph",
+        "body": "Passive mechanics reduce carriage wiring but transfer responsibility to alignment. Dock position, pin fit and approach path must cooperate closely enough that the tool seats without the latch being forced or the nozzle position changing unpredictably."
+      },
+      {
+        "type": "paragraph",
+        "body": "Five direct-drive heads also multiply ordinary printer details: heater wiring, filament routing, CAN identity, dock clearance and thermal standby behaviour all need to remain serviceable when the rack is full."
+      },
+      {
+        "type": "paragraph",
+        "body": "Mixing soft and rigid filament is one reason for independent tools, but it also exposes calibration differences. Each head needs its own extrusion and positional values so a successful mechanical pickup produces a useful material transition."
+      },
+      {
+        "type": "photoPlan",
+        "title": "Components and process to document",
+        "items": [
+          {
+            "title": "One complete tool",
+            "description": "Photograph a single tool removed from the rack against a plain background, showing its direct-drive extruder, heater, CAN electronics and docking features.",
+            "kind": "portrait"
+          },
+          {
+            "title": "Latch and locating pins",
+            "description": "Use a macro view of the mating carriage and tool features with the latch open, keeping pin surfaces and mechanical stops in focus.",
+            "kind": "detail"
+          },
+          {
+            "title": "Dock geometry",
+            "description": "Photograph one empty dock beside an occupied dock so retention, cable clearance and the tool's parked support points can be compared.",
+            "kind": "detail"
+          },
+          {
+            "title": "CAN tool electronics",
+            "description": "Capture the electronics on two adjacent heads with their network cabling and tool identifiers visible but machine UUIDs omitted from public labels.",
+            "kind": "detail"
+          },
+          {
+            "title": "Pickup motion sequence",
+            "description": "Create a four-frame sequence of approach, pin engagement, latch closure and withdrawal using a fixed camera position and consistent scale.",
+            "kind": "diagram"
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "level": 2,
+        "title": "Result and present state"
+      },
+      {
         "type": "callout",
         "style": "info",
         "title": "Feature complete",
         "body": "The five-tool exchange works, but refinement and wider machine integration keep the project active."
+      },
+      {
+        "type": "paragraph",
+        "body": "The tool changer is feature complete: the carriage can mechanically swap among five independent heads. I keep it active because repeatability across many cycles and consistent offsets between all five tools still define whether the machine is satisfying to use."
+      },
+      {
+        "type": "paragraph",
+        "body": "The most meaningful demonstration will combine materials that justify the architecture, not merely print the same plastic from five nozzles. A soft-and-rigid part shows why separate direct-drive paths and preheated tools matter."
+      },
+      {
+        "type": "photoPlan",
+        "title": "Testing and outcome to document",
+        "items": [
+          {
+            "title": "All tools reporting ready",
+            "description": "Save a control screenshot listing all five tool temperatures and identities in standby or ready states with private network identifiers removed.",
+            "kind": "screenshot"
+          },
+          {
+            "title": "Multi-material result",
+            "description": "Photograph a finished part that combines visibly distinct materials or colours, alongside the two or more tools that produced it.",
+            "kind": "detail"
+          },
+          {
+            "title": "Soft and rigid transition",
+            "description": "Use a macro image of the boundary between flexible and rigid regions with a wider inset showing the complete functional part.",
+            "kind": "detail"
+          }
+        ]
       }
     ]
   },
@@ -995,8 +3314,78 @@
     },
     "content": [
       {
+        "type": "heading",
+        "level": 2,
+        "title": "Why I built it"
+      },
+      {
         "type": "paragraph",
         "body": "When connected to USB-C power, the display hosts a webpage for choosing and converting an image. The ESP32 receives the prepared bitmap and updates the panel; it does not fetch calendar data by itself."
+      },
+      {
+        "type": "paragraph",
+        "body": "The device is deliberately an image display rather than an autonomous calendar client. When powered through USB-C, the ESP32 serves a local webpage that accepts an image, converts it to the panel's three-colour format and updates the 240 × 360 display."
+      },
+      {
+        "type": "paragraph",
+        "body": "That design kept account authentication and layout editing out of the embedded device. The browser prepares exactly what should be shown; the board's job is to receive it, drive the black, red and white panel and preserve the image without a battery."
+      },
+      {
+        "type": "photoPlan",
+        "title": "Opening views to capture",
+        "items": [
+          {
+            "title": "Finished tri-colour display",
+            "description": "Take the cover photograph straight on in soft daylight with a complete calendar image visible and the black, red and white areas clearly separated.",
+            "kind": "cover"
+          },
+          {
+            "title": "USB-powered desktop use",
+            "description": "Photograph the display at a slight angle on a desk with its USB-C cable connected, showing that no battery pack or external controller is required.",
+            "kind": "detail"
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "level": 2,
+        "title": "Build diary"
+      },
+      {
+        "type": "timeline",
+        "title": "From browser image to persistent three-colour panel",
+        "items": [
+          {
+            "title": "Select the 240 × 360 panel",
+            "body": "I fixed the target palette and pixel dimensions first so image conversion and PCB connections could be designed against the real display.",
+            "date": "Stage 1",
+            "state": "complete"
+          },
+          {
+            "title": "Build the upload webpage",
+            "body": "The ESP32 hosts the local page used to select, preview and submit an image without a separate desktop application.",
+            "date": "Stage 2",
+            "state": "complete"
+          },
+          {
+            "title": "Convert to three display planes",
+            "body": "Uploaded artwork is reduced to black, red and white information suitable for the panel instead of sending an ordinary full-colour bitmap.",
+            "date": "Stage 3",
+            "state": "complete"
+          },
+          {
+            "title": "Drive a complete refresh",
+            "body": "The firmware transfers the converted image and allows the e-paper update sequence to finish before reporting the new content as displayed.",
+            "date": "Stage 4",
+            "state": "complete"
+          },
+          {
+            "title": "Redesign for assembly and power",
+            "body": "After the impractically small parts and power issues in Version 1, I revised the board into the completed, solderable USB-C-powered version.",
+            "date": "Stage 5",
+            "state": "complete"
+          }
+        ]
       },
       {
         "type": "specificationTable",
@@ -1041,6 +3430,78 @@
             "state": "complete"
           }
         ]
+      },
+      {
+        "type": "heading",
+        "level": 2,
+        "title": "Problems, decisions and small fixes"
+      },
+      {
+        "type": "paragraph",
+        "body": "The first PCB used components that were smaller than the project needed. They reduced layout area but made hand assembly and fault finding needlessly difficult, so the redesign treated solderability as a real specification."
+      },
+      {
+        "type": "paragraph",
+        "body": "Power faults in the initial version also showed why an e-paper board cannot be judged only by its low idle consumption. A refresh produces a different load and several internal voltage requirements, all of which must remain stable through the update."
+      },
+      {
+        "type": "paragraph",
+        "body": "Image conversion needed honest previews. Red cannot be treated as generic grey, and fine text can disappear during palette reduction, so the browser workflow had to show the actual three-colour result before committing a slow refresh."
+      },
+      {
+        "type": "photoPlan",
+        "title": "Components and process to document",
+        "items": [
+          {
+            "title": "Version 1 PCB",
+            "description": "Photograph the original board with a macro scale reference and mark the components that proved unnecessarily difficult to solder.",
+            "kind": "detail"
+          },
+          {
+            "title": "Redesigned PCB",
+            "description": "Capture Version 2 in the same orientation and magnification as Version 1 so component-size and power-layout changes can be compared.",
+            "kind": "detail"
+          },
+          {
+            "title": "USB-C and power section",
+            "description": "Use a close angled view of the final power input and display supply circuitry with connector access and polarity labels visible.",
+            "kind": "detail"
+          },
+          {
+            "title": "Panel connection",
+            "description": "Photograph the display flex and connector installed correctly, showing retention and cable routing without sharply bending the flex.",
+            "kind": "detail"
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "level": 2,
+        "title": "Result and present state"
+      },
+      {
+        "type": "paragraph",
+        "body": "The second hardware revision is the completed display. It accepts an image through the local webpage, converts it for the tri-colour panel and leaves the result visible after the refresh without requiring continuous rendering."
+      },
+      {
+        "type": "paragraph",
+        "body": "A good project record should show both the convenient browser workflow and the awkward physical update. E-paper flashing through its refresh stages is part of the device, even if it is less photogenic than the final still image."
+      },
+      {
+        "type": "photoPlan",
+        "title": "Testing and outcome to document",
+        "items": [
+          {
+            "title": "Upload and conversion page",
+            "description": "Save a native screenshot showing source image, three-colour preview and upload control, using a neutral example with no private calendar events.",
+            "kind": "screenshot"
+          },
+          {
+            "title": "Refresh sequence",
+            "description": "Create a short frame sequence from blanking through intermediate flashes to the final image, keeping camera exposure and crop fixed.",
+            "kind": "diagram"
+          }
+        ]
       }
     ]
   },
@@ -1073,8 +3534,78 @@
     },
     "content": [
       {
+        "type": "heading",
+        "level": 2,
+        "title": "Why I built it"
+      },
+      {
         "type": "paragraph",
         "body": "Each display is deliberately thin: an Android device opens the local signage page in a full-screen browser, while an Ubuntu server owns the media queue, schedules and device-wide control."
+      },
+      {
+        "type": "paragraph",
+        "body": "I kept each display client intentionally thin: an Android signage screen opens one full-screen page on the local network. Scheduling, media selection and control live on a Flask application hosted by an Ubuntu server."
+      },
+      {
+        "type": "paragraph",
+        "body": "That division made the system practical to expand. Adding another display meant pointing a browser at the service rather than installing and maintaining another slightly different application package."
+      },
+      {
+        "type": "photoPlan",
+        "title": "Opening views to capture",
+        "items": [
+          {
+            "title": "Managed screen group",
+            "description": "Use the cover photograph to show several Android signage screens displaying one coordinated campaign in their real installed setting.",
+            "kind": "cover"
+          },
+          {
+            "title": "Single full-screen client",
+            "description": "Photograph one display from directly in front with the browser chrome absent and enough bezel visible to establish that it is an ordinary signage screen.",
+            "kind": "detail"
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "level": 2,
+        "title": "Build diary"
+      },
+      {
+        "type": "timeline",
+        "title": "Scaling one browser page into a managed display network",
+        "items": [
+          {
+            "title": "Prove the browser client",
+            "body": "I first made one Android screen reliably open and play the local signage page in a full-screen presentation mode.",
+            "date": "Step 1",
+            "state": "complete"
+          },
+          {
+            "title": "Centralise media on Flask",
+            "body": "The Ubuntu-hosted application became the source for available assets, display state and the schedule applied to clients.",
+            "date": "Step 2",
+            "state": "complete"
+          },
+          {
+            "title": "Add timed image queues",
+            "body": "Images can be ordered and assigned display periods so a campaign runs without someone manually changing every screen.",
+            "date": "Step 3",
+            "state": "complete"
+          },
+          {
+            "title": "Support video playback",
+            "body": "The client path was extended to handle moving media while preserving the same central queue and control model.",
+            "date": "Step 4",
+            "state": "complete"
+          },
+          {
+            "title": "Exercise many clients",
+            "body": "I tested the system with up to 40 screens to confirm that one server could remain the operational centre for the complete display set.",
+            "date": "Step 5",
+            "state": "complete"
+          }
+        ]
       },
       {
         "type": "specificationTable",
@@ -1105,6 +3636,78 @@
       {
         "type": "paragraph",
         "body": "Keeping the clients browser-based made replacement and expansion straightforward: the operational logic stayed on one server instead of becoming forty slightly different applications."
+      },
+      {
+        "type": "heading",
+        "level": 2,
+        "title": "Problems, decisions and small fixes"
+      },
+      {
+        "type": "paragraph",
+        "body": "A browser client is simple only when it returns to the intended page after restarts and network interruptions. I treated automatic recovery and a clear disconnected state as part of signage behaviour rather than a separate IT problem."
+      },
+      {
+        "type": "paragraph",
+        "body": "Image and video items have different loading and playback needs, so the queue cannot assume that every asset changes instantaneously at its scheduled boundary. Preloading and client state matter most when many displays switch together."
+      },
+      {
+        "type": "paragraph",
+        "body": "Central control also made mistakes scalable. I kept queue order, timing and target display selection visible before applying changes, because one wrong item on a single screen is a typo and on forty screens it is branding."
+      },
+      {
+        "type": "photoPlan",
+        "title": "Components and process to document",
+        "items": [
+          {
+            "title": "Administration interface",
+            "description": "Save a native screenshot of the central management page showing connected displays and media controls with device names replaced by neutral labels.",
+            "kind": "screenshot"
+          },
+          {
+            "title": "Timed media queue",
+            "description": "Capture the schedule editor with several images and a video arranged across explicit time ranges, keeping durations and ordering readable.",
+            "kind": "screenshot"
+          },
+          {
+            "title": "Ubuntu server",
+            "description": "Photograph the physical server or host device in its installed location with cabling and ventilation visible but no login details on screen.",
+            "kind": "detail"
+          },
+          {
+            "title": "Network topology",
+            "description": "Diagram the Ubuntu Flask server, local network and browser clients, showing that the displays request content rather than storing independent schedules.",
+            "kind": "diagram"
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "level": 2,
+        "title": "Result and present state"
+      },
+      {
+        "type": "paragraph",
+        "body": "The completed system can schedule images, play video and centrally control the connected Android displays. Testing at forty clients demonstrated the architecture at the scale I needed rather than only on a development laptop."
+      },
+      {
+        "type": "paragraph",
+        "body": "For the portfolio, the most convincing evidence is a matched set: the queue entry, the server state and several physical screens showing the selected item. Each view alone can be staged; together they document the actual system."
+      },
+      {
+        "type": "photoPlan",
+        "title": "Testing and outcome to document",
+        "items": [
+          {
+            "title": "Video playing on a client",
+            "description": "Photograph one screen during video playback with a second frame or motion cue that distinguishes it from a static poster.",
+            "kind": "detail"
+          },
+          {
+            "title": "Forty-screen test overview",
+            "description": "Use the widest available photograph or labelled composite that documents the large client test without exposing private room or organisation details.",
+            "kind": "diagram"
+          }
+        ]
       }
     ]
   },
@@ -1137,8 +3740,84 @@
     },
     "content": [
       {
+        "type": "heading",
+        "level": 2,
+        "title": "Why I built it"
+      },
+      {
         "type": "paragraph",
         "body": "The project grew from a school hackathon theme based on the jungle. I expanded that starting point into an island whose terrain and forests are generated from noise, then added animals and a repeatable fishing economy."
+      },
+      {
+        "type": "paragraph",
+        "body": "The project grew from a school hackathon prompt based on a jungle. I kept the dense vegetation but moved the player onto an island, then used procedural generation so the landscape and forests were not one hand-built route experienced exactly once."
+      },
+      {
+        "type": "paragraph",
+        "body": "The finished loop is intentionally open-ended: explore, catch fish, sell them and buy better rods until the available upgrades are exhausted. There is no final boss or rescue sequence added merely to make the progression graph end with fireworks."
+      },
+      {
+        "type": "photoPlan",
+        "title": "Opening views to capture",
+        "items": [
+          {
+            "title": "Generated island overview",
+            "description": "Use the cover screenshot as a wide elevated view that shows coastline, terrain and a dense procedurally placed forest in the same frame.",
+            "kind": "cover"
+          },
+          {
+            "title": "Player-scale shoreline",
+            "description": "Capture the island from normal gameplay height near the water so the environment reads as a playable place rather than only a terrain generator.",
+            "kind": "screenshot"
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "level": 2,
+        "title": "Build diary"
+      },
+      {
+        "type": "timeline",
+        "title": "Expanding a hackathon jungle into a fishing game",
+        "items": [
+          {
+            "title": "Interpret the jungle theme",
+            "body": "I began with a forested survival setting and chose an island boundary that could contain exploration without requiring an enormous authored world.",
+            "date": "Hackathon",
+            "state": "complete"
+          },
+          {
+            "title": "Generate terrain and forests",
+            "body": "Perlin-noise-driven values shape the island and vary the forest distribution so separate runs do not produce an identical landscape.",
+            "date": "World generation",
+            "state": "complete"
+          },
+          {
+            "title": "Populate the island",
+            "body": "Animals and environmental details were added so procedural terrain supports a world rather than remaining an empty height map.",
+            "date": "World building",
+            "state": "complete"
+          },
+          {
+            "title": "Implement fishing",
+            "body": "The player can use a rod, catch fish and convert the catch into the resource needed for progression.",
+            "date": "Core mechanic",
+            "state": "complete"
+          },
+          {
+            "title": "Build the upgrade loop",
+            "body": "Selling fish funds improved rods, which gives the player a reason to repeat the core action and work toward the complete equipment set.",
+            "date": "Progression",
+            "state": "complete"
+          },
+          {
+            "title": "Finish without a forced ending",
+            "body": "I left full upgrading as the natural stopping point instead of attaching an unrelated win condition to the original loop.",
+            "date": "Final",
+            "state": "complete"
+          }
+        ]
       },
       {
         "type": "specificationTable",
@@ -1163,6 +3842,83 @@
           {
             "label": "Ending",
             "value": "No separate final objective"
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "level": 2,
+        "title": "Problems, decisions and small fixes"
+      },
+      {
+        "type": "paragraph",
+        "body": "Pure randomness made poor level design. I used noise as structure and still had to consider walkable space, shoreline access and forest density so a generated seed remained playable rather than merely different."
+      },
+      {
+        "type": "paragraph",
+        "body": "The economy needed a visible reason to continue. Rod upgrades had to change the player's fishing capability enough that selling another catch felt like progress instead of a number increasing behind the same interaction."
+      },
+      {
+        "type": "paragraph",
+        "body": "Hackathon scope also left a useful boundary. I kept the finished game centred on fishing and exploration rather than adding several shallow crafting systems that would obscure the part that actually worked."
+      },
+      {
+        "type": "photoPlan",
+        "title": "Components and process to document",
+        "items": [
+          {
+            "title": "Two generation seeds",
+            "description": "Place overhead screenshots from two different world seeds side by side with identical camera angle to show changed coastline and forest layout.",
+            "kind": "screenshot"
+          },
+          {
+            "title": "Procedural forest",
+            "description": "Capture a ground-level view where tree spacing, variation and a navigable path can all be judged, rather than choosing only the densest area.",
+            "kind": "screenshot"
+          },
+          {
+            "title": "Island animals",
+            "description": "Take a gameplay screenshot that shows at least one animal behaving in the generated environment with the player and terrain providing scale.",
+            "kind": "screenshot"
+          },
+          {
+            "title": "Generation controls",
+            "description": "Save a concise Unity inspector or debug view showing the seed and major terrain or forest parameters without filling the frame with unrelated editor panels.",
+            "kind": "screenshot"
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "level": 2,
+        "title": "Result and present state"
+      },
+      {
+        "type": "paragraph",
+        "body": "Tide Bound is complete as the game I intended to make: a generated island, a fishing economy and a finite equipment ladder inside an otherwise open-ended world."
+      },
+      {
+        "type": "paragraph",
+        "body": "The diary should show both systems and play. A landscape screenshot proves the generator can make an island; the fishing and shop views prove there is a reason for the player to remain on it."
+      },
+      {
+        "type": "photoPlan",
+        "title": "Testing and outcome to document",
+        "items": [
+          {
+            "title": "Fishing interaction",
+            "description": "Capture the moment the line is active with the player, rod, water and feedback element all visible enough to explain the action.",
+            "kind": "screenshot"
+          },
+          {
+            "title": "Catch and sale result",
+            "description": "Save a matched pair showing a caught fish and the corresponding sale or currency change, using the same neutral save state.",
+            "kind": "screenshot"
+          },
+          {
+            "title": "Rod upgrade interface",
+            "description": "Capture the upgrade screen with several rod tiers and the final progression target visible, while avoiding a crop that hides the current resources.",
+            "kind": "screenshot"
           }
         ]
       }
@@ -1196,8 +3952,78 @@
     },
     "content": [
       {
+        "type": "heading",
+        "level": 2,
+        "title": "Why I built it"
+      },
+      {
         "type": "paragraph",
         "body": "The hackathon theme combined food with the galactic. I interpreted it as a small resource-and-crafting loop on a spaceborne dome, where the surrounding world is absurdly generous but the ticket home still has a price."
+      },
+      {
+        "type": "paragraph",
+        "body": "The hackathon theme combined galactic space with food, so I built the game around a deliberately strange premise: the player is stranded on a dome containing limitless ingredients but still needs to run a pizza business to afford a way home."
+      },
+      {
+        "type": "paragraph",
+        "body": "The objective is compact and explicit. Gather ingredients, assemble pizzas, sell them and reach 1,000 in currency; the rocket then turns that accumulated work into a visible exit rather than leaving the score as its own reward."
+      },
+      {
+        "type": "photoPlan",
+        "title": "Opening views to capture",
+        "items": [
+          {
+            "title": "Space dome and pizza station",
+            "description": "Use the cover screenshot to show the player, curved dome environment, ingredient area, pizza station and surrounding space in one readable composition.",
+            "kind": "cover"
+          },
+          {
+            "title": "Rocket destination",
+            "description": "Capture the rocket from the player's normal view with enough of the dome visible to establish it as the escape objective rather than background decoration.",
+            "kind": "screenshot"
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "level": 2,
+        "title": "Build diary"
+      },
+      {
+        "type": "timeline",
+        "title": "Turning two hackathon words into one complete loop",
+        "items": [
+          {
+            "title": "Combine the themes",
+            "body": "I interpreted galactic and food as a pizza business operating on an isolated space dome instead of presenting two unrelated visual motifs.",
+            "date": "Concept",
+            "state": "complete"
+          },
+          {
+            "title": "Build the bounded world",
+            "body": "The dome keeps every resource and station close enough for a short hackathon game while the space setting explains why leaving matters.",
+            "date": "World",
+            "state": "complete"
+          },
+          {
+            "title": "Provide renewable ingredients",
+            "body": "Ingredient sources do not run out, keeping the challenge focused on collection and production rather than a permanently failed save.",
+            "date": "Resources",
+            "state": "complete"
+          },
+          {
+            "title": "Assemble and sell pizzas",
+            "body": "The player converts gathered items into a finished product, then into money through the selling step.",
+            "date": "Core loop",
+            "state": "complete"
+          },
+          {
+            "title": "Attach a clear win condition",
+            "body": "Reaching 1,000 unlocks the rocket departure and gives the compact economy a definite endpoint.",
+            "date": "Final objective",
+            "state": "complete"
+          }
+        ]
       },
       {
         "type": "specificationTable",
@@ -1218,6 +4044,78 @@
           {
             "label": "Win condition",
             "value": "Reach 1,000 and leave in the rocket"
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "level": 2,
+        "title": "Problems, decisions and small fixes"
+      },
+      {
+        "type": "paragraph",
+        "body": "The main design risk was theme-first clutter. I kept the number of actions small so the joke premise still led to a game the player could understand within the first minute."
+      },
+      {
+        "type": "paragraph",
+        "body": "Infinite resources remove failure through scarcity, so the remaining pacing has to come from collection, pizza assembly and sale value. Those steps need to be quick enough for a hackathon game but distinct enough to feel like progress."
+      },
+      {
+        "type": "paragraph",
+        "body": "The target of 1,000 also had to remain visible. Without a clear relationship between current money and the rocket, the player could repeat the loop without realising that the game had an ending."
+      },
+      {
+        "type": "photoPlan",
+        "title": "Components and process to document",
+        "items": [
+          {
+            "title": "Ingredient sources",
+            "description": "Capture the resource area with several ingredient types visible and the interaction prompt shown for one source.",
+            "kind": "screenshot"
+          },
+          {
+            "title": "Ingredient collection",
+            "description": "Save an action frame where a collected item and inventory feedback appear together so the input and result are connected.",
+            "kind": "screenshot"
+          },
+          {
+            "title": "Pizza assembly",
+            "description": "Capture the production station with ingredients becoming a pizza, keeping any recipe or progress indication readable.",
+            "kind": "screenshot"
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "level": 2,
+        "title": "Result and present state"
+      },
+      {
+        "type": "paragraph",
+        "body": "Celestial Feasts is complete as a short hackathon game with a full beginning-to-end economy. The player can understand why they are gathering food, what the pizzas are worth and exactly when the rocket becomes available."
+      },
+      {
+        "type": "paragraph",
+        "body": "The best record is a sequence of the loop rather than seven scenic dome shots. Collection, assembly, sale and departure should each appear once so the page documents play rather than only theme."
+      },
+      {
+        "type": "photoPlan",
+        "title": "Testing and outcome to document",
+        "items": [
+          {
+            "title": "Pizza sale",
+            "description": "Capture a completed pizza being sold with the currency increase visible in the same frame.",
+            "kind": "screenshot"
+          },
+          {
+            "title": "Reaching 1,000",
+            "description": "Save the moment the target currency is reached and the game communicates that the rocket exit is now available.",
+            "kind": "screenshot"
+          },
+          {
+            "title": "Rocket departure",
+            "description": "Capture the final escape sequence or end screen with the dome still recognisable as the place the player is leaving.",
+            "kind": "screenshot"
           }
         ]
       }
@@ -1252,8 +4150,78 @@
     },
     "content": [
       {
+        "type": "heading",
+        "level": 2,
+        "title": "Why I built it"
+      },
+      {
         "type": "paragraph",
         "body": "The PCB places a small square display directly on the Pi Zero and provides real-time clock hardware for timekeeping. A transparent prism cube sits above the panel and reflects prepared imagery into a floating four-sided illusion."
+      },
+      {
+        "type": "paragraph",
+        "body": "The display uses a reflection illusion rather than a volumetric hologram. A transparent prism cube sits above a small square IPS panel and reflects four prepared views so the image appears to float near the centre."
+      },
+      {
+        "type": "paragraph",
+        "body": "I designed a breakout board for the Raspberry Pi Zero that places the 1.3-inch 240 × 240 screen in the required position and adds an RTC. That makes the optical stack compact and allows time-based content to remain useful after the Pi has been powered down."
+      },
+      {
+        "type": "photoPlan",
+        "title": "Opening views to capture",
+        "items": [
+          {
+            "title": "Illuminated prism illusion",
+            "description": "Take the cover photograph in a darkened room with the floating image sharp, the glass prism edges faintly visible and the base not lost completely in black.",
+            "kind": "cover"
+          },
+          {
+            "title": "Complete optical stack",
+            "description": "Photograph the Pi Zero, breakout, IPS panel and prism from the side under normal light so the physical source of the illusion is clear.",
+            "kind": "portrait"
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "level": 2,
+        "title": "Build diary"
+      },
+      {
+        "type": "timeline",
+        "title": "Building the display beneath the illusion",
+        "items": [
+          {
+            "title": "Choose a square source display",
+            "body": "The 240 × 240 IPS panel provides equal space for four directional views arranged around the centre of the image.",
+            "date": "Step 1",
+            "state": "complete"
+          },
+          {
+            "title": "Design the Pi Zero breakout",
+            "body": "I placed the display interface and supporting connections on a compact PCB that stacks directly with the Raspberry Pi Zero.",
+            "date": "Step 2",
+            "state": "complete"
+          },
+          {
+            "title": "Add RTC timekeeping",
+            "body": "The breakout includes a real-time clock so content that depends on time does not rely on a network update immediately after every boot.",
+            "date": "Step 3",
+            "state": "complete"
+          },
+          {
+            "title": "Prepare four-view artwork",
+            "body": "Source imagery is repeated and oriented around the display centre so each prism face reflects an upright view toward its observer.",
+            "date": "Step 4",
+            "state": "complete"
+          },
+          {
+            "title": "Align the glass prism",
+            "body": "The prism is centred over the image and held at the height and angle where all four reflections meet convincingly.",
+            "date": "Final",
+            "state": "complete"
+          }
+        ]
       },
       {
         "type": "specificationTable",
@@ -1274,6 +4242,78 @@
           {
             "label": "Optical element",
             "value": "Glass prism cube above the screen"
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "level": 2,
+        "title": "Problems, decisions and small fixes"
+      },
+      {
+        "type": "paragraph",
+        "body": "The illusion depends heavily on alignment. A small offset between the prism and the four image quadrants makes the reflected object split or appear to lean, so the mechanical centre matters as much as the display resolution."
+      },
+      {
+        "type": "paragraph",
+        "body": "Ambient light is another honest limitation. The transparent surfaces cannot produce black; they reflect bright pixels and allow the room to remain visible, which is why high-contrast artwork and a darker setting work best."
+      },
+      {
+        "type": "paragraph",
+        "body": "The name is convenient but technically generous. I describe the prism and reflections on the project page so the effect is not presented as a free-space volumetric display."
+      },
+      {
+        "type": "photoPlan",
+        "title": "Components and process to document",
+        "items": [
+          {
+            "title": "Breakout PCB",
+            "description": "Use a top-down macro of the bare or assembled breakout with the display connector, Pi header and RTC section labelled.",
+            "kind": "detail"
+          },
+          {
+            "title": "Pi Zero stack",
+            "description": "Photograph the breakout installed on the Raspberry Pi Zero from an angle that shows board spacing, connectors and the compact combined footprint.",
+            "kind": "detail"
+          },
+          {
+            "title": "IPS panel without prism",
+            "description": "Capture the running 240 × 240 display before the prism is placed, showing all four rotated image quadrants and the empty centre.",
+            "kind": "detail"
+          },
+          {
+            "title": "RTC section",
+            "description": "Take a close view of the RTC and its supporting parts with the board silkscreen and timekeeping backup arrangement visible.",
+            "kind": "detail"
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "level": 2,
+        "title": "Result and present state"
+      },
+      {
+        "type": "paragraph",
+        "body": "The completed breakout supports the screen and timekeeping required for the prism display. The effect is simple, but integrating the panel directly with the Pi Zero made the object compact enough to feel like one device rather than a monitor under a loose piece of glass."
+      },
+      {
+        "type": "paragraph",
+        "body": "The portfolio should show the illusion and its construction beside each other. Preserving the trick does not require pretending there is no screen underneath it."
+      },
+      {
+        "type": "photoPlan",
+        "title": "Testing and outcome to document",
+        "items": [
+          {
+            "title": "Prism alignment close-up",
+            "description": "Photograph one prism edge meeting the display centre with a reflected image visible, using side lighting that reveals the glass without overwhelming the content.",
+            "kind": "detail"
+          },
+          {
+            "title": "Four-sided viewing comparison",
+            "description": "Create a four-frame composite photographed from each side of the cube, keeping camera distance and exposure consistent.",
+            "kind": "diagram"
           }
         ]
       }
@@ -1307,14 +4347,151 @@
     },
     "content": [
       {
+        "type": "heading",
+        "level": 2,
+        "title": "Why I built it"
+      },
+      {
         "type": "paragraph",
         "body": "I developed the mechanical layout and the code needed to plan board movement, with a reed-switch grid intended to identify occupied squares. The design never progressed into physical assembly."
+      },
+      {
+        "type": "paragraph",
+        "body": "This project remained a digital study. I developed the mechanical CAD and movement-planning code for an automatic chess board, with reed switches intended to report which squares were occupied."
+      },
+      {
+        "type": "paragraph",
+        "body": "The goal was to connect sensed board state to physical movement without requiring a camera above the board. I stopped before manufacturing after buying a Chestnut automatic chess set that already met the practical need that had motivated the design."
+      },
+      {
+        "type": "photoPlan",
+        "title": "Opening views to capture",
+        "items": [
+          {
+            "title": "Complete CAD concept",
+            "description": "Use the cover as a clean isometric render of the complete chess board and its base, with the movement hardware visible through a cutaway or removed side panel.",
+            "kind": "cover"
+          },
+          {
+            "title": "Board and base proportions",
+            "description": "Export a side or section render with chess pieces in place so the thickness required by sensing and movement can be judged.",
+            "kind": "diagram"
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "level": 2,
+        "title": "Build diary"
+      },
+      {
+        "type": "timeline",
+        "title": "Developing the board far enough to judge the build",
+        "items": [
+          {
+            "title": "Define the sensed board",
+            "body": "I laid out a reed-switch grid so the controller could determine which of the 64 squares were occupied after a move.",
+            "date": "Stage 1",
+            "state": "complete"
+          },
+          {
+            "title": "Model the movement mechanism",
+            "body": "The internal motion system and board structure were developed in CAD around the need to reach every square beneath the playing surface.",
+            "date": "Stage 2",
+            "state": "complete"
+          },
+          {
+            "title": "Represent legal movement paths",
+            "body": "I wrote planning code that converts board coordinates into physical routes while accounting for the pieces already occupying other squares.",
+            "date": "Stage 3",
+            "state": "complete"
+          },
+          {
+            "title": "Join sensing and planned state",
+            "body": "The software design used occupancy readings to confirm that the physical board agreed with the move history maintained by the game logic.",
+            "date": "Stage 4",
+            "state": "complete"
+          },
+          {
+            "title": "Stop before physical manufacture",
+            "body": "The project ended at CAD and planning code when an existing automatic set provided the function without requiring another large mechanical build.",
+            "date": "Final",
+            "state": "complete"
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "level": 2,
+        "title": "Problems, decisions and small fixes"
+      },
+      {
+        "type": "paragraph",
+        "body": "A reed switch reports occupancy, not piece identity. The software would therefore have to preserve the known game state and use changes between scans to infer which physical piece had moved."
+      },
+      {
+        "type": "paragraph",
+        "body": "Path planning also becomes a mechanical problem around crowded positions. A route that is short in board coordinates may pass too close to another piece, so planned motion needs clearance rules rather than only start and end squares."
+      },
+      {
+        "type": "paragraph",
+        "body": "Stopping was a valid project result. The CAD and code had clarified the size and complexity of the mechanism, and buying an existing set removed the original need before I committed material and time to assembly."
+      },
+      {
+        "type": "photoPlan",
+        "title": "Components and process to document",
+        "items": [
+          {
+            "title": "Internal mechanism render",
+            "description": "Export the board with its playing surface hidden so rails, carriage or other designed movement parts are visible exactly as they appear in the CAD.",
+            "kind": "diagram"
+          },
+          {
+            "title": "Reed-switch grid",
+            "description": "Draw or export the 8 × 8 sensor arrangement with row, column and square labels, including one example occupied-square reading.",
+            "kind": "diagram"
+          },
+          {
+            "title": "Exploded CAD",
+            "description": "Create an exploded view separating playing surface, sensing layer, mechanism and enclosure without adding parts that were never designed.",
+            "kind": "diagram"
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "level": 2,
+        "title": "Result and present state"
       },
       {
         "type": "callout",
         "style": "warning",
         "title": "Stopped at the digital stage",
         "body": "I ended the experiment after buying a Chestnut automatic chess set that already met the practical need behind the project."
+      },
+      {
+        "type": "paragraph",
+        "body": "The design is experimental because it never left the digital stage. The useful output is the combination of CAD, sensor plan and movement code—not a claim that a physical robot was completed."
+      },
+      {
+        "type": "paragraph",
+        "body": "Documenting why I stopped is part of the diary. The existing product changed the make-versus-buy decision after the project had already answered the questions I was most interested in exploring."
+      },
+      {
+        "type": "photoPlan",
+        "title": "Testing and outcome to document",
+        "items": [
+          {
+            "title": "Path-planning visualisation",
+            "description": "Save a screenshot of one planned chess move over an occupied board with start, destination, obstacles and chosen physical route clearly distinguished.",
+            "kind": "screenshot"
+          },
+          {
+            "title": "Movement-code test",
+            "description": "Capture a concise test output that converts algebraic or grid coordinates into the planned machine positions, hiding unrelated editor panels.",
+            "kind": "screenshot"
+          }
+        ]
       }
     ]
   }

@@ -43,10 +43,35 @@ describe("project information hierarchy", () => {
   it("gives every specification grid and timeline its own concise title", () => {
     for (const project of content.projects) {
       for (const block of project.content) {
-        if (block.type === "specificationTable" || block.type === "timeline") {
+        if (
+          block.type === "specificationTable" ||
+          block.type === "timeline" ||
+          block.type === "photoPlan"
+        ) {
           expect(block.title.trim().length).toBeGreaterThan(0);
         }
+
+        if (block.type === "photoPlan") {
+          for (const item of block.items) {
+            expect(item.title.trim().length).toBeGreaterThan(0);
+            expect(item.description.trim().length).toBeGreaterThan(24);
+          }
+        }
       }
+    }
+  });
+
+  it("keeps a described cover and supporting media plan for every project", () => {
+    for (const project of content.projects) {
+      const plannedPhotos = project.content.flatMap((block) =>
+        block.type === "photoPlan" ? block.items : [],
+      );
+
+      expect(plannedPhotos.length, project.id).toBeGreaterThanOrEqual(6);
+      expect(
+        plannedPhotos.filter((item) => item.kind === "cover"),
+        project.id,
+      ).toHaveLength(1);
     }
   });
 });

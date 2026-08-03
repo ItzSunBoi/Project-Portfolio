@@ -215,6 +215,7 @@ timeline
 linkGroup
 video
 diagram
+photoPlan
 ```
 
 When adding or changing a block:
