@@ -151,6 +151,7 @@ describe("portfolio content validation", () => {
 
   it("requires visible social profiles to have a URL", () => {
     const input = validInput();
+    input.socials[0].url = "";
     input.socials[0].visible = true;
 
     expect(() => validatePortfolioContent(input)).toThrow(
