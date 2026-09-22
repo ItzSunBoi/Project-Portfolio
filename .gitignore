@@ -1,6 +1,8 @@
 # Private working notes
 INTERNAL.md
 AGENT.md
+/Private/
+/src/content/backups/
 
 # Dependencies and package-manager state
 /node_modules/

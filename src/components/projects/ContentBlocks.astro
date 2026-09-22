@@ -1,5 +1,6 @@
 ---
 import type { ProjectContentBlock } from "../../schemas/project";
+import { responsiveSrcSet } from "../../lib/responsive-images";
 
 interface Props {
   blocks: ProjectContentBlock[];
@@ -33,6 +34,8 @@ const photoRecommendations = {
             <figure>
               <img
                 src={block.src}
+                srcset={responsiveSrcSet(block.src)}
+                sizes="(max-width: 960px) 100vw, 820px"
                 alt={block.alt}
                 loading="lazy"
                 decoding="async"
@@ -47,6 +50,8 @@ const photoRecommendations = {
                 <figure>
                   <img
                     src={image.src}
+                    srcset={responsiveSrcSet(image.src)}
+                    sizes="(max-width: 720px) 100vw, (max-width: 960px) 50vw, 400px"
                     alt={image.alt}
                     loading="lazy"
                     decoding="async"

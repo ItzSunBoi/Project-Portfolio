@@ -4,6 +4,7 @@ import { formatProjectYear } from "../../lib/dates";
 import { projectCategoryLabels } from "../../lib/project-taxonomy";
 import BlueprintThumbnail from "./BlueprintThumbnail.astro";
 import StatusBadge from "../common/StatusBadge.astro";
+import { responsiveSrcSet } from "../../lib/responsive-images";
 
 interface Props {
   project: Project;
@@ -37,6 +38,8 @@ const yearLabel = formatProjectYear(project.year, project.yearEnd);
         <>
           <img
             src={project.thumbnail}
+            srcset={responsiveSrcSet(project.thumbnail)}
+            sizes="(max-width: 720px) 100vw, (max-width: 960px) 50vw, 33vw"
             alt=""
             width="720"
             height="440"

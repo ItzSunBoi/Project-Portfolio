@@ -1,6 +1,7 @@
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { content } from "../src/lib/content";
+import { responsiveSrcSet } from "../src/lib/responsive-images";
 
 const detailTemplate = readFileSync(
   new URL("../src/pages/projects/[slug].astro", import.meta.url),
@@ -61,11 +62,31 @@ describe("project information hierarchy", () => {
     }
   });
 
-  it("keeps a described cover and supporting media plan for every project", () => {
+  it("keeps either real photos or a described media plan for every project", () => {
     for (const project of content.projects) {
       const plannedPhotos = project.content.flatMap((block) =>
         block.type === "photoPlan" ? block.items : [],
       );
+
+      if (plannedPhotos.length === 0) {
+        const photos = project.content.flatMap((block) => {
+          if (block.type === "image") return [block.src];
+          if (block.type === "gallery")
+            return block.images.map((image) => image.src);
+          return [];
+        });
+        expect(project.thumbnail, project.id).not.toBeNull();
+        expect(photos.length, project.id).toBeGreaterThanOrEqual(3);
+        for (const src of [project.thumbnail, ...photos]) {
+          expect(existsSync(`public${src}`), src ?? project.id).toBe(true);
+          for (const variant of responsiveSrcSet(src ?? "")?.split(", ") ??
+            []) {
+            const path = variant.split(" ")[0];
+            expect(existsSync(`public${path}`), path).toBe(true);
+          }
+        }
+        continue;
+      }
 
       expect(plannedPhotos.length, project.id).toBeGreaterThanOrEqual(6);
       expect(

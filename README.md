@@ -27,7 +27,7 @@ bars or suspiciously perfect project histories.
 | Styling        | Tailwind CSS 4 plus a shared responsive design system   |
 | Content        | Strictly validated JSON                                 |
 | Validation     | Zod, Astro checks, ESLint, Prettier and Vitest          |
-| Hosting target | Cloudflare Pages or any static host                     |
+| Hosting target | Cloudflare Workers static assets                        |
 | Client state   | Theme preference and project-filter URL parameters only |
 | Backend        | None required                                           |
 
@@ -99,19 +99,39 @@ than an invented asset path.
 
 ## Privacy choices
 
-This repository is intended to be public. It therefore contains no education
-profile, location history, private contact form, webhook adapter or server-side
-message endpoint. Public profile links remain configurable and blank links are
-not rendered.
+The generated site is public. Keep this source repository private while its
+history still contains earlier unfinished project content. The production build
+contains no education profile, location history, private contact form, webhook
+adapter or server-side message endpoint. Public profile links remain
+configurable and blank links are not rendered.
 
 `INTERNAL.md` is reserved for my own notes and is intentionally excluded from
 Git.
 
 ## Deployment
 
-Run `npm ci` followed by `npm run build`. The verified static output is written
-to `dist/`, ready for Cloudflare Pages or another static host. The portfolio's
-canonical address is configured as `www.ItzSunBoi.dev`.
+Run `npm ci`, `npm run check`, `npm run lint`, `npm test` and `npm run build` to
+validate a change locally. The verified static output is written to `dist/`.
+The GitHub Actions workflow repeats those checks and deploys that exact build
+to Cloudflare Workers only after a push to `main` passes. The Worker serves
+static assets and returns the generated `404.html` for missing pages.
+
+The production workflow needs `CLOUDFLARE_ACCOUNT_ID` and a scoped
+`CLOUDFLARE_API_TOKEN` in the GitHub `production` environment. Deployment stays
+disabled until the repository variable `CLOUDFLARE_DEPLOY_ENABLED` is set to
+`true`; after that, a push to `main` or a manual workflow run validates and
+deploys. Cloudflare Workers must not also have an automatic Git build
+connected to this repo, because that would bypass the validation gate.
+
+The portfolio's canonical address is `https://www.itzsunboi.dev`, configured
+in `src/content/site.json` and `astro.config.mjs`. Attach that hostname as a
+Worker custom domain after checking the deployment on `workers.dev`. Redirect
+the apex domain to `www` while preserving paths and query strings.
+
+Unfinished JSON lives in the separate private repository at `Private/`. The
+parent repository ignores that directory and `src/content/backups/`. Changes
+to the private repository do not trigger a site build. Review and copy approved
+content into this repository through a pull request to publish it.
 
 ## Licence
 

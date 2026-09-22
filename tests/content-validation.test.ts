@@ -36,7 +36,10 @@ describe("portfolio content validation", () => {
 
   it("rejects repeated project narrative copy", () => {
     const input = validInput();
-    input.projects[1].summary = input.projects[0].summary;
+    const repeatedCopy = structuredClone(input.projects[0]);
+    repeatedCopy.id = "repeated-copy-test";
+    repeatedCopy.slug = "repeated-copy-test";
+    input.projects.push(repeatedCopy);
 
     expect(() => validatePortfolioContent(input)).toThrow(/projects\.copy/i);
   });
@@ -113,9 +116,10 @@ describe("portfolio content validation", () => {
     const input = validInput();
     input.projects[0].year = 2024;
     input.projects[0].yearEnd = 2026;
-    input.projects[1].year = 2025;
-    input.projects[1].yearEnd = "Now";
+    expect(() => validatePortfolioContent(input)).not.toThrow();
 
+    input.projects[0].year = 2025;
+    input.projects[0].yearEnd = "Now";
     expect(() => validatePortfolioContent(input)).not.toThrow();
   });
 

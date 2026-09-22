@@ -4,21 +4,39 @@ import { filterProjects } from "../src/lib/filters";
 
 describe("project filtering", () => {
   it("matches technologies and summary text", () => {
-    const results = filterProjects(content.projects, { query: "OV9281" });
-    expect(results.map((project) => project.slug)).toContain(
-      "dual-laser-triangulator",
-    );
+    expect(
+      filterProjects(content.projects, { query: "CH32V006" }).map(
+        (project) => project.slug,
+      ),
+    ).toContain("gigaplex");
+    expect(
+      filterProjects(content.projects, { query: "keychain" }).map(
+        (project) => project.slug,
+      ),
+    ).toContain("gigaplex");
   });
 
   it("matches secondary categories", () => {
     const results = filterProjects(content.projects, {
-      categories: ["computer-vision"],
+      categories: ["pcb"],
     });
-    expect(results.map((project) => project.slug)).toContain("chroma-slicer");
+    expect(results.map((project) => project.slug)).toContain("gigaplex");
+  });
+
+  it("lists the finished Gigaplex build as completed", () => {
+    const results = filterProjects(content.projects, {
+      statuses: ["completed"],
+    });
+
+    expect(results.map((project) => project.slug)).toContain("gigaplex");
   });
 
   it("combines category and status filters", () => {
-    const results = filterProjects(content.projects, {
+    const experimentalProject = {
+      ...structuredClone(content.projects[0]),
+      status: "experimental" as const,
+    };
+    const results = filterProjects([experimentalProject], {
       categories: ["pcb"],
       statuses: ["experimental"],
     });

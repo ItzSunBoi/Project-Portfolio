@@ -4,6 +4,7 @@ on:
   push:
     branches: ["main"]
   pull_request:
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -24,6 +25,13 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Keep private content out of the public repository
+        run: |
+          if [[ -n "$(git ls-files -- Private src/content/backups)" ]]; then
+            echo "Private project data is tracked in the public repository." >&2
+            exit 1
+          fi
+
       - name: Validate content and types
         run: npm run check
 
@@ -35,3 +43,42 @@ jobs:
 
       - name: Build static site
         run: npm run build
+
+      - name: Save verified static site
+        if: github.ref == 'refs/heads/main' && vars.CLOUDFLARE_DEPLOY_ENABLED == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: verified-site
+          path: dist/
+          if-no-files-found: error
+
+  deploy:
+    if: github.ref == 'refs/heads/main' && vars.CLOUDFLARE_DEPLOY_ENABLED == 'true'
+    needs: validate
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Get verified static site
+        uses: actions/download-artifact@v4
+        with:
+          name: verified-site
+          path: dist/
+
+      - name: Deploy Cloudflare Worker
+        uses: cloudflare/wrangler-action@v4
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: deploy
