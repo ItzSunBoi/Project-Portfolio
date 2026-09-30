@@ -75,6 +75,17 @@ const jsonLd = {
         <div class="project-hero-copy">
           <p class="page-kicker">{projectCategoryLabels[project.category]}</p>
           <h1>{project.title}</h1>
+          {
+            project.heroLink && (
+              <a
+                class="text-link project-hero-link"
+                href={project.heroLink.url}
+                rel="noreferrer"
+              >
+                {project.heroLink.label} <span aria-hidden="true">↗</span>
+              </a>
+            )
+          }
           <p class="project-subtitle">{project.subtitle}</p>
           <div class="project-hero-meta">
             <span class="project-year">{yearLabel}</span>

@@ -204,6 +204,13 @@ export const projectSchema = z
       .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/),
     title: z.string().trim().min(1),
     subtitle: z.string().trim().min(1),
+    heroLink: z
+      .object({
+        label: z.string().trim().min(1),
+        url: z.url(),
+      })
+      .strict()
+      .optional(),
     summary: z.string().trim().min(1),
     category: projectCategorySchema,
     secondaryCategories: z.array(projectCategorySchema).default([]),

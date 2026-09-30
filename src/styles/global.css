@@ -1304,6 +1304,10 @@ a {
   letter-spacing: -0.058em;
 }
 
+.project-hero-link {
+  margin-top: 0.85rem;
+}
+
 .project-subtitle {
   margin: 0.85rem 0 0;
   color: var(--primary-strong);

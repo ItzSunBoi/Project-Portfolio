@@ -24,6 +24,18 @@ describe("portfolio content validation", () => {
     expect(() => validatePortfolioContent(validInput())).not.toThrow();
   });
 
+  it("requires a valid URL and label for a project hero link", () => {
+    const input = validInput();
+    input.projects[0].heroLink = {
+      label: "Watch the making process on YouTube",
+      url: "https://www.youtube.com/watch?v=xjz5ZIe7dBw",
+    };
+    expect(() => validatePortfolioContent(input)).not.toThrow();
+
+    input.projects[0].heroLink.url = "not a URL";
+    expect(() => validatePortfolioContent(input)).toThrow(/heroLink\.url/i);
+  });
+
   it("reports duplicate project IDs and slugs", () => {
     const input = validInput();
     input.projects.push(structuredClone(input.projects[0]));

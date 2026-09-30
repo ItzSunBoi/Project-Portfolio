@@ -4,6 +4,10 @@
     "slug": "gigaplex",
     "title": "Gigaplex",
     "subtitle": "A complete game console in a 15 × 11 matrix",
+    "heroLink": {
+      "label": "Watch the making process on YouTube",
+      "url": "https://www.youtube.com/watch?v=xjz5ZIe7dBw"
+    },
     "summary": "I built a CR2032-powered keychain console around a charlieplexed display, five buttons, motion input and sound.",
     "category": "embedded",
     "secondaryCategories": ["hardware", "firmware", "pcb"],
