@@ -8,6 +8,10 @@
       "label": "Watch the making process on YouTube",
       "url": "https://www.youtube.com/watch?v=xjz5ZIe7dBw"
     },
+    "heroDownload": {
+      "label": "Instruction manual (PDF)",
+      "url": "/gigaplex/instruction-manual.pdf"
+    },
     "summary": "I built a CR2032-powered keychain console around a charlieplexed display, five buttons, motion input and sound.",
     "category": "embedded",
     "secondaryCategories": ["hardware", "firmware", "pcb"],
@@ -95,13 +99,13 @@
           },
           {
             "title": "Finish the console and packaging",
-            "body": "I finished the console after the first board bring-up and completed its packaging around the keychain-sized hardware.",
+            "body": "I finished the console after the first board bring-up and completed the packaging design around the keychain-sized hardware.",
             "date": "Step 6",
             "state": "complete"
           },
           {
-            "title": "Move into mid-scale production",
-            "body": "I am moving the finished design toward mid-scale production, where repeatable assembly, inspection and packaging are the next practical constraints.",
+            "title": "Build and check the first batch",
+            "body": "I have taken the finished design into production. Assembly and individual board checks are now the work in progress.",
             "date": "Now",
             "state": "active"
           }
@@ -191,8 +195,8 @@
       {
         "type": "callout",
         "style": "success",
-        "title": "Completed build",
-        "body": "I finished Gigaplex and its packaging. I am now moving the completed design toward mid-scale production."
+        "title": "Completed console design",
+        "body": "I finished Gigaplex and its packaging design before taking the build into batch production."
       },
       {
         "type": "paragraph",
@@ -200,13 +204,65 @@
       },
       {
         "type": "paragraph",
-        "body": "I wanted the console to feel deliberately tiny rather than compromised. With the product and packaging finished, the next challenge is repeating the build: placing 165 LEDs consistently, checking the assembled matrix and controls, and fitting the case without hand-tuning each unit."
+        "body": "I wanted the console to feel deliberately tiny rather than compromised. Taking that design into production brings a different set of constraints: repeatable assembly, inspection and case fit across a batch."
       },
       {
         "type": "image",
         "src": "/gigaplex/images/matrix-scan-oscilloscope-1600.webp",
         "alt": "Oscilloscope screen showing short repeated voltage pulses during Gigaplex bring-up",
         "caption": "Oscilloscope capture from the matrix bring-up."
+      },
+      {
+        "type": "heading",
+        "level": 2,
+        "title": "First production run"
+      },
+      {
+        "type": "paragraph",
+        "body": "I planned the first production run for 104 units. The packaging and accessories have all arrived, and I have assembled 84 boards so far. Time constraints have left the remaining assembly unfinished."
+      },
+      {
+        "type": "image",
+        "src": "/gigaplex/images/packaging-and-accessories-1600.webp",
+        "alt": "Open Gigaplex box with a keychain accessory inside, beside the printed instruction manual and an insert holding the console and coin cell; a QR code is printed inside the lid",
+        "caption": "The packaging brings the console, printed manual, battery and keychain accessory together. The lid’s QR code links back to this page."
+      },
+      {
+        "type": "gallery",
+        "images": [
+          {
+            "src": "/gigaplex/images/production-board-rack.webp",
+            "alt": "Gigaplex PCB panels standing vertically in a black rack, with individual populated console boards arranged in front",
+            "caption": "Panelised boards and individual consoles from the production batch."
+          },
+          {
+            "src": "/gigaplex/images/component-placement.webp",
+            "alt": "Desktop component-placement machine above PCB panels, with component reels across the front",
+            "caption": "The component-placement setup used during batch assembly."
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "level": 3,
+        "title": "Testing and QC"
+      },
+      {
+        "type": "paragraph",
+        "body": "I am now programming each assembled board, verifying the functionality of every core component and inspecting the visual quality. Testing and QC are still in progress across the batch; each board needs its own checks before I can call it ready."
+      },
+      {
+        "type": "heading",
+        "level": 3,
+        "title": "What the batch exposed"
+      },
+      {
+        "type": "paragraph",
+        "body": "The production run exposed a flaw in my power design: I had added too many capacitors to the buzzer’s power lines, which caused brownouts. Removing the extra capacitors fixed it. More components did not buy me more margin."
+      },
+      {
+        "type": "paragraph",
+        "body": "I also ran into a process limit: solder paste left unreflowed hardened until it was unusable. That made the gap between paste application and reflow a practical scheduling constraint."
       }
     ]
   }

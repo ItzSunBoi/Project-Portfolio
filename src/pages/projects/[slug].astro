@@ -75,18 +75,32 @@ const jsonLd = {
         <div class="project-hero-copy">
           <p class="page-kicker">{projectCategoryLabels[project.category]}</p>
           <h1>{project.title}</h1>
+          <p class="project-subtitle">{project.subtitle}</p>
           {
-            project.heroLink && (
-              <a
-                class="text-link project-hero-link"
-                href={project.heroLink.url}
-                rel="noreferrer"
-              >
-                {project.heroLink.label} <span aria-hidden="true">↗</span>
-              </a>
+            (project.heroDownload || project.heroLink) && (
+              <div class="project-hero-actions">
+                {project.heroDownload && (
+                  <a
+                    class="button button-primary"
+                    href={project.heroDownload.url}
+                    type="application/pdf"
+                  >
+                    {project.heroDownload.label}{" "}
+                    <span aria-hidden="true">→</span>
+                  </a>
+                )}
+                {project.heroLink && (
+                  <a
+                    class="text-link"
+                    href={project.heroLink.url}
+                    rel="noreferrer"
+                  >
+                    {project.heroLink.label} <span aria-hidden="true">↗</span>
+                  </a>
+                )}
+              </div>
             )
           }
-          <p class="project-subtitle">{project.subtitle}</p>
           <div class="project-hero-meta">
             <span class="project-year">{yearLabel}</span>
             <StatusBadge status={project.status} />

@@ -38,6 +38,58 @@ describe("portfolio content validation", () => {
     expect(() => validatePortfolioContent(input)).toThrow(/heroLink\.url/i);
   });
 
+  it.each(["/gigaplex/instruction-manual.pdf", "/documents/manual%2D2026.PDF"])(
+    "accepts a local PDF hero download: %s",
+    (url) => {
+      const input = validInput();
+      input.projects[0].heroDownload = {
+        label: "Instruction manual (PDF)",
+        url,
+      };
+
+      expect(() => validatePortfolioContent(input)).not.toThrow();
+    },
+  );
+
+  it.each([
+    "https://example.com/manual.pdf",
+    "//example.com/manual.pdf",
+    "manual.pdf",
+    "/documents/manual.html",
+    "/documents/../manual.pdf",
+    "/documents/./manual.pdf",
+    "/documents/%2e%2e/manual.pdf",
+    "/documents/%252e%252e/manual.pdf",
+    "/%2fexample.com/manual.pdf",
+    "/documents/%2e%2e%2fmanual.pdf",
+    "/documents\\manual.pdf",
+    "/documents/manual.pdf?download=true",
+    "/documents/manual.pdf#page=1",
+    "/documents/manual.pdf%3Fdownload=true",
+    "/documents/%00manual.pdf",
+    "/documents/%invalid.pdf",
+  ])("rejects an invalid PDF hero download path: %s", (url) => {
+    const input = validInput();
+    input.projects[0].heroDownload = {
+      label: "Instruction manual (PDF)",
+      url,
+    };
+
+    expect(() => validatePortfolioContent(input)).toThrow(/heroDownload\.url/i);
+  });
+
+  it("requires a nonempty PDF hero download label", () => {
+    const input = validInput();
+    input.projects[0].heroDownload = {
+      label: " ",
+      url: "/gigaplex/instruction-manual.pdf",
+    };
+
+    expect(() => validatePortfolioContent(input)).toThrow(
+      /heroDownload\.label/i,
+    );
+  });
+
   it("reports duplicate project IDs and slugs", () => {
     const input = validInput();
     input.projects.push(structuredClone(input.projects[0]));

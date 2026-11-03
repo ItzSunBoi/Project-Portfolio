@@ -1322,8 +1322,12 @@ a {
   letter-spacing: -0.058em;
 }
 
-.project-hero-link {
-  margin-top: 0.85rem;
+.project-hero-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.85rem;
+  margin-top: 1.25rem;
 }
 
 .project-subtitle {

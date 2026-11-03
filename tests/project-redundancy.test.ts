@@ -41,6 +41,40 @@ describe("project information hierarchy", () => {
     expect(detailTemplate).not.toContain(">Highlights<");
   });
 
+  it("places one PDF action ahead of the making video in the project hero", () => {
+    const heroStart = detailTemplate.indexOf('<header class="project-hero">');
+    const heroEnd = detailTemplate.indexOf("</header>", heroStart);
+    const hero = detailTemplate.slice(heroStart, heroEnd);
+    const subtitle = hero.indexOf("{project.subtitle}</p>");
+    const pdfLink = hero.indexOf("href={project.heroDownload.url}");
+    const videoLink = hero.indexOf("href={project.heroLink.url}");
+    const metadata = hero.indexOf('class="project-hero-meta"');
+
+    expect(subtitle).toBeGreaterThan(-1);
+    expect(pdfLink).toBeGreaterThan(subtitle);
+    expect(videoLink).toBeGreaterThan(pdfLink);
+    expect(metadata).toBeGreaterThan(videoLink);
+    expect(
+      detailTemplate.match(/href=\{project\.heroDownload\.url\}/g),
+    ).toHaveLength(1);
+    expect(hero).toContain("project.heroDownload &&");
+    expect(hero).toContain("{project.heroDownload.label}");
+    expect(hero).toContain('type="application/pdf"');
+    expect(hero).toContain('class="button button-primary"');
+  });
+
+  it("keeps the packaging QR destination connected to a real instruction PDF", () => {
+    const project = content.projects.find((entry) => entry.id === "gigaplex");
+    const download = project?.heroDownload;
+
+    expect(download).toBeDefined();
+    expect(download!.label).toMatch(/\bPDF\b/);
+    const manual = readFileSync(
+      new URL(`../public${download!.url}`, import.meta.url),
+    );
+    expect(manual.subarray(0, 5).toString()).toBe("%PDF-");
+  });
+
   it("keeps a single contextual filter reset control", () => {
     expect(indexTemplate.match(/data-clear-filters/g)).toHaveLength(1);
     expect(filterScript).toContain("button.hidden =");

@@ -18,6 +18,24 @@ const localOrRemotePath = z
     "Expected an absolute site path or valid URL",
   );
 
+const localPdfPath = z.string().refine((value) => {
+  let path = value;
+  try {
+    while (path.includes("%")) path = decodeURIComponent(path);
+  } catch {
+    return false;
+  }
+
+  return (
+    path.startsWith("/") &&
+    !path.startsWith("//") &&
+    !/[\\?#\s]/.test(path) &&
+    !Array.from(path).some((character) => character.charCodeAt(0) < 32) &&
+    /\.pdf$/i.test(path) &&
+    !path.split("/").some((segment) => segment === "." || segment === "..")
+  );
+}, "Expected an absolute local PDF path without traversal, a query or a fragment");
+
 const imageSchema = z
   .object({
     src: localOrRemotePath,
@@ -204,6 +222,13 @@ export const projectSchema = z
       .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/),
     title: z.string().trim().min(1),
     subtitle: z.string().trim().min(1),
+    heroDownload: z
+      .object({
+        label: z.string().trim().min(1),
+        url: localPdfPath,
+      })
+      .strict()
+      .optional(),
     heroLink: z
       .object({
         label: z.string().trim().min(1),
