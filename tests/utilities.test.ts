@@ -1,9 +1,62 @@
+import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { content } from "../src/lib/content";
 import { formatProjectYear } from "../src/lib/dates";
 import { responsiveSrcSet } from "../src/lib/responsive-images";
 import { absoluteUrl, pageTitle } from "../src/lib/seo";
 import { resolveThemePreference } from "../src/lib/theme";
+
+const styles = readFileSync("src/styles/global.css", "utf8");
+
+function luminance(hex: string) {
+  const channels = hex.match(/[a-f\d]{2}/gi)!.map((value) => {
+    const channel = parseInt(value, 16) / 255;
+    return channel <= 0.04045
+      ? channel / 12.92
+      : ((channel + 0.055) / 1.055) ** 2.4;
+  });
+  return channels[0] * 0.2126 + channels[1] * 0.7152 + channels[2] * 0.0722;
+}
+
+function contrast(a: string, b: string) {
+  const values = [luminance(a), luminance(b)].sort((x, y) => y - x);
+  return (values[0] + 0.05) / (values[1] + 0.05);
+}
+
+describe("theme text contrast", () => {
+  for (const [theme, selector] of [
+    ["light", ":root"],
+    ["dark", ':root[data-theme="dark"]'],
+  ]) {
+    it(`${theme} text roles meet normal-text contrast on all page surfaces`, () => {
+      const rule = styles.slice(styles.indexOf(`${selector} {`)).split("}")[0];
+      const tokens = Object.fromEntries(
+        [...rule.matchAll(/--([\w-]+):\s*(#[a-f\d]{6});/gi)].map(
+          ([, name, value]) => [name, value],
+        ),
+      );
+      for (const foreground of [
+        "text",
+        "text-secondary",
+        "primary-strong",
+        "success",
+        "warning",
+      ]) {
+        for (const background of ["page-bg", "surface", "secondary-bg"]) {
+          expect(
+            contrast(tokens[foreground], tokens[background]),
+          ).toBeGreaterThanOrEqual(4.5);
+        }
+      }
+      const buttonBackground =
+        theme === "dark" ? tokens.primary : tokens["primary-strong"];
+      const buttonText = theme === "dark" ? tokens["page-bg"] : "#ffffff";
+      expect(contrast(buttonBackground, buttonText)).toBeGreaterThanOrEqual(
+        4.5,
+      );
+    });
+  }
+});
 
 describe("URL generation", () => {
   it("creates canonical absolute URLs", () => {

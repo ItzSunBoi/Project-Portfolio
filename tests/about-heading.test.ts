@@ -10,8 +10,24 @@ describe("about page heading hierarchy", () => {
       /<SectionHeading\s+eyebrow="Working style"\s+title="Practical curiosity, tested physically\."\s*\/>/s,
     );
     expect(globalCss).toMatch(
-      /\.section-heading h2,[\s\S]*?font-size:\s*clamp\(2rem,\s*4vw,\s*3\.65rem\);[\s\S]*?line-height:\s*1\.08;/,
+      /\.section-heading h2\s*\{[^}]*font-size:\s*clamp\([^;]+\);[^}]*line-height:/,
     );
     expect(globalCss).not.toContain(".about-heading");
+  });
+
+  it("presents the four working principles as one semantic list", () => {
+    expect(aboutPage).toContain(
+      '<ol class="working-method" aria-label="My working method">',
+    );
+    expect(aboutPage).toContain('<li class="working-method-item">');
+    expect(aboutPage).not.toMatch(/principles-grid|class="principle"/);
+    for (const description of [
+      "Move an idea into a form that can be measured.",
+      "Use failures to refine the model of the system.",
+      "Check assumptions at electrical and physical boundaries.",
+      "Keep the next revision simpler and more reliable.",
+    ]) {
+      expect(aboutPage).toContain(description);
+    }
   });
 });

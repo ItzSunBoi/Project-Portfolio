@@ -13,6 +13,7 @@ import {
   skillGroupSchema,
   socialSchema,
   timelineItemSchema,
+  type TimelineItem,
 } from "../schemas/site";
 
 export class ContentValidationError extends Error {
@@ -249,4 +250,22 @@ export function getProjectBySlug(slug: string, includeDrafts = false) {
   return getVisibleProjects(content.projects, includeDrafts).find(
     (project) => project.slug === slug,
   );
+}
+
+export function getExplorationItems(
+  timeline: TimelineItem[] = content.timeline,
+  projects: Project[] = content.projects,
+) {
+  const publicProjectIds = new Set(
+    getVisibleProjects(projects).map((project) => project.id),
+  );
+
+  return timeline
+    .map((item) => ({
+      ...item,
+      relatedProjects: item.relatedProjects.filter((id) =>
+        publicProjectIds.has(id),
+      ),
+    }))
+    .filter((item) => item.relatedProjects.length > 0);
 }

@@ -17,7 +17,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     />
   </header>
 
-  <section class="section section-soft" style="padding-top: 3rem">
+  <section class="section section-soft">
     <div class="site-shell about-grid">
       <div class="about-copy">
         <SectionHeading
@@ -36,7 +36,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
           understandable and repeatable.
         </p>
       </div>
-      <div class="principles-grid">
+      <ol class="working-method" aria-label="My working method">
         {
           [
             ["01", "Build", "Move an idea into a form that can be measured."],
@@ -52,16 +52,16 @@ import BaseLayout from "../layouts/BaseLayout.astro";
               "Keep the next revision simpler and more reliable.",
             ],
           ].map(([number, title, description]) => (
-            <article class="principle">
-              <span>{number}</span>
-              <h3>{title}</h3>
-              <p style="margin: .45rem 0 0; color: var(--text-secondary); font-size: .78rem">
-                {description}
-              </p>
-            </article>
+            <li class="working-method-item">
+              <span aria-hidden="true">{number}</span>
+              <div>
+                <h3>{title}</h3>
+                <p>{description}</p>
+              </div>
+            </li>
           ))
         }
-      </div>
+      </ol>
     </div>
   </section>
 
@@ -75,7 +75,9 @@ import BaseLayout from "../layouts/BaseLayout.astro";
           than presenting every experiment as finished.
         </p>
       </div>
-      <a class="button button-primary" href="/projects/">Browse projects</a>
+      <a class="button button-primary" href="/projects/"
+        >Browse projects <span aria-hidden="true">→</span></a
+      >
     </div>
   </section>
 </BaseLayout>

@@ -10,9 +10,15 @@ interface Props {
   project: Project;
   compact?: boolean;
   filterable?: boolean;
+  headingAs?: "h2" | "h3";
 }
 
-const { project, compact = false, filterable = false } = Astro.props;
+const {
+  project,
+  compact = false,
+  filterable = false,
+  headingAs: Heading = "h3",
+}: Props = Astro.props;
 const categories = [project.category, ...project.secondaryCategories];
 const yearLabel = formatProjectYear(project.year, project.yearEnd);
 ---
@@ -30,8 +36,7 @@ const yearLabel = formatProjectYear(project.year, project.yearEnd);
   <a
     class="project-card-media"
     href={`/projects/${project.slug}/`}
-    tabindex="-1"
-    aria-hidden="true"
+    aria-label={`View ${project.title} project`}
   >
     {
       project.thumbnail ? (
@@ -39,8 +44,8 @@ const yearLabel = formatProjectYear(project.year, project.yearEnd);
           <img
             src={project.thumbnail}
             srcset={responsiveSrcSet(project.thumbnail)}
-            sizes="(max-width: 720px) 100vw, (max-width: 960px) 50vw, 33vw"
-            alt=""
+            sizes="(max-width: 720px) 100vw, 50vw"
+            alt={project.thumbnailAlt ?? ""}
             width="720"
             height="440"
             loading="lazy"
@@ -69,9 +74,9 @@ const yearLabel = formatProjectYear(project.year, project.yearEnd);
     </div>
     <div>
       <p class="project-type">{projectCategoryLabels[project.category]}</p>
-      <h3>
+      <Heading>
         <a href={`/projects/${project.slug}/`}>{project.title}</a>
-      </h3>
+      </Heading>
       <p class="project-summary">{project.summary}</p>
     </div>
     <div

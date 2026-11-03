@@ -2,10 +2,12 @@ import { describe, expect, it } from "vitest";
 import {
   ContentValidationError,
   content,
+  getExplorationItems,
   getVisibleProjects,
   validatePortfolioContent,
 } from "../src/lib/content";
 import type { ProjectContentBlock } from "../src/schemas/project";
+import type { TimelineItem } from "../src/schemas/site";
 
 function validInput() {
   return {
@@ -209,5 +211,52 @@ describe("portfolio content validation", () => {
     input.timeline = [];
 
     expect(validatePortfolioContent(input).projects).toEqual([]);
+  });
+
+  it("omits exploration with no published project references", () => {
+    const project = structuredClone(content.projects[0]);
+    project.visibility = "draft";
+    const item: TimelineItem = {
+      id: "test-exploration",
+      code: "EMB",
+      title: "Test exploration",
+      description: "A test thread linked to a project.",
+      relatedProjects: [project.id],
+    };
+
+    expect(getExplorationItems([], [project])).toEqual([]);
+    expect(getExplorationItems([item], [project])).toEqual([]);
+    project.visibility = "hidden";
+    expect(getExplorationItems([item], [project])).toEqual([]);
+    expect(getExplorationItems([{ ...item, relatedProjects: [] }], [])).toEqual(
+      [],
+    );
+  });
+
+  it("preserves populated exploration and only its public references", () => {
+    const published = structuredClone(content.projects[0]);
+    published.visibility = "public";
+    const draft = {
+      ...structuredClone(published),
+      id: "test-draft",
+      visibility: "draft" as const,
+    };
+    const hidden = {
+      ...structuredClone(published),
+      id: "test-hidden",
+      visibility: "hidden" as const,
+    };
+    const item: TimelineItem = {
+      id: "test-exploration",
+      code: "EMB",
+      title: "Test exploration",
+      description: "A test thread linked to a project.",
+      relatedProjects: [draft.id, published.id, hidden.id],
+    };
+
+    expect(getExplorationItems([item], [published, draft, hidden])).toEqual([
+      { ...item, relatedProjects: [published.id] },
+    ]);
+    expect(item.relatedProjects).toEqual([draft.id, published.id, hidden.id]);
   });
 });

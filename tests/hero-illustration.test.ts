@@ -9,8 +9,19 @@ const styles = readFileSync(
   new URL("../src/styles/global.css", import.meta.url),
   "utf8",
 );
+const hero = readFileSync(
+  new URL("../src/components/hero/Hero.astro", import.meta.url),
+  "utf8",
+);
 
 describe("hero exploded-render contract", () => {
+  it("signals internal project navigation with an internal arrow", () => {
+    expect(hero).toMatch(
+      /href="\/projects\/">\s*Explore projects\s*<span aria-hidden="true">→<\/span>/,
+    );
+    expect(hero).toContain('GitHub profile <span aria-hidden="true">↗</span>');
+  });
+
   it("layers the shared render beneath both theme-specific callouts", () => {
     expect(illustration).toContain("/images/hero/exploded-base.png");
     expect(illustration).toContain("/images/hero/exploded-text-black.png");

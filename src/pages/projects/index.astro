@@ -34,7 +34,12 @@ const projects = getVisibleProjects(undefined, includeDrafts);
     style="padding-top: 0"
     aria-label="Project browser"
   >
-    <form class="filters-panel" data-project-filters>
+    <form
+      class="filters-panel"
+      method="get"
+      action="/projects/"
+      data-project-filters
+    >
       <div class="filters-top">
         <label class="search-label">
           Search projects
@@ -51,6 +56,9 @@ const projects = getVisibleProjects(undefined, includeDrafts);
             />
           </span>
         </label>
+        <button class="button button-secondary filter-submit" type="submit">
+          Apply filters
+        </button>
       </div>
 
       <div class="filter-groups">
@@ -84,14 +92,24 @@ const projects = getVisibleProjects(undefined, includeDrafts);
     </form>
 
     <div class="results-bar" aria-live="polite">
-      <span data-result-count>{projects.length} projects</span>
+      <span data-result-count>
+        {projects.length} project{projects.length === 1 ? "" : "s"}
+      </span>
       <button class="clear-filters" type="button" data-clear-filters hidden>
         Reset view
       </button>
     </div>
 
-    <div class="projects-grid">
-      {projects.map((project) => <ProjectCard project={project} filterable />)}
+    <div
+      class="projects-grid"
+      data-project-results
+      data-project-count={projects.length}
+    >
+      {
+        projects.map((project) => (
+          <ProjectCard project={project} filterable headingAs="h2" />
+        ))
+      }
     </div>
 
     <div class="empty-state" data-empty-state hidden>
@@ -104,8 +122,8 @@ const projects = getVisibleProjects(undefined, includeDrafts);
 
     <noscript>
       <p class="content-callout callout-info">
-        JavaScript is disabled, so every project is shown. Individual project
-        pages remain fully available.
+        Every published project is shown. Enable JavaScript to filter the list.
+        Individual project pages remain fully available.
       </p>
     </noscript>
   </section>

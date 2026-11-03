@@ -1,6 +1,7 @@
 ---
 import type { ProjectContentBlock } from "../../schemas/project";
 import { responsiveSrcSet } from "../../lib/responsive-images";
+import { getTimelineHeadingTag } from "../../lib/project-content";
 
 interface Props {
   blocks: ProjectContentBlock[];
@@ -19,23 +20,23 @@ const photoRecommendations = {
 
 <div class="project-content">
   {
-    blocks.map((block) => {
+    blocks.map((block, index) => {
       switch (block.type) {
         case "paragraph":
-          return <p>{block.body}</p>;
+          return <p class="project-prose">{block.body}</p>;
         case "heading":
           return block.level === 2 ? (
-            <h2>{block.title}</h2>
+            <h2 class="project-prose">{block.title}</h2>
           ) : (
-            <h3>{block.title}</h3>
+            <h3 class="project-prose">{block.title}</h3>
           );
         case "image":
           return (
-            <figure>
+            <figure class="project-media">
               <img
                 src={block.src}
                 srcset={responsiveSrcSet(block.src)}
-                sizes="(max-width: 960px) 100vw, 820px"
+                sizes="(max-width: 960px) 100vw, 1040px"
                 alt={block.alt}
                 loading="lazy"
                 decoding="async"
@@ -45,13 +46,13 @@ const photoRecommendations = {
           );
         case "gallery":
           return (
-            <div class="content-gallery">
+            <div class="content-gallery project-media">
               {block.images.map((image) => (
                 <figure>
                   <img
                     src={image.src}
                     srcset={responsiveSrcSet(image.src)}
-                    sizes="(max-width: 720px) 100vw, (max-width: 960px) 50vw, 400px"
+                    sizes="(max-width: 720px) 100vw, (max-width: 960px) 50vw, 512px"
                     alt={image.alt}
                     loading="lazy"
                     decoding="async"
@@ -69,14 +70,20 @@ const photoRecommendations = {
           );
         case "quote":
           return (
-            <blockquote>
+            <blockquote class="project-prose">
               <p>{block.body}</p>
               {block.attribution && <cite>{block.attribution}</cite>}
             </blockquote>
           );
         case "callout":
           return (
-            <aside class:list={["content-callout", `callout-${block.style}`]}>
+            <aside
+              class:list={[
+                "project-prose",
+                "content-callout",
+                `callout-${block.style}`,
+              ]}
+            >
               <strong>{block.title}</strong>
               <p>{block.body}</p>
             </aside>
@@ -97,10 +104,11 @@ const photoRecommendations = {
               </table>
             </div>
           );
-        case "timeline":
+        case "timeline": {
+          const TimelineHeading = getTimelineHeadingTag(blocks, index);
           return (
             <section class="content-timeline-section">
-              <h2>{block.title}</h2>
+              <TimelineHeading>{block.title}</TimelineHeading>
               <ol class="content-timeline">
                 {block.items.map((item) => (
                   <li>
@@ -122,9 +130,10 @@ const photoRecommendations = {
               </ol>
             </section>
           );
+        }
         case "linkGroup":
           return (
-            <div class="content-links">
+            <div class="content-links project-prose">
               {block.links.map((link) => (
                 <a href={link.url} rel="noreferrer">
                   {link.label} <span aria-hidden="true">↗</span>
@@ -134,7 +143,7 @@ const photoRecommendations = {
           );
         case "video":
           return (
-            <figure>
+            <figure class="project-media">
               <video controls preload="metadata" poster={block.poster}>
                 <source src={block.src} />
               </video>
@@ -143,7 +152,7 @@ const photoRecommendations = {
           );
         case "diagram":
           return (
-            <aside class="content-diagram">
+            <aside class="content-diagram project-prose">
               {block.title && <strong>{block.title}</strong>}
               <p>{block.description}</p>
               {block.items?.length && (
