@@ -1,5 +1,6 @@
 name = "itzsunboi-portfolio"
 compatibility_date = "2026-07-26"
+previews = {}
 
 [assets]
 directory = "./dist"
