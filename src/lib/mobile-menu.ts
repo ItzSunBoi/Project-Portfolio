@@ -10,6 +10,9 @@ export function initializeMobileMenu(
 
   if (!menu || !toggle || !panel) return null;
 
+  const background = doc.querySelectorAll<HTMLElement>(
+    "[data-menu-background]",
+  );
   const setOpen = (open: boolean) => {
     menu.dataset.open = String(open);
     toggle.setAttribute("aria-expanded", String(open));
@@ -19,6 +22,9 @@ export function initializeMobileMenu(
     );
     panel.hidden = !open;
     doc.body.classList.toggle("mobile-menu-open", open);
+    background.forEach((element) => {
+      element.inert = open;
+    });
   };
 
   toggle.addEventListener("click", () => {

@@ -6,6 +6,8 @@ import { content } from "../lib/content";
 const profileLinks = content.socials.filter(
   (social) => social.visible && social.url,
 );
+const { email, title, knownContact, inquiryPrefix, profilesTitle } =
+  content.contact;
 ---
 
 <BaseLayout
@@ -13,52 +15,167 @@ const profileLinks = content.socials.filter(
   description="How to contact me about my hardware, embedded systems and software projects."
   canonicalPath="/contact/"
 >
-  <header class="site-shell page-header contact-header">
-    <SectionHeading
-      as="h1"
-      eyebrow="Contact"
-      title="If you know me, find me."
-      description="Ooooh, you can't find mee!."
-    />
-    <div class="contact-message">
-      <p class="eyebrow">{content.contact.eyebrow}</p>
-      <h2>{content.contact.title}</h2>
-      <p>{content.contact.knownContact}</p>
-      <p>
-        {content.contact.inquiryPrefix}
-        {" "}
-        <a class="contact-email" href={`mailto:${content.contact.email}`}>
-          {content.contact.email}
-        </a>
-      </p>
-    </div>
-  </header>
+  <div class="site-shell contact-page">
+    <header class="contact-masthead">
+      <SectionHeading
+        as="h1"
+        variant="page"
+        eyebrow="Contact"
+        title={title}
+        description={`${knownContact} ${inquiryPrefix}`}
+      />
+    </header>
 
-  <section class="section contact-profiles-section">
-    <div class="site-shell">
-      <aside class="contact-profiles">
-        <p class="eyebrow">Profiles</p>
-        <h2>{content.contact.profilesTitle}</h2>
-        {
-          profileLinks.length > 0 ? (
-            <ul class="profile-links">
-              {profileLinks.map((link) => (
-                <li>
-                  <a href={link.url} rel="me noreferrer">
-                    <span>{link.label}</span>
-                    <span class="profile-address">
-                      {link.url.replace(/^https?:\/\//, "")}
-                    </span>
-                    <span aria-hidden="true">↗</span>
-                  </a>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p class="contact-empty">{content.contact.emptyProfilesMessage}</p>
-          )
-        }
-      </aside>
+    <div class="contact-address">
+      <a href={`mailto:${email}`}>{email}</a>
+      <button
+        type="button"
+        class="button button-primary"
+        data-copy-email={email}
+        hidden
+      >
+        Copy email
+      </button>
+      <p class="copy-status" data-copy-status role="status"></p>
     </div>
-  </section>
+
+    {
+      profileLinks.length > 0 && (
+        <nav class="contact-links" aria-labelledby="contact-profiles">
+          <h2 class="eyebrow" id="contact-profiles">
+            {profilesTitle}
+          </h2>
+          <ul>
+            {profileLinks.map((link) => (
+              <li>
+                <a href={link.url} rel="me noreferrer">
+                  {link.label} <span aria-hidden="true">↗</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      )
+    }
+  </div>
 </BaseLayout>
+
+<script>
+  import { initializeCopyEmail } from "../lib/copy-email";
+
+  initializeCopyEmail();
+</script>
+
+<style>
+  .contact-page {
+    padding-block-end: clamp(3.5rem, 8vw, 7.5rem);
+  }
+
+  .contact-masthead :global(.section-heading.section-heading-page) {
+    display: block;
+  }
+
+  .contact-masthead :global(h1) {
+    margin-block: 0.09em 0.19em;
+  }
+
+  .contact-masthead :global(.section-description) {
+    max-width: 49ch;
+  }
+
+  .contact-address {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.85rem 1.5rem;
+    padding: clamp(1.25rem, 3.5vw, 3.5rem);
+    background: var(--callout);
+    color: var(--callout-text);
+    --focus: currentColor;
+  }
+
+  .contact-address > a {
+    font-size: clamp(1.37rem, 5vw, 5.1rem);
+    font-weight: 700;
+    line-height: 1.08;
+    letter-spacing: -0.057em;
+    overflow-wrap: anywhere;
+  }
+
+  .contact-address > a:hover,
+  .contact-links a:hover {
+    text-decoration: underline;
+    text-underline-offset: 0.18em;
+  }
+
+  .contact-address .button-primary {
+    --button-bg: #202a44;
+    --button-text: #f5f6ed;
+    flex-shrink: 0;
+  }
+
+  :global([data-design="workbench"]) .contact-address {
+    border: 1px solid var(--border-strong);
+    background: var(--secondary-bg);
+    color: var(--text);
+  }
+
+  :global([data-design="workbench"]) .contact-address > a {
+    font-family: var(--font-mono);
+    font-size: clamp(1.2rem, 3.8vw, 4.15rem);
+  }
+
+  :global([data-design="workbench"]) .contact-address .button-primary {
+    --button-bg: var(--callout);
+    --button-text: var(--callout-text);
+  }
+
+  .copy-status {
+    position: absolute;
+    inset-inline-end: 0.75rem;
+    inset-block-end: 0.3rem;
+    margin: 0;
+    font: 500 0.72rem/1.35 var(--font-mono);
+  }
+
+  .contact-links {
+    display: grid;
+    grid-template-columns: minmax(max-content, 1fr) 3fr;
+    align-items: center;
+    gap: 0.6rem 1.5rem;
+    margin-block-start: 1.65rem;
+    border-block: 1px solid var(--border);
+  }
+
+  .contact-links ul {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 0 1rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .contact-links a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    min-height: 3.5rem;
+    font-weight: 700;
+  }
+
+  @media (max-width: 720px) {
+    .contact-links {
+      grid-template-columns: 1fr;
+      gap: 0;
+      padding-block-start: 0.7rem;
+    }
+
+    .contact-links a {
+      min-height: 2.75rem;
+    }
+  }
+</style>

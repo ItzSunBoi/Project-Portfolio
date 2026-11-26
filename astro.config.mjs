@@ -5,7 +5,23 @@ import { defineConfig } from "astro/config";
 export default defineConfig({
   site: "https://www.itzsunboi.dev",
   output: "static",
-  integrations: [sitemap()],
+  devToolbar: { enabled: false },
+  integrations: [
+    sitemap(),
+    {
+      name: "portfolio-local-review",
+      hooks: {
+        "astro:config:setup": ({ command, injectRoute }) => {
+          if (command === "dev") {
+            injectRoute({
+              pattern: "/review/",
+              entrypoint: "./src/preview/Review.astro",
+            });
+          }
+        },
+      },
+    },
+  ],
   vite: {
     plugins: [tailwindcss()],
     server: {

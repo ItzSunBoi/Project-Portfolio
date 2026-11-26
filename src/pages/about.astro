@@ -1,83 +1,196 @@
 ---
 import SectionHeading from "../components/common/SectionHeading.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
+import { getProjectBySlug } from "../lib/content";
+
+const workshopPhoto = getProjectBySlug("gigaplex")
+  ?.content.flatMap((block) => (block.type === "gallery" ? block.images : []))
+  .find(({ src }) => src.endsWith("/component-placement.webp"));
+
+const workingMethod = [
+  ["Build", "Make something I can measure."],
+  ["Learn", "Use failures to refine my understanding of the system."],
+  ["Test", "Check the electrical and mechanical assumptions."],
+  ["Improve", "Keep the next revision simpler and more reliable."],
+];
 ---
 
 <BaseLayout
   title="About"
-  description="How I approach hardware, embedded systems, robotics, manufacturing and software projects."
+  description="How I approach electronics, firmware and manufacturing projects."
   canonicalPath="/about/"
 >
-  <header class="site-shell page-header">
-    <SectionHeading
-      as="h1"
-      eyebrow="About"
-      title="Engineering the whole path from idea to working system"
-      description="The common thread is not a particular board or language. It is the process of making electrical, mechanical and software decisions agree with each other."
-    />
-  </header>
+  <div class="site-shell about-page">
+    <header>
+      <SectionHeading
+        as="h1"
+        variant="page"
+        title="I’m Sun."
+        description="I work across electronics, firmware and manufacturing. I like seeing a design all the way through to a working prototype."
+      />
+    </header>
 
-  <section class="section section-soft">
-    <div class="site-shell about-grid">
-      <div class="about-copy">
+    <section class="about-layout" aria-label="How I work">
+      {
+        workshopPhoto && (
+          <figure class="workshop-photo">
+            <img
+              src={workshopPhoto.src}
+              alt={workshopPhoto.alt}
+              width="480"
+              height="360"
+              decoding="async"
+            />
+            {workshopPhoto.caption && (
+              <figcaption>{workshopPhoto.caption}</figcaption>
+            )}
+          </figure>
+        )
+      }
+
+      <div class="about-method">
         <SectionHeading
           eyebrow="Working style"
           title="Practical curiosity, tested physically."
         />
         <p>
-          I enjoy building systems that sit between disciplines: a camera
-          becomes useful when its power rails, interface, optics and processing
-          pipeline all work; a placement machine improves when calibration,
-          lighting, motion and tooling are treated as one problem.
+          A placement machine is a good example. Its calibration, lighting,
+          motion and tooling all have to agree. Getting there usually takes a
+          schematic, firmware logs, CAD and a few trips back to the bench.
         </p>
-        <p>
-          That usually means moving between a schematic, firmware logs, Python
-          scripts, CAD and a physical prototype until the system is
-          understandable and repeatable.
-        </p>
-      </div>
-      <ol class="working-method" aria-label="My working method">
-        {
-          [
-            ["01", "Build", "Move an idea into a form that can be measured."],
-            ["02", "Learn", "Use failures to refine the model of the system."],
-            [
-              "03",
-              "Test",
-              "Check assumptions at electrical and physical boundaries.",
-            ],
-            [
-              "04",
-              "Improve",
-              "Keep the next revision simpler and more reliable.",
-            ],
-          ].map(([number, title, description]) => (
-            <li class="working-method-item">
-              <span aria-hidden="true">{number}</span>
-              <div>
+
+        <ol class="working-method" aria-label="My working method" role="list">
+          {
+            workingMethod.map(([title, description]) => (
+              <li class="working-method-item">
                 <h3>{title}</h3>
                 <p>{description}</p>
-              </div>
-            </li>
-          ))
-        }
-      </ol>
-    </div>
-  </section>
+              </li>
+            ))
+          }
+        </ol>
 
-  <section class="section">
-    <div class="site-shell cta-band">
-      <div>
-        <p class="eyebrow">Current work</p>
-        <h2>Read the decisions, constraints and current state.</h2>
-        <p>
-          Project pages omit empty sections and mark active work honestly rather
-          than presenting every experiment as finished.
-        </p>
+        <a class="toolbox-link" href="/#skills">
+          See my toolbox <span aria-hidden="true">→</span>
+        </a>
       </div>
-      <a class="button button-primary" href="/projects/"
-        >Browse projects <span aria-hidden="true">→</span></a
-      >
-    </div>
-  </section>
+    </section>
+  </div>
 </BaseLayout>
+
+<style>
+  .about-page {
+    padding-bottom: clamp(3.2rem, 8vw, 7.5rem);
+  }
+
+  .about-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 0.86fr);
+    align-items: start;
+    gap: clamp(1.25rem, 4vw, 4rem);
+    border-top: 1px solid var(--border-strong);
+    padding-top: clamp(1.15rem, 3.25vw, 2.9rem);
+  }
+
+  .workshop-photo {
+    margin: 0;
+  }
+
+  .workshop-photo img {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1.42;
+    object-fit: cover;
+  }
+
+  .workshop-photo figcaption {
+    border-bottom: 1px solid var(--border);
+    padding-block: 0.65rem;
+    color: var(--text-secondary);
+    font: 0.8rem / 1.5 var(--font-mono);
+  }
+
+  .about-method :global(.section-heading) {
+    margin-bottom: 1rem;
+  }
+
+  .about-method :global(h2) {
+    font-size: clamp(2.15rem, 4.55vw, 4.8rem);
+    font-weight: 700;
+    line-height: 0.98;
+    letter-spacing: -0.074em;
+  }
+
+  .about-method > p {
+    max-width: 58ch;
+    margin: 0;
+    font-size: 1.05rem;
+    line-height: 1.55;
+  }
+
+  .working-method {
+    display: block;
+    margin-block: 1.2rem 0.6rem;
+    padding: 0;
+    list-style: none;
+  }
+
+  .working-method-item {
+    display: grid;
+    grid-template-columns: 5.3rem minmax(0, 1fr);
+    gap: 0.65rem;
+    border-block-start: 1px solid var(--border);
+    padding-block: 0.68rem;
+  }
+
+  .working-method-item:last-child {
+    border-block-end: 1px solid var(--border);
+  }
+
+  .working-method-item h3 {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 700;
+  }
+
+  .working-method-item p {
+    margin: 0;
+    color: var(--text-secondary);
+    font-size: 1rem;
+    line-height: 1.38;
+  }
+
+  .toolbox-link {
+    display: inline-flex;
+    min-height: 44px;
+    align-items: center;
+    gap: 0.45rem;
+    font-weight: 700;
+    text-decoration: underline;
+    text-underline-offset: 0.23em;
+  }
+
+  .toolbox-link:hover {
+    color: var(--primary-strong);
+  }
+
+  @media (min-width: 721px) {
+    :global(:root[data-design="workbench"]) .about-layout {
+      grid-template-columns: minmax(0, 0.85fr) minmax(0, 1fr);
+    }
+
+    :global(:root[data-design="workbench"]) .workshop-photo {
+      grid-area: 1 / 2;
+    }
+
+    :global(:root[data-design="workbench"]) .about-method {
+      grid-area: 1 / 1;
+    }
+  }
+
+  @media (max-width: 720px) {
+    .about-layout {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

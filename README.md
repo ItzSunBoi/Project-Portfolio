@@ -108,6 +108,13 @@ configurable and blank links are not rendered.
 `INTERNAL.md` is reserved for my own notes and is intentionally excluded from
 Git.
 
+## Local review
+
+For a local design review, run `npm run dev` and open
+`http://localhost:4321/review/`. The review loads the real Astro pages in
+Editorial or Workbench at Fit, 1440 px, 820 px or 390 px. Editorial is the
+default. The review controls are available only in the development server.
+
 ## Deployment
 
 Run `npm ci`, `npm run check`, `npm run lint`, `npm test` and `npm run build` to

@@ -16,7 +16,9 @@ describe("mobile menu rendering contract", () => {
 
     expect(panelRule).toContain("position: absolute");
     expect(panelRule).toContain("inset-block-start: 100%");
-    expect(panelRule).toContain("height: calc(100dvh - 76px)");
+    expect(panelRule).toContain(
+      "height: calc(100dvh - var(--site-header-height))",
+    );
   });
 
   it("uses CSS-positioned bars for a centred, browser-stable close icon", () => {

@@ -48,12 +48,19 @@ class FakeLink {
   }
 }
 
-function fixture(hash = "") {
+function fixture(hash = "", pathname = "/") {
   const homeDesktop = new FakeLink("/");
   const skillsDesktop = new FakeLink("/", "#skills");
   const homeMobile = new FakeLink("/");
   const skillsMobile = new FakeLink("/", "#skills");
-  const links = [homeDesktop, skillsDesktop, homeMobile, skillsMobile];
+  const projectsDesktop = new FakeLink("/projects/");
+  const links = [
+    homeDesktop,
+    skillsDesktop,
+    homeMobile,
+    skillsMobile,
+    projectsDesktop,
+  ];
   let sectionBounds = { top: 700, bottom: 1300 };
 
   const section = {
@@ -76,7 +83,7 @@ function fixture(hash = "") {
   const windowRoot = {
     innerHeight: 900,
     location: {
-      pathname: "/",
+      pathname,
       hash,
     },
     requestAnimationFrame: (callback: FrameRequestCallback) => {
@@ -99,6 +106,7 @@ function fixture(hash = "") {
     controller,
     homeDesktop,
     homeMobile,
+    projectsDesktop,
     setSectionBounds: (top: number, bottom: number) => {
       sectionBounds = { top, bottom };
     },
@@ -108,6 +116,13 @@ function fixture(hash = "") {
 }
 
 describe("section-aware navigation", () => {
+  it("keeps Projects current on a project detail page", () => {
+    const { homeDesktop, projectsDesktop } = fixture("", "/projects/gigaplex/");
+
+    expect(homeDesktop.attributes.has("aria-current")).toBe(false);
+    expect(projectsDesktop.attributes.get("aria-current")).toBe("location");
+  });
+
   it("selects Home at the top of the home page", () => {
     const { homeDesktop, homeMobile, skillsDesktop, skillsMobile } = fixture();
 

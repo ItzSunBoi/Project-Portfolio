@@ -95,7 +95,7 @@ class FilterInput {
   }
 }
 
-function browserFixture(search = "") {
+function browserFixture(address = "") {
   const query = new FilterInput("q", "");
   const pcb = new FilterInput("category", "pcb");
   const web = new FilterInput("category", "web");
@@ -130,14 +130,27 @@ function browserFixture(search = "") {
     querySelectorAll: () => cards,
   };
   const count = { textContent: "" };
+  const categorySelection = {
+    textContent: "",
+    dataset: { unfiltered: "All categories" },
+  };
+  const statusSelection = {
+    textContent: "",
+    dataset: { unfiltered: "All statuses" },
+  };
   const empty = { hidden: true };
   const clear = {
-    hidden: true,
+    disabled: true,
     addEventListener: (name: string, listener: FilterListener) =>
       clearListeners.set(name, listener),
   };
+  const fields = new Map<string, unknown>([
+    ['input[name="q"]', query],
+    ['[data-filter-selection="category"]', categorySelection],
+    ['[data-filter-selection="status"]', statusSelection],
+  ]);
   const form = {
-    querySelector: () => query,
+    querySelector: (selector: string) => fields.get(selector),
     querySelectorAll: (selector: string) => {
       if (selector === 'input[type="checkbox"]') return checkboxes;
       const name = selector.match(/name="([^"]+)"/)?.[1];
@@ -160,12 +173,12 @@ function browserFixture(search = "") {
     querySelector: (selector: string) => elements.get(selector),
     querySelectorAll: () => [clear],
   };
-  const location = { pathname: "/projects/", search };
-  const entries = [`/projects/${search}`];
+  const entries = [`/projects/${address}`];
+  const location = new URL(entries[0], "https://example.com");
   let historyIndex = 0;
   const restore = (index: number) => {
     historyIndex = index;
-    location.search = new URL(entries[index], "https://example.com").search;
+    location.href = new URL(entries[index], "https://example.com").href;
     windowListeners.get("popstate")?.();
   };
   const currentWindow = {
@@ -175,7 +188,7 @@ function browserFixture(search = "") {
         entries.splice(historyIndex + 1);
         entries.push(url);
         historyIndex += 1;
-        location.search = new URL(url, "https://example.com").search;
+        location.href = new URL(url, "https://example.com").href;
       },
       back: () => restore(historyIndex - 1),
       forward: () => restore(historyIndex + 1),
@@ -195,6 +208,7 @@ function browserFixture(search = "") {
 
   return {
     cards,
+    categorySelection,
     clear,
     completed,
     count,
@@ -205,6 +219,7 @@ function browserFixture(search = "") {
     pcb,
     query,
     results,
+    statusSelection,
     web,
     input: (target: FilterInput) => formListeners.get("input")?.({ target }),
     submit: () =>
@@ -244,14 +259,14 @@ describe("project browser interaction", () => {
     expect(results.dataset.projectCount).toBe("0");
     expect(count.textContent).toBe("0 projects");
     expect(empty.hidden).toBe(false);
-    expect(clear.hidden).toBe(false);
+    expect(clear.disabled).toBe(false);
 
     fixture.reset();
     expect(results.dataset.projectCount).toBe("2");
     expect(cards.every((card) => !card.hidden)).toBe(true);
     expect(web.checked).toBe(false);
     expect(completed.checked).toBe(false);
-    expect(clear.hidden).toBe(true);
+    expect(clear.disabled).toBe(true);
     expect(query.focused).toBe(true);
     expect(fixture.currentWindow.location.search).toBe("");
   });
@@ -312,5 +327,39 @@ describe("project browser interaction", () => {
     expect(fixture.query.value).toBe("");
     expect(fixture.results.dataset.projectCount).toBe("2");
     expect(fixture.entries).toHaveLength(2);
+  });
+
+  it("retains multi-select results and summarises selections on closed controls", () => {
+    const fixture = browserFixture("?category=pcb&status=completed");
+    expect(fixture.categorySelection.textContent).toBe("PCB");
+    expect(fixture.statusSelection.textContent).toBe("Completed");
+    expect(fixture.results.dataset.projectCount).toBe("1");
+
+    fixture.web.checked = true;
+    fixture.input(fixture.web);
+    expect(fixture.categorySelection.textContent).toBe("2 selected");
+    expect(fixture.results.dataset.projectCount).toBe("1");
+
+    fixture.experimental.checked = true;
+    fixture.input(fixture.experimental);
+    expect(fixture.statusSelection.textContent).toBe("2 selected");
+    expect(fixture.results.dataset.projectCount).toBe("2");
+
+    fixture.reset();
+    expect(fixture.categorySelection.textContent).toBe("All categories");
+    expect(fixture.statusSelection.textContent).toBe("All statuses");
+  });
+
+  it("preserves unrelated preview parameters and the fragment through filtering and reset", () => {
+    const fixture = browserFixture("?design=workbench#results");
+    fixture.pcb.checked = true;
+    fixture.input(fixture.pcb);
+
+    expect(fixture.entries.at(-1)).toBe(
+      "/projects/?design=workbench&category=pcb#results",
+    );
+
+    fixture.reset();
+    expect(fixture.entries.at(-1)).toBe("/projects/?design=workbench#results");
   });
 });

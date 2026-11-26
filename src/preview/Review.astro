@@ -1,0 +1,203 @@
+---
+import { getVisibleProjects } from "../lib/content";
+
+const pages = [
+  { label: "Home", path: "/" },
+  { label: "Skills", path: "/#skills" },
+  { label: "Projects", path: "/projects/" },
+  ...getVisibleProjects().map((project) => ({
+    label: project.title,
+    path: `/projects/${project.slug}/`,
+  })),
+  { label: "About", path: "/about/" },
+  { label: "Contact", path: "/contact/" },
+  { label: "404", path: "/404" },
+];
+const designs = ["Editorial", "Workbench"];
+const sizes = ["Fit", "Desktop", "Tablet", "Phone"];
+const params = Astro.url.searchParams;
+const initialPage =
+  pages.find(({ path }) => path === params.get("page")) ?? pages[0]!;
+const initialDesign =
+  params.get("design") === "workbench" ? "workbench" : "editorial";
+const initialSize =
+  sizes
+    .find((size) => size.toLowerCase() === params.get("viewport"))
+    ?.toLowerCase() ?? "fit";
+const frameUrl = new URL(initialPage.path, Astro.url.origin);
+if (initialDesign === "workbench")
+  frameUrl.searchParams.set("design", initialDesign);
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <link href="/favicon.svg" rel="icon" type="image/svg+xml" />
+    <title>Portfolio design review</title>
+  </head>
+  <body>
+    <header class="review-controls">
+      <strong>Portfolio review</strong>
+
+      <div class="review-group" role="group" aria-label="Design">
+        {
+          designs.map((design) => (
+            <button
+              type="button"
+              data-design-choice={design.toLowerCase()}
+              aria-pressed={design.toLowerCase() === initialDesign}
+            >
+              {design}
+            </button>
+          ))
+        }
+      </div>
+
+      <div class="page-picker">
+        <label for="review-page">Page</label>
+        <select id="review-page">
+          {
+            pages.map(({ label, path }) => (
+              <option value={path} selected={path === initialPage.path}>
+                {label}
+              </option>
+            ))
+          }
+        </select>
+      </div>
+
+      <div class="review-group" role="group" aria-label="Viewport">
+        {
+          sizes.map((size) => (
+            <button
+              type="button"
+              data-viewport-choice={size.toLowerCase()}
+              aria-pressed={size.toLowerCase() === initialSize}
+            >
+              {size}
+            </button>
+          ))
+        }
+      </div>
+    </header>
+
+    <main class="review-stage" data-review-viewport={initialSize}>
+      <iframe
+        title="Portfolio preview"
+        allow="clipboard-write"
+        src={frameUrl.pathname + frameUrl.search + frameUrl.hash}></iframe>
+    </main>
+    <script>
+      import "./review";
+    </script>
+  </body>
+</html>
+
+<style>
+  :root {
+    color-scheme: dark;
+    font-family: Arial, Helvetica, sans-serif;
+    background: #121a2c;
+    color: #f1f4fa;
+  }
+
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  body {
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr);
+    height: 100vh;
+    height: 100dvh;
+    margin: 0;
+  }
+
+  .review-controls,
+  .review-group,
+  .page-picker {
+    display: flex;
+    align-items: center;
+  }
+
+  .review-controls {
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 0.55rem 1rem;
+    border-bottom: 1px solid #596685;
+    padding: 0.55rem clamp(0.65rem, 2.3vw, 2rem);
+    background: #202a44;
+    font-size: 0.88rem;
+  }
+
+  .review-group {
+    border: 1px solid #596685;
+    padding: 2px;
+  }
+
+  .page-picker {
+    gap: 0.55rem;
+  }
+
+  button,
+  select {
+    min-height: 2.3rem;
+    border: 0;
+    padding: 0.4rem clamp(0.45rem, 1vw, 0.8rem);
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    cursor: pointer;
+  }
+
+  select {
+    max-width: min(48vw, 15rem);
+    border: 1px solid #596685;
+    background: #202a44;
+  }
+
+  button:hover {
+    background: #3b4969;
+  }
+
+  button[aria-pressed="true"] {
+    background: #eef2fc;
+    color: #202a44;
+    font-weight: 700;
+  }
+
+  :focus-visible {
+    outline: 2px solid #dbe750;
+    outline-offset: 2px;
+  }
+
+  .review-stage {
+    overflow: auto;
+  }
+
+  iframe {
+    display: block;
+    width: var(--preview-width, 100%);
+    height: 100%;
+    margin-inline: auto;
+    border: 0;
+    background: #f1efe6;
+  }
+
+  [data-review-viewport="desktop"] {
+    --preview-width: 1440px;
+  }
+
+  [data-review-viewport="tablet"] {
+    --preview-width: 820px;
+  }
+
+  [data-review-viewport="phone"] {
+    --preview-width: 390px;
+  }
+</style>

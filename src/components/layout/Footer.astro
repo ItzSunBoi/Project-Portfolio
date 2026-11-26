@@ -1,64 +1,49 @@
 ---
-import { currentYear } from "../../lib/dates";
 import { content } from "../../lib/content";
-import SunMark from "../common/SunMark.astro";
 
-const displayDomain = new URL(content.site.baseUrl).hostname;
 const visibleSocials = content.socials.filter(
   (social) => social.visible && social.url,
 );
+const isContactPage = /^\/contact\/?$/.test(Astro.url.pathname);
+const footerNavigation = content.navigation.filter(
+  (item) => item.href !== "/contact/",
+);
 ---
 
-<footer class="site-footer">
+<footer class="site-footer" data-menu-background>
   <div class="site-shell footer-grid">
-    <div class="footer-brand">
-      <a
-        class="brand-link"
-        href="/"
-        aria-label={`${content.site.brandName} home`}
-      >
-        <SunMark class="brand-sun" size={34} />
-        <span class="brand-wordmark">
-          <strong>{content.site.brandName}</strong>
-          <small>{displayDomain}</small>
+    {
+      !isContactPage && (
+        <div class="footer-intro">
+          <a class="footer-contact" href="/contact/">
+            Get in touch<span aria-hidden="true">.</span>
+          </a>
+          <p>{content.site.footerLine}</p>
+        </div>
+      )
+    }
+    <nav class="footer-links" aria-label="Footer navigation">
+      {footerNavigation.map((item) => <a href={item.href}>{item.label}</a>)}
+      {
+        visibleSocials.map((social) => (
+          <a href={social.url} rel="me noreferrer">
+            {social.label} <span aria-hidden="true">↗</span>
+          </a>
+        ))
+      }
+      <a href={`mailto:${content.contact.email}`}>Email</a>
+    </nav>
+    <div class="footer-bottom">
+      <p class="footer-attribution">
+        <span>© 2026 Sun Zheng (ItzSunBoi)</span>
+        <span>Built with Astro plus a sprinkle of AI.</span>
+        <span>
+          Ducks courtesy of <a href="https://random-d.uk/" rel="noreferrer">
+            https://random-d.uk/
+          </a>
         </span>
-      </a>
-      <p>{content.site.footerLine}</p>
+      </p>
+      <a href="#top">Back to top <span aria-hidden="true">↑</span></a>
     </div>
-
-    <div class="footer-links">
-      <div>
-        <h2>Navigate</h2>
-        {
-          content.navigation
-            .slice(0, 4)
-            .map((item) => <a href={item.href}>{item.label}</a>)
-        }
-      </div>
-      <div>
-        <h2>Elsewhere</h2>
-        {
-          visibleSocials.map((social) => (
-            <a href={social.url} rel="me noreferrer">
-              {social.label}
-            </a>
-          ))
-        }
-        <a href={`mailto:${content.contact.email}`}>Email</a>
-      </div>
-    </div>
-  </div>
-  <div class="site-shell footer-bottom">
-    <p class="footer-attribution">
-      <span>© {currentYear()} Sun Zheng (ItzSunBoi)</span>
-      <span>Built with Astro and stubborn curiosity plus a sprinkle of AI.</span
-      >
-      <span>
-        Ducks courtesy of <a href="https://random-d.uk/" rel="noreferrer">
-          https://random-d.uk/
-        </a>
-      </span>
-    </p>
-    <a href="#top">Back to top <span aria-hidden="true">↑</span></a>
   </div>
 </footer>

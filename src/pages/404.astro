@@ -1,60 +1,135 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+
+Astro.response.status = 404;
 ---
 
 <BaseLayout
   title="Page not found"
   description="The requested page could not be found."
+  canonicalPath="/404/"
   noIndex
 >
   <section class="site-shell not-found">
-    <div>
-      <p class="not-found-code">404</p>
-      <h1>This trace does not connect anywhere.</h1>
-      <p>
-        The page may have moved, the link may be incomplete, or the project
-        documentation is still negotiating. But here is a duck to make it
-        better. :D
-      </p>
+    <h1>
+      <span class="not-found-code">Error 404</span>{" "}
+      <span class="not-found-subtitle">the page wandered off.</span>
+    </h1>
 
-      <figure class="not-found-duck">
-        <div
-          class="not-found-duck-frame"
-          data-duck-frame
-          data-state="loading"
-          aria-busy="true"
-        >
-          <img
-            data-duck-image
-            alt="A random duck supplied by random-d.uk."
-            decoding="async"
-            referrerpolicy="no-referrer"
-            hidden
-          />
-          <p
-            class="not-found-duck-status"
-            data-duck-status
-            role="status"
-            aria-live="polite"
-          >
-            Fetching emergency duck…
-          </p>
-        </div>
-        <figcaption class="sr-only">
-          A random duck image provided by random-d.uk.
-        </figcaption>
-      </figure>
-
-      <div class="hero-actions" style="justify-content: center">
-        <a class="button button-primary" href="/">Return home</a>
-        <a class="button button-secondary" href="/projects/">Browse projects</a>
+    <figure class="not-found-duck">
+      <div
+        class="not-found-duck-frame"
+        data-duck-frame
+        data-state="loading"
+        aria-busy="true"
+      >
+        <img
+          data-duck-image
+          alt="A random duck supplied by random-d.uk."
+          decoding="async"
+          referrerpolicy="no-referrer"
+          hidden
+        />
+        <p class="not-found-duck-status" data-duck-status role="status">
+          Fetching emergency duck…
+        </p>
       </div>
+    </figure>
+
+    <div class="not-found-actions">
+      <a class="button button-primary" href="/">
+        Return home <span aria-hidden="true">→</span>
+      </a>
     </div>
   </section>
-
-  <script>
-    import { initializeRandomDuck } from "../lib/random-duck";
-
-    void initializeRandomDuck(document);
-  </script>
 </BaseLayout>
+
+<script>
+  import { initializeRandomDuck } from "../lib/random-duck";
+
+  void initializeRandomDuck(document);
+</script>
+
+<style>
+  .not-found {
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
+    grid-template-areas: "heading duck" "actions duck";
+    grid-template-rows: 1fr auto;
+    gap: 1.55rem clamp(1.5rem, 4vw, 4rem);
+    align-items: center;
+    padding-block: clamp(3rem, 8vw, 7.5rem);
+  }
+
+  .not-found h1 {
+    grid-area: heading;
+    align-self: end;
+    margin: 0;
+    font-weight: 700;
+    line-height: 0.94;
+  }
+
+  .not-found-code,
+  .not-found-subtitle {
+    display: block;
+  }
+
+  .not-found-code {
+    font-size: clamp(3.4rem, 9.3vw, 9rem);
+    letter-spacing: -0.085em;
+  }
+
+  .not-found-subtitle {
+    margin-block-start: 0.45em;
+    color: var(--primary-strong);
+    font-size: clamp(1.35rem, 3.4vw, 3.25rem);
+    line-height: 1.1;
+    letter-spacing: -0.055em;
+  }
+
+  .not-found-actions {
+    grid-area: actions;
+    align-self: start;
+  }
+
+  .not-found-duck {
+    grid-area: duck;
+    width: min(100%, 34rem);
+    margin: 0;
+  }
+
+  .not-found-duck-frame {
+    display: grid;
+    overflow: hidden;
+    aspect-ratio: 4 / 3;
+    place-items: center;
+    border: 1px solid var(--border);
+    background: var(--secondary-bg);
+  }
+
+  .not-found-duck-frame img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .not-found-duck-status {
+    margin: 0;
+    padding: 1rem;
+    color: var(--text-secondary);
+    font: 500 0.8rem/1.45 var(--font-mono);
+    text-align: center;
+  }
+
+  .not-found-duck-frame[data-state="error"] {
+    border-style: dashed;
+  }
+
+  @media (max-width: 720px) {
+    .not-found {
+      grid-template-columns: minmax(0, 1fr);
+      grid-template-areas: "heading" "duck" "actions";
+      grid-template-rows: auto;
+    }
+  }
+</style>

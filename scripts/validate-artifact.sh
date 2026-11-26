@@ -22,4 +22,9 @@ dist="${project_root}/dist"
   exit 65
 }
 
+[[ ! -e "${dist}/review" && ! -e "${dist}/review.html" ]] || {
+  echo "Preview check failed: local review route was generated." >&2
+  exit 65
+}
+
 echo "Validated static artifact and privacy-sensitive route exclusions."

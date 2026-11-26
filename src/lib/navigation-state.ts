@@ -31,16 +31,23 @@ export function initializeNavigationState(
     const normalizedPathname = normalizePathname(pathname);
 
     links.forEach((link) => {
+      const linkPathname = normalizePathname(
+        link.dataset.navPathname ?? HOME_PATH,
+      );
       const matchesPath =
-        normalizePathname(link.dataset.navPathname ?? HOME_PATH) ===
-        normalizedPathname;
+        linkPathname === normalizedPathname ||
+        (linkPathname !== HOME_PATH &&
+          normalizedPathname.startsWith(linkPathname));
       const matchesHash = (link.dataset.navHash ?? "") === hash;
       const active = matchesPath && matchesHash;
 
       link.classList.toggle("is-active", active);
 
       if (active) {
-        link.setAttribute("aria-current", hash ? "location" : "page");
+        link.setAttribute(
+          "aria-current",
+          hash || linkPathname !== normalizedPathname ? "location" : "page",
+        );
       } else {
         link.removeAttribute("aria-current");
       }

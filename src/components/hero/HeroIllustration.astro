@@ -1,41 +1,355 @@
+---
+import { initialScan, profilerParts } from "../../lib/profiler";
+
+const explodedBase = "/images/hero/exploded-base.png";
+---
+
 <figure
-  class="hero-visual"
-  role="img"
+  class="profiler-panel"
+  data-profiler
   aria-labelledby="exploded-build-title"
   aria-describedby="exploded-build-description"
 >
-  <figcaption id="exploded-build-title" class="hero-visual-title">
+  <figcaption id="exploded-build-title" class="profiler-title">
     Dual Laser Surface Profiler
   </figcaption>
+  <span class="view-type" aria-hidden="true">Exploded view</span>
   <span id="exploded-build-description" class="sr-only">
     An exploded view of the custom PCB, top case, OV9281 camera sensor, dual
     line lasers and bottom case.
   </span>
-  <img
-    class="exploded-layer exploded-base"
-    src="/images/hero/exploded-base.png"
-    width="2048"
-    height="2048"
-    alt=""
-    aria-hidden="true"
-    fetchpriority="high"
-  />
-  <img
-    class="exploded-layer exploded-labels exploded-labels-light"
-    src="/images/hero/exploded-text-black.png"
-    width="2048"
-    height="2048"
-    alt=""
-    aria-hidden="true"
-    fetchpriority="high"
-  />
-  <img
-    class="exploded-layer exploded-labels exploded-labels-dark"
-    src="/images/hero/exploded-text-white.png"
-    width="2048"
-    height="2048"
-    alt=""
-    aria-hidden="true"
-    fetchpriority="high"
-  />
+  <div
+    class="profiler-bed"
+    data-profiler-bed
+    data-part="assembly"
+    style={`--scan: ${initialScan}%`}
+  >
+    <img
+      class="exploded-layer exploded-base"
+      src={explodedBase}
+      width="2048"
+      height="2048"
+      alt=""
+      draggable="false"
+      loading="lazy"
+      decoding="async"
+    />
+    <img
+      class="exploded-layer exploded-labels exploded-labels-light"
+      src="/images/hero/exploded-text-black.png"
+      width="2048"
+      height="2048"
+      alt=""
+      draggable="false"
+      loading="lazy"
+      decoding="async"
+    />
+    <img
+      class="exploded-layer exploded-labels exploded-labels-dark"
+      src="/images/hero/exploded-text-white.png"
+      width="2048"
+      height="2048"
+      alt=""
+      draggable="false"
+      loading="lazy"
+      decoding="async"
+    />
+    <div class="scan-exposure" aria-hidden="true">
+      <img
+        class="exploded-layer"
+        src={explodedBase}
+        width="2048"
+        height="2048"
+        alt=""
+        draggable="false"
+        loading="lazy"
+        decoding="async"
+      />
+    </div>
+    <span class="scan-line" aria-hidden="true"></span>
+  </div>
+  <div class="inspector-controls">
+    <div class="part-select" role="group" aria-label="Profiler components">
+      {
+        profilerParts.map((part) => (
+          <button
+            type="button"
+            data-profiler-part={part.id}
+            aria-pressed={part.id === "assembly" ? "true" : "false"}
+          >
+            {part.label}
+          </button>
+        ))
+      }
+    </div>
+    <label class="sweep-control">
+      Sweep
+      <input
+        type="range"
+        data-profiler-sweep
+        min="5"
+        max="95"
+        value={initialScan}
+      />
+    </label>
+  </div>
+  <p class="part-description" data-profiler-description aria-live="polite">
+    {profilerParts[0].description}
+  </p>
 </figure>
+
+<script>
+  import { getSweepHeight, profilerParts } from "../../lib/profiler";
+
+  const panel = document.querySelector("[data-profiler]");
+  const bed = panel?.querySelector<HTMLElement>("[data-profiler-bed]");
+  const sweep = panel?.querySelector<HTMLInputElement>("[data-profiler-sweep]");
+  const description = panel?.querySelector("[data-profiler-description]");
+  const partButtons = panel?.querySelectorAll<HTMLButtonElement>(
+    "[data-profiler-part]",
+  );
+
+  if (bed && sweep && description && partButtons) {
+    const moveSweep = (value: number) => {
+      const height = getSweepHeight(value);
+      bed.style.setProperty("--scan", `${height}%`);
+      sweep.value = String(height);
+    };
+
+    const sweepToPointer = (event: PointerEvent) => {
+      const bounds = bed.getBoundingClientRect();
+      moveSweep(((event.clientY - bounds.top) / bounds.height) * 100);
+    };
+
+    for (const button of partButtons) {
+      button.addEventListener("click", () => {
+        const part = profilerParts.find(
+          ({ id }) => id === button.dataset.profilerPart,
+        );
+        if (!part) return;
+
+        for (const choice of partButtons) {
+          choice.setAttribute("aria-pressed", String(choice === button));
+        }
+
+        bed.dataset.part = part.id;
+        description.textContent = part.description;
+        moveSweep(part.height);
+      });
+    }
+
+    sweep.addEventListener("input", () => moveSweep(sweep.valueAsNumber));
+    bed.addEventListener("pointermove", (event) => {
+      if (event.pointerType === "mouse") sweepToPointer(event);
+    });
+    bed.addEventListener("pointerup", (event) => {
+      if (event.pointerType !== "mouse") sweepToPointer(event);
+    });
+  }
+</script>
+
+<style>
+  .profiler-panel {
+    position: relative;
+    container: profiler / inline-size;
+    overflow: hidden;
+    margin: 0;
+    border: 1px solid var(--border-strong);
+    border-radius: clamp(0.85rem, 2vw, 2rem);
+    background: var(--surface);
+    box-shadow: var(--shadow-md);
+  }
+
+  .profiler-title {
+    padding: 0.7rem 1rem;
+    font-weight: 700;
+    letter-spacing: -0.022em;
+  }
+
+  .view-type {
+    position: absolute;
+    top: 1.02rem;
+    right: 1rem;
+    color: var(--text-secondary);
+    font: 0.72rem var(--font-mono);
+    text-transform: uppercase;
+  }
+
+  .profiler-bed {
+    position: relative;
+    overflow: hidden;
+    aspect-ratio: 1;
+    border-block: 1px solid var(--border-strong);
+    background-color: var(--secondary-bg);
+    background-image:
+      linear-gradient(var(--border) 1px, transparent 1px),
+      linear-gradient(90deg, var(--border) 1px, transparent 1px);
+    background-position: center;
+    background-size: 25px 25px;
+    cursor: crosshair;
+    touch-action: pan-y;
+  }
+
+  .exploded-layer {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    pointer-events: none;
+  }
+
+  .exploded-labels {
+    z-index: 3;
+  }
+
+  .exploded-labels-light {
+    opacity: 1;
+  }
+
+  .exploded-labels-dark {
+    opacity: 0;
+  }
+
+  :global(:root[data-theme="dark"]) .exploded-labels-light {
+    opacity: 0;
+  }
+
+  :global(:root[data-theme="dark"]) .exploded-labels-dark {
+    opacity: 1;
+  }
+
+  [data-part="pcb"] .exploded-labels {
+    clip-path: inset(0 57% 78% 0);
+  }
+
+  [data-part="optics"] .exploded-labels {
+    clip-path: inset(35% 0 46% 0);
+  }
+
+  [data-part="case"] .exploded-labels {
+    clip-path: polygon(
+      60% 10%,
+      100% 10%,
+      100% 38%,
+      99% 38%,
+      99% 60%,
+      100% 60%,
+      100% 100%,
+      0 100%,
+      0 60%,
+      98% 60%,
+      98% 35%,
+      60% 35%
+    );
+  }
+
+  .scan-exposure {
+    position: absolute;
+    z-index: 2;
+    inset: 0;
+    clip-path: inset(
+      calc(var(--scan) - 10px) 0 calc(100% - var(--scan) - 10px)
+    );
+    pointer-events: none;
+  }
+
+  .scan-exposure img {
+    filter: brightness(1.65) contrast(0.9)
+      drop-shadow(0 0 7px var(--primary-strong));
+  }
+
+  .scan-line {
+    position: absolute;
+    z-index: 2;
+    inset-inline: 0;
+    top: var(--scan);
+    border-top: 1px solid var(--primary-strong);
+    box-shadow: 0 0 8px var(--primary-strong);
+    pointer-events: none;
+  }
+
+  .scan-line::before {
+    position: absolute;
+    top: -0.23rem;
+    left: 4%;
+    width: 0.4rem;
+    height: 0.4rem;
+    background: var(--primary-strong);
+    content: "";
+    rotate: 45deg;
+  }
+
+  .inspector-controls,
+  .part-select {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .inspector-controls {
+    justify-content: space-between;
+    gap: 0 0.65rem;
+    padding-inline: 0.65rem;
+  }
+
+  .part-select button {
+    min-height: 2.75rem;
+    padding-inline: 0.55rem;
+    border: 0;
+    border-bottom: 2px solid transparent;
+    background: transparent;
+    color: var(--text-secondary);
+    font: 0.8rem var(--font-mono);
+    cursor: pointer;
+  }
+
+  .part-select button:hover,
+  .part-select button[aria-pressed="true"] {
+    border-bottom-color: var(--primary-strong);
+    color: var(--text);
+  }
+
+  .part-select button[aria-pressed="true"] {
+    font-weight: 700;
+  }
+
+  .sweep-control {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    min-height: 2.75rem;
+    padding-inline: 0.55rem;
+    color: var(--text-secondary);
+    font: 0.8rem var(--font-mono);
+  }
+
+  .sweep-control input {
+    width: clamp(5.25rem, 8vw, 7rem);
+    min-height: 2rem;
+    accent-color: var(--primary-strong);
+    cursor: pointer;
+  }
+
+  .part-description {
+    min-height: 3.55rem;
+    margin: 0;
+    padding: 0.7rem 1rem;
+    border-top: 1px solid var(--border);
+    color: var(--text-secondary);
+    font-size: 0.89rem;
+    line-height: 1.4;
+  }
+
+  @container profiler (max-width: 21rem) {
+    .view-type {
+      display: none;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .view-type {
+      display: none;
+    }
+  }
+</style>

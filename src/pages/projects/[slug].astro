@@ -1,11 +1,14 @@
 ---
 import BlueprintThumbnail from "../../components/projects/BlueprintThumbnail.astro";
 import ContentBlocks from "../../components/projects/ContentBlocks.astro";
+import LedSketchpad from "../../components/projects/LedSketchpad.astro";
 import ProjectCard from "../../components/projects/ProjectCard.astro";
+import SectionHeading from "../../components/common/SectionHeading.astro";
 import StatusBadge from "../../components/common/StatusBadge.astro";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import { content, getVisibleProjects } from "../../lib/content";
 import { formatProjectYear } from "../../lib/dates";
+import { getProjectSections } from "../../lib/project-content";
 import { projectCategoryLabels } from "../../lib/project-taxonomy";
 import { responsiveSrcSet } from "../../lib/responsive-images";
 import type { Project } from "../../schemas/project";
@@ -26,6 +29,8 @@ interface Props {
 const { project } = Astro.props;
 const categories = [project.category, ...project.secondaryCategories];
 const yearLabel = formatProjectYear(project.year, project.yearEnd);
+const sections = getProjectSections(project.content, project.id === "gigaplex");
+const sectionLinks = sections.filter((section) => section.id);
 const relatedProjects = getVisibleProjects()
   .filter(
     (candidate) =>
@@ -63,18 +68,17 @@ const jsonLd = {
 >
   <header class="project-hero">
     <div class="site-shell">
-      <nav class="breadcrumbs" aria-label="Breadcrumb">
-        <a href="/">Home</a>
-        <span aria-hidden="true">/</span>
-        <a href="/projects/">Projects</a>
-        <span aria-hidden="true">/</span>
-        <span aria-current="page">{project.title}</span>
-      </nav>
+      <a class="text-link all-projects" href="/projects/">
+        All projects <span aria-hidden="true">→</span>
+      </a>
 
       <div class="project-hero-grid">
         <div class="project-hero-copy">
-          <p class="page-kicker">{projectCategoryLabels[project.category]}</p>
-          <h1>{project.title}</h1>
+          <h1>
+            {project.title}<span class="heading-period" aria-hidden="true"
+              >.</span
+            >
+          </h1>
           <p class="project-subtitle">{project.subtitle}</p>
           {
             (project.heroDownload || project.heroLink) && (
@@ -102,6 +106,9 @@ const jsonLd = {
             )
           }
           <div class="project-hero-meta">
+            <span class="project-category"
+              >{projectCategoryLabels[project.category]}</span
+            >
             <span class="project-year">{yearLabel}</span>
             <StatusBadge status={project.status} />
           </div>
@@ -114,10 +121,11 @@ const jsonLd = {
                 <img
                   src={project.thumbnail}
                   srcset={responsiveSrcSet(project.thumbnail)}
-                  sizes="(max-width: 960px) 100vw, 45vw"
+                  sizes="(max-width: 720px) 100vw, 48vw"
                   alt={project.thumbnailAlt ?? ""}
                   width="900"
                   height="700"
+                  fetchpriority="high"
                   data-project-image
                 />
                 <div data-project-image-fallback hidden>
@@ -139,37 +147,60 @@ const jsonLd = {
     </div>
   </header>
 
-  <section class="section project-body">
-    <div
-      class:list={[
-        "site-shell",
-        "project-layout",
-        externalLinks.length === 0 && "project-layout-single",
-      ]}
-    >
-      <ContentBlocks blocks={project.content} />
-
-      {
-        externalLinks.length > 0 && (
-          <nav class="project-links" aria-label="External project links">
-            {externalLinks.map(([kind, url]) => (
-              <a href={url} rel="noreferrer">
-                {kind.charAt(0).toUpperCase() + kind.slice(1)} ↗
-              </a>
+  {
+    (sections.length > 0 || externalLinks.length > 0) && (
+      <div
+        class:list={[
+          "site-shell",
+          "case-layout",
+          (sections.length === 0 ||
+            (sectionLinks.length === 0 && externalLinks.length === 0)) &&
+            "case-layout-single",
+        ]}
+      >
+        {(sectionLinks.length > 0 || externalLinks.length > 0) && (
+          <div class="case-sidebar">
+            {sectionLinks.length > 0 && (
+              <nav aria-label="In this project">
+                {sectionLinks.map(({ id, title }) => (
+                  <a href={`#${id}`}>{title}</a>
+                ))}
+              </nav>
+            )}
+            {externalLinks.length > 0 && (
+              <nav aria-label="External project links">
+                {externalLinks.map(([kind, url]) => (
+                  <a href={url} rel="noreferrer">
+                    {kind.charAt(0).toUpperCase() + kind.slice(1)}{" "}
+                    <span aria-hidden="true">↗</span>
+                  </a>
+                ))}
+              </nav>
+            )}
+          </div>
+        )}
+        {sections.length > 0 && (
+          <div class="case-article">
+            {sections.map((section) => (
+              <section class="case-section" aria-labelledby={section.id}>
+                <ContentBlocks blocks={section.blocks} headingId={section.id} />
+                {section.sketchpad && <LedSketchpad />}
+              </section>
             ))}
-          </nav>
-        )
-      }
-    </div>
-  </section>
+            <a class="text-link case-back" href="/projects/">
+              Back to all projects <span aria-hidden="true">→</span>
+            </a>
+          </div>
+        )}
+      </div>
+    )
+  }
 
   {
     relatedProjects.length > 0 && (
       <section class="section" aria-labelledby="related-title">
         <div class="site-shell">
-          <div class="section-heading">
-            <h2 id="related-title">Related projects</h2>
-          </div>
+          <SectionHeading id="related-title" title="Related projects" />
           <div class="related-projects">
             {relatedProjects.map((related) => (
               <ProjectCard project={related} compact />
@@ -180,3 +211,355 @@ const jsonLd = {
     )
   }
 </BaseLayout>
+
+<style>
+  .project-hero {
+    padding-block: clamp(0.75rem, 2vw, 1.9rem) clamp(2.3rem, 5vw, 4.8rem);
+  }
+
+  .all-projects {
+    display: inline-flex;
+    min-height: 2.75rem;
+    align-items: center;
+  }
+
+  .project-hero-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 0.9fr);
+    align-items: stretch;
+    gap: 0;
+    background: var(--secondary-bg);
+    border: 1px solid var(--border);
+  }
+
+  .project-hero-copy {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: clamp(1.35rem, 4.2vw, 4.7rem);
+  }
+
+  .project-hero-copy h1 {
+    margin: 0.16em 0 0.22em -0.045em;
+    font-size: clamp(3.75rem, 8.7vw, 8.1rem);
+    font-weight: 700;
+    letter-spacing: -0.086em;
+    line-height: 0.87;
+    overflow-wrap: anywhere;
+  }
+
+  .heading-period {
+    color: var(--primary-strong);
+  }
+
+  .project-subtitle {
+    max-width: 33ch;
+    margin: 0;
+    color: var(--text);
+    font-size: clamp(1.1rem, 1.8vw, 1.55rem);
+    font-weight: 400;
+    line-height: 1.4;
+    letter-spacing: -0.023em;
+  }
+
+  .project-hero-actions {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem 0.9rem;
+    margin-top: 1.45rem;
+  }
+
+  .project-hero-actions .text-link {
+    min-height: 2.75rem;
+    align-items: center;
+  }
+
+  .project-hero-meta {
+    order: -1;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin: 0;
+    color: var(--text-secondary);
+    font: 500 0.77rem / 1.4 var(--font-mono);
+    letter-spacing: 0.055em;
+    text-transform: uppercase;
+  }
+
+  .project-category,
+  .project-year {
+    padding-right: 0.5rem;
+    border-right: 1px solid var(--border-strong);
+    color: inherit;
+    font: inherit;
+  }
+
+  .project-hero-meta :global(.status-badge) {
+    width: auto;
+    border: 0;
+    border-radius: 0;
+    background: none;
+    padding: 0;
+    color: inherit;
+    font: inherit;
+  }
+
+  .project-hero-meta :global(.status-dot) {
+    display: none;
+  }
+
+  .project-hero-visual {
+    position: relative;
+    min-height: clamp(16rem, 32vw, 35rem);
+    overflow: hidden;
+    background: var(--secondary-bg);
+  }
+
+  .project-hero-visual > * {
+    position: absolute;
+    inset: 0;
+  }
+
+  .project-hero-visual > img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 50% 60%;
+  }
+
+  .case-layout {
+    display: grid;
+    grid-template-columns: minmax(9rem, 0.4fr) minmax(0, 1.5fr);
+    align-items: start;
+    gap: 1.5rem clamp(1.4rem, 4vw, 5rem);
+    padding-bottom: clamp(3.3rem, 8vw, 8rem);
+  }
+
+  .case-layout-single {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .case-sidebar {
+    position: sticky;
+    top: calc(var(--site-header-height) + 1.2rem);
+    display: grid;
+    gap: 1.2rem;
+  }
+
+  .case-sidebar nav {
+    display: grid;
+    border-top: 1px solid var(--border-strong);
+  }
+
+  .case-sidebar a {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    min-height: 2.8rem;
+    padding-block: 0.4rem;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-secondary);
+    font-size: 0.93rem;
+    line-height: 1.3;
+  }
+
+  .case-sidebar a:hover {
+    color: var(--text);
+    text-decoration: underline;
+    text-underline-offset: 0.22em;
+  }
+
+  .case-section {
+    border-top: 1px solid var(--border-strong);
+    padding-top: 1.22rem;
+  }
+
+  .case-section + .case-section {
+    margin-top: clamp(2.9rem, 6vw, 5.75rem);
+  }
+
+  .case-section :global(.project-content) {
+    max-width: none;
+  }
+
+  .case-section :global(:is(.project-prose, .content-timeline-section)) {
+    margin-inline: 0;
+  }
+
+  .case-section :global(.project-content > h2) {
+    margin-block: 0 0.48em;
+    font-size: clamp(2.35rem, 5.2vw, 5.2rem);
+    font-weight: 700;
+    letter-spacing: -0.075em;
+    line-height: 0.96;
+    text-wrap: balance;
+  }
+
+  .case-section :global(.project-content h3) {
+    font-weight: 700;
+  }
+
+  .case-section :global(.project-content > p) {
+    max-width: 66ch;
+    margin-block: 0 1rem;
+    color: var(--text-secondary);
+    font-size: 1.055rem;
+    line-height: 1.62;
+  }
+
+  .case-section :global(.project-content figure) {
+    margin-block: 1.35rem 0;
+  }
+
+  .case-section :global(.project-content figure img) {
+    border-radius: 0;
+  }
+
+  .case-section :global(.project-content > figure img) {
+    max-height: 36rem;
+    object-fit: cover;
+  }
+
+  .case-section :global(.project-content figcaption) {
+    margin: 0;
+    padding-block: 0.65rem;
+    border-bottom: 1px solid var(--border);
+    font: 0.8rem / 1.5 var(--font-mono);
+  }
+
+  .case-section :global(.project-diary) {
+    margin: 1.2rem 0 0;
+    padding: 0;
+    border-top: 1px solid var(--border-strong);
+    list-style: none;
+  }
+
+  .case-section :global(.project-diary details) {
+    border-bottom: 1px solid var(--border);
+  }
+
+  .case-section :global(.project-diary summary) {
+    min-height: 2.75rem;
+    padding: 0.9rem 0.25rem;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 1.05rem;
+    line-height: 1.35;
+  }
+
+  .case-section :global(.project-diary details[open] summary) {
+    color: var(--primary-strong);
+  }
+
+  .case-section :global(.project-diary summary span) {
+    margin-inline-start: 0.65rem;
+    color: var(--text-secondary);
+    font: 0.78rem / 1.4 var(--font-mono);
+    white-space: nowrap;
+  }
+
+  .case-section :global(.project-diary [data-state="active"] summary span) {
+    color: var(--primary-strong);
+    font-weight: 700;
+  }
+
+  .case-section :global(.project-diary details p) {
+    margin: 0;
+    padding: 0.2rem 0.4rem 1rem 1.1rem;
+    color: var(--text-secondary);
+    font-size: 1.025rem;
+    line-height: 1.62;
+  }
+
+  .case-section :global(.spec-table-wrap) {
+    margin-block: 1.15rem 1.35rem;
+    border: 0;
+    border-radius: 0;
+  }
+
+  .case-section :global(.spec-table caption) {
+    background: none;
+    padding: 0 0 0.55rem;
+    border-block-end: 1px solid var(--border-strong);
+  }
+
+  .case-section :global(.spec-table :is(th, td)) {
+    display: table-cell;
+    width: auto;
+    padding: 0.8rem 0.52rem;
+    border-bottom: 1px solid var(--border);
+    background: none;
+  }
+
+  .case-section :global(.spec-table th) {
+    width: 30%;
+    font: 700 0.98rem / 1.35 var(--font-sans);
+  }
+
+  .case-section :global(.spec-table td) {
+    font: 0.91rem / 1.35 var(--font-mono);
+  }
+
+  .case-back {
+    margin-top: 1.55rem;
+  }
+
+  :global([data-design="workbench"]) .project-hero-grid {
+    background: var(--page-bg);
+    border-color: var(--border-strong);
+  }
+
+  :global([data-design="workbench"]) .project-hero-copy h1 {
+    font-size: clamp(3.55rem, 8vw, 7.65rem);
+  }
+
+  :global([data-design="workbench"]) .project-hero-visual {
+    border-inline-start: 1px solid var(--border);
+  }
+
+  :global([data-design="workbench"]) .case-sidebar nav {
+    padding-inline: 0.85rem;
+    background: var(--secondary-bg);
+  }
+
+  @media (max-width: 900px) {
+    .project-hero-copy {
+      padding: 1.4rem;
+    }
+  }
+
+  @media (max-width: 720px) {
+    .project-hero-grid,
+    .case-layout {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .project-hero-copy h1,
+    :global([data-design="workbench"]) .project-hero-copy h1 {
+      font-size: clamp(3.45rem, 13.3vw, 6.2rem);
+    }
+
+    :global([data-design="workbench"]) .project-hero-visual {
+      border-inline-start: 0;
+      border-block-start: 1px solid var(--border);
+    }
+
+    .case-sidebar {
+      position: static;
+    }
+
+    .case-sidebar nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0 1rem;
+    }
+
+    .case-sidebar a {
+      border: 0;
+      text-decoration: underline;
+      text-underline-offset: 0.24em;
+    }
+  }
+</style>
