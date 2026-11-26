@@ -1,6 +1,8 @@
 import {
   projectCategories,
+  projectCategoryLabels,
   projectStatuses,
+  projectStatusLabels,
   type ProjectCategory,
   type ProjectStatus,
 } from "./project-taxonomy";
@@ -22,6 +24,12 @@ export function initializeProjectFilters(
     "[data-clear-filters]",
   );
   const queryField = form.querySelector<HTMLInputElement>('input[name="q"]');
+  const categorySelection = form.querySelector<HTMLElement>(
+    '[data-filter-selection="category"]',
+  );
+  const statusSelection = form.querySelector<HTMLElement>(
+    '[data-filter-selection="status"]',
+  );
   let searchTimeout: number | undefined;
 
   function selectedValues<T extends string>(name: string): T[] {
@@ -40,14 +48,31 @@ export function initializeProjectFilters(
     };
   }
 
+  function updateSelection<T extends string>(
+    element: HTMLElement | null,
+    values: T[],
+    labels: Record<T, string>,
+  ) {
+    if (!element) return;
+    const selectedLabels = values.map((value) => labels[value]);
+    element.textContent =
+      selectedLabels.length > 1
+        ? `${selectedLabels.length} selected`
+        : (selectedLabels[0] ?? element.dataset.unfiltered ?? "");
+  }
+
   function updateUrl() {
     const { query, categories, statuses } = readFilters();
-    const parameters = new URLSearchParams();
+    const { pathname, search, hash } = currentWindow.location;
+    const parameters = new URLSearchParams(search);
+    parameters.delete("q");
+    parameters.delete("category");
+    parameters.delete("status");
     if (query) parameters.set("q", query);
     categories.forEach((category) => parameters.append("category", category));
     statuses.forEach((status) => parameters.append("status", status));
-    const nextUrl = `${currentWindow.location.pathname}${parameters.size ? `?${parameters}` : ""}`;
-    const currentUrl = `${currentWindow.location.pathname}${currentWindow.location.search}`;
+    const nextUrl = `${pathname}${parameters.size ? `?${parameters}` : ""}${hash}`;
+    const currentUrl = `${pathname}${search}${hash}`;
     if (nextUrl !== currentUrl) {
       currentWindow.history.pushState({}, "", nextUrl);
     }
@@ -79,8 +104,10 @@ export function initializeProjectFilters(
       resultCount.textContent = `${visibleCount} project${visibleCount === 1 ? "" : "s"}`;
     }
     if (emptyState) emptyState.hidden = visibleCount !== 0;
+    updateSelection(categorySelection, categories, projectCategoryLabels);
+    updateSelection(statusSelection, statuses, projectStatusLabels);
     clearButtons.forEach((button) => {
-      button.hidden =
+      button.disabled =
         !query && categories.length === 0 && statuses.length === 0;
     });
 

@@ -1,7 +1,10 @@
 ---
 import type { Project } from "../../schemas/project";
 import { formatProjectYear } from "../../lib/dates";
-import { projectCategoryLabels } from "../../lib/project-taxonomy";
+import {
+  projectCategoryLabels,
+  projectStatusLabels,
+} from "../../lib/project-taxonomy";
 import BlueprintThumbnail from "./BlueprintThumbnail.astro";
 import StatusBadge from "../common/StatusBadge.astro";
 import { responsiveSrcSet } from "../../lib/responsive-images";
@@ -24,7 +27,11 @@ const yearLabel = formatProjectYear(project.year, project.yearEnd);
 ---
 
 <article
-  class:list={["project-card", compact && "project-card-compact"]}
+  class:list={[
+    "project-card",
+    compact && "project-card-compact",
+    filterable && "project-card-record",
+  ]}
   data-project-card={filterable ? "" : undefined}
   data-title={filterable ? project.title : undefined}
   data-summary={filterable
@@ -68,12 +75,28 @@ const yearLabel = formatProjectYear(project.year, project.yearEnd);
     }
   </a>
   <div class="project-card-body">
-    <div class="project-card-meta">
-      <span>{yearLabel}</span>
-      <StatusBadge status={project.status} />
-    </div>
+    {
+      filterable ? (
+        <p class="project-record-meta">
+          <span>{projectCategoryLabels[project.category]}</span>
+          <span aria-hidden="true">·</span>
+          <span>{yearLabel}</span>
+          <span aria-hidden="true">·</span>
+          <span>{projectStatusLabels[project.status]}</span>
+        </p>
+      ) : (
+        <div class="project-card-meta">
+          <span>{yearLabel}</span>
+          <StatusBadge status={project.status} />
+        </div>
+      )
+    }
     <div>
-      <p class="project-type">{projectCategoryLabels[project.category]}</p>
+      {
+        !filterable && (
+          <p class="project-type">{projectCategoryLabels[project.category]}</p>
+        )
+      }
       <Heading>
         <a href={`/projects/${project.slug}/`}>{project.title}</a>
       </Heading>
@@ -95,3 +118,121 @@ const yearLabel = formatProjectYear(project.year, project.yearEnd);
     </a>
   </div>
 </article>
+
+<style>
+  .project-card.project-card-record {
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+    grid-template-rows: auto;
+    overflow: visible;
+    border: 1px solid var(--border-strong);
+    border-radius: 0;
+    background: var(--secondary-bg);
+  }
+
+  .project-card-record .project-card-media {
+    position: relative;
+    min-height: clamp(14rem, 27vw, 27rem);
+    aspect-ratio: auto;
+    border: 0;
+  }
+
+  .project-card-record .project-card-media:focus-visible {
+    z-index: 1;
+  }
+
+  .project-card-record .project-card-media img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .project-card-record .project-card-body {
+    grid-area: 1 / 2;
+    align-content: center;
+    gap: 0.75rem;
+    padding: clamp(1.35rem, 3.4vw, 3.5rem);
+  }
+
+  .project-record-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.2rem 0.45rem;
+    margin: 0;
+    color: var(--text-secondary);
+    font: 500 0.77rem / 1.4 var(--font-mono);
+    letter-spacing: 0.055em;
+    text-transform: uppercase;
+  }
+
+  .project-card-record :is(h2, h3) {
+    margin: 0 0 0 -0.03em;
+    font-size: clamp(2.6rem, 6.8vw, 6.75rem);
+    font-weight: 700;
+    letter-spacing: -0.085em;
+    line-height: 1.02;
+    overflow-wrap: anywhere;
+  }
+
+  .project-card-record :is(h2, h3) a:hover {
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 0.13em;
+  }
+
+  .project-card-record .project-summary {
+    max-width: 40ch;
+    margin-top: 0.65rem;
+    color: var(--text);
+    font-size: 1rem;
+    line-height: 1.45;
+  }
+
+  .project-card-record .tag-list {
+    margin-bottom: 0.45rem;
+  }
+
+  .project-card-record .project-card-link {
+    min-height: 44px;
+    border: 1px solid var(--button-bg);
+    background: var(--button-bg);
+    padding: 0.55rem 0.8rem;
+    color: var(--button-text);
+    font-weight: 700;
+    text-decoration: none;
+  }
+
+  .project-card-record .project-card-link:hover {
+    border-color: currentColor;
+    background: transparent;
+    color: var(--text);
+  }
+
+  @media (min-width: 721px) {
+    :global(:root[data-design="workbench"]) .project-card-record {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 0.75fr);
+    }
+
+    :global(:root[data-design="workbench"])
+      .project-card-record
+      .project-card-media {
+      grid-area: 1 / 2;
+    }
+
+    :global(:root[data-design="workbench"])
+      .project-card-record
+      .project-card-body {
+      grid-area: 1 / 1;
+    }
+  }
+
+  @media (max-width: 720px) {
+    .project-card.project-card-record {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .project-card-record .project-card-body {
+      grid-area: 2 / 1;
+    }
+  }
+</style>

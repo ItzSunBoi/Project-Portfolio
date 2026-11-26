@@ -5,9 +5,10 @@ import { getTimelineHeadingTag } from "../../lib/project-content";
 
 interface Props {
   blocks: ProjectContentBlock[];
+  headingId?: string;
 }
 
-const { blocks } = Astro.props;
+const { blocks, headingId } = Astro.props;
 
 const photoRecommendations = {
   cover: "2400 × 1600 px · landscape cover",
@@ -26,7 +27,13 @@ const photoRecommendations = {
           return <p class="project-prose">{block.body}</p>;
         case "heading":
           return block.level === 2 ? (
-            <h2 class="project-prose">{block.title}</h2>
+            <h2
+              class="project-prose"
+              id={index === 0 ? headingId : undefined}
+              tabindex={index === 0 && headingId ? -1 : undefined}
+            >
+              {block.title}
+            </h2>
           ) : (
             <h3 class="project-prose">{block.title}</h3>
           );
@@ -109,22 +116,16 @@ const photoRecommendations = {
           return (
             <section class="content-timeline-section">
               <TimelineHeading>{block.title}</TimelineHeading>
-              <ol class="content-timeline">
-                {block.items.map((item) => (
+              <ol class="project-diary">
+                {block.items.map((item, itemIndex) => (
                   <li>
-                    <span
-                      class:list={[
-                        "timeline-marker",
-                        item.state && `is-${item.state}`,
-                      ]}
-                    />
-                    <div>
-                      <div class="content-timeline-heading">
-                        <strong>{item.title}</strong>
+                    <details open={itemIndex === 0} data-state={item.state}>
+                      <summary>
+                        {item.title}
                         {item.date && <span>{item.date}</span>}
-                      </div>
+                      </summary>
                       <p>{item.body}</p>
-                    </div>
+                    </details>
                   </li>
                 ))}
               </ol>

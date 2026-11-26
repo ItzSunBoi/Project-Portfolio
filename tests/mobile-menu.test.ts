@@ -19,6 +19,7 @@ class FakeClassList {
 class FakeElement {
   dataset: Record<string, string> = {};
   hidden = false;
+  inert = false;
   classList = new FakeClassList();
   focused = false;
   attributes = new Map<string, string>();
@@ -59,6 +60,7 @@ function fixture() {
   const toggle = new FakeElement();
   const panel = new FakeElement();
   const link = new FakeElement();
+  const main = new FakeElement();
   const documentRoot = new FakeElement();
   const windowRoot = new FakeElement() as FakeElement & { innerWidth: number };
 
@@ -67,6 +69,7 @@ function fixture() {
   menu.children.set("[data-mobile-nav-panel]", panel);
   menu.children.set("[data-mobile-nav-link]", [link]);
   documentRoot.children.set("[data-mobile-menu]", menu);
+  documentRoot.children.set("[data-menu-background]", [main]);
   Object.assign(documentRoot, { body });
   windowRoot.innerWidth = 390;
 
@@ -80,6 +83,7 @@ function fixture() {
     controller,
     documentRoot,
     link,
+    main,
     menu,
     panel,
     toggle,
@@ -89,7 +93,7 @@ function fixture() {
 
 describe("mobile navigation", () => {
   it("opens and closes from the menu button", () => {
-    const { body, controller, menu, panel, toggle } = fixture();
+    const { body, controller, main, menu, panel, toggle } = fixture();
 
     expect(controller?.isOpen()).toBe(false);
     expect(panel.hidden).toBe(true);
@@ -102,12 +106,14 @@ describe("mobile navigation", () => {
     expect(toggle.attributes.get("aria-expanded")).toBe("true");
     expect(toggle.attributes.get("aria-label")).toBe("Close navigation");
     expect(body.classList.contains("mobile-menu-open")).toBe(true);
+    expect(main.inert).toBe(true);
 
     toggle.dispatch("click");
 
     expect(controller?.isOpen()).toBe(false);
     expect(panel.hidden).toBe(true);
     expect(toggle.attributes.get("aria-expanded")).toBe("false");
+    expect(main.inert).toBe(false);
   });
 
   it("closes after navigation, Escape, or returning to desktop", () => {

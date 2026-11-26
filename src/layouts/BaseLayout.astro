@@ -38,12 +38,12 @@ const defaultTheme = content.site.defaultTheme;
     <meta name="description" content={description} />
     <meta
       name="theme-color"
-      content="#F7FBFF"
+      content="#F1EFE6"
       media="(prefers-color-scheme: light)"
     />
     <meta
       name="theme-color"
-      content="#07131F"
+      content="#202A44"
       media="(prefers-color-scheme: dark)"
     />
     {noIndex && <meta name="robots" content="noindex, nofollow" />}
@@ -65,6 +65,12 @@ const defaultTheme = content.site.defaultTheme;
 
     <script is:inline define:vars={{ defaultTheme }}>
       (() => {
+        const root = document.documentElement;
+        const design = new URLSearchParams(window.location.search).get(
+          "design",
+        );
+        root.dataset.design =
+          design === "workbench" ? "workbench" : "editorial";
         let saved = null;
         try {
           saved = localStorage.getItem("portfolio-theme");
@@ -82,7 +88,7 @@ const defaultTheme = content.site.defaultTheme;
               : systemDark
                 ? "dark"
                 : "light";
-        document.documentElement.dataset.theme = theme;
+        root.dataset.theme = theme;
       })();
     </script>
 
@@ -97,9 +103,12 @@ const defaultTheme = content.site.defaultTheme;
     }
   </head>
   <body id="top">
-    <a class="skip-link" href="#main-content">Skip to content</a>
+    <div class="paper-light" data-paper-light aria-hidden="true"></div>
+    <a class="skip-link" href="#main-content" data-menu-background
+      >Skip to content</a
+    >
     <Header />
-    <main class="page-main" id="main-content">
+    <main class="page-main" id="main-content" data-menu-background>
       <slot />
     </main>
     <Footer />

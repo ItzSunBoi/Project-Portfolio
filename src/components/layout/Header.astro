@@ -4,7 +4,6 @@ import SunMark from "../common/SunMark.astro";
 import ThemeToggle from "../common/ThemeToggle.astro";
 
 const pathname = Astro.url.pathname;
-const displayDomain = new URL(content.site.baseUrl).hostname;
 
 function isActive(href: string) {
   if (href.includes("#")) return false;
@@ -29,17 +28,20 @@ const navigation = content.navigation.map((item) => ({
 ---
 
 <header class="site-header" data-site-header>
+  <div
+    class="paper-light paper-light-header"
+    data-paper-light
+    aria-hidden="true"
+  >
+  </div>
   <div class="site-shell header-inner">
     <a
       class="brand-link"
       href="/"
       aria-label={`${content.site.brandName} home`}
     >
-      <SunMark class="brand-sun" size={34} />
-      <span class="brand-wordmark">
-        <strong>{content.site.brandName}</strong>
-        <small>{displayDomain}</small>
-      </span>
+      <SunMark class="brand-sun" size={24} />
+      <span>{content.site.brandName}</span>
     </a>
 
     <nav class="desktop-nav" aria-label="Primary navigation">
@@ -48,7 +50,13 @@ const navigation = content.navigation.map((item) => ({
           <a
             class:list={["nav-link", item.active && "is-active"]}
             href={item.href}
-            aria-current={item.active ? "page" : undefined}
+            aria-current={
+              item.active
+                ? pathname === item.pathname
+                  ? "page"
+                  : "location"
+                : undefined
+            }
             data-nav-link
             data-nav-pathname={item.pathname}
             data-nav-hash={item.hash}
@@ -85,19 +93,22 @@ const navigation = content.navigation.map((item) => ({
         >
           <nav class="site-shell mobile-nav" aria-label="Mobile navigation">
             {
-              navigation.map((item, index) => (
+              navigation.map((item) => (
                 <a
                   class:list={["mobile-nav-link", item.active && "is-active"]}
                   href={item.href}
-                  aria-current={item.active ? "page" : undefined}
+                  aria-current={
+                    item.active
+                      ? pathname === item.pathname
+                        ? "page"
+                        : "location"
+                      : undefined
+                  }
                   data-mobile-nav-link
                   data-nav-link
                   data-nav-pathname={item.pathname}
                   data-nav-hash={item.hash}
                 >
-                  <span class="mobile-nav-index" aria-hidden="true">
-                    {String(index + 1).padStart(2, "0")}
-                  </span>
                   {item.label}
                 </a>
               ))

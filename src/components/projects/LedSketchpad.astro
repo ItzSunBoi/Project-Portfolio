@@ -1,0 +1,272 @@
+---
+import {
+  defaultLedColour,
+  ledColumns,
+  ledPalette,
+  ledPixelLabel,
+  ledRows,
+  sunHasPixel,
+} from "../../lib/led-sketchpad";
+
+const rows = Array.from({ length: ledRows }, (_, row) =>
+  Array.from({ length: ledColumns }, (_, column) => row * ledColumns + column),
+);
+const centrePixel = rows[Math.floor(ledRows / 2)][Math.floor(ledColumns / 2)];
+const colours = Object.entries(ledPalette);
+const paletteStyles = colours
+  .map(([colour, { hex }]) => `--led-${colour}: ${hex}`)
+  .join(";");
+---
+
+<section
+  class="led-sketchpad"
+  data-led-sketchpad
+  aria-labelledby="led-title"
+  style={paletteStyles}
+>
+  <div class="led-copy">
+    <h3 id="led-title">Draw in 165 pixels</h3>
+    <p id="led-instructions">
+      Tap or drag to draw. Use the arrow keys to move between pixels and Space
+      to draw or erase.
+    </p>
+    <fieldset class="led-palette">
+      <legend>LED colour</legend>
+      <div class="led-colours">
+        {
+          colours.map(([colour, { label }]) => (
+            <label class="led-colour" style={`--swatch: var(--led-${colour})`}>
+              <input
+                type="radio"
+                name="gigaplex-led-colour"
+                value={colour}
+                checked={colour === defaultLedColour}
+              />
+              <span class="led-swatch" aria-hidden="true" />
+              {label}
+            </label>
+          ))
+        }
+      </div>
+    </fieldset>
+    <div class="led-actions">
+      <button type="button" data-led-sun>Draw sun</button>
+      <button type="button" data-led-clear>Clear</button>
+    </div>
+    <p class="sr-only" data-led-status role="status"></p>
+  </div>
+
+  <div
+    class="led-board"
+    data-led-board
+    role="grid"
+    aria-label="15 by 11 LED sketchpad"
+    aria-describedby="led-instructions"
+    aria-rowcount={ledRows}
+    aria-colcount={ledColumns}
+    style={`--led-columns: ${ledColumns}`}
+  >
+    {
+      rows.map((row) => (
+        <div class="led-row" role="row">
+          {row.map((index) => {
+            const colour = sunHasPixel(index) ? defaultLedColour : undefined;
+            return (
+              <div role="gridcell">
+                <button
+                  type="button"
+                  class="led-pixel"
+                  tabindex={index === centrePixel ? 0 : -1}
+                  aria-label={ledPixelLabel(index, colour)}
+                  aria-pressed={Boolean(colour)}
+                  data-led-index={index}
+                  data-led-colour={colour}
+                />
+              </div>
+            );
+          })}
+        </div>
+      ))
+    }
+  </div>
+  <noscript><p>Enable JavaScript to draw on the sketchpad.</p></noscript>
+</section>
+
+<script>
+  import "../../scripts/led-sketchpad";
+</script>
+
+<style>
+  .led-sketchpad {
+    --board: color-mix(in srgb, var(--feature-bg) 62%, black);
+    --board-text: var(--feature-text);
+    --board-muted: color-mix(in srgb, var(--board-text) 82%, var(--board));
+    --board-rule: color-mix(in srgb, var(--board-text) 50%, var(--board));
+    --unlit: color-mix(in srgb, var(--board-rule) 42%, var(--board));
+    display: grid;
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+    align-items: center;
+    gap: clamp(1rem, 2.5vw, 2rem);
+    margin-block: 1.45rem 0;
+    padding: clamp(0.85rem, 2.4vw, 2rem);
+    border: 1px solid var(--board-rule);
+    background: var(--feature-bg);
+    color: var(--board-text);
+  }
+
+  .led-sketchpad :focus-visible,
+  .led-colour:has(input:focus-visible) {
+    outline: 2px solid var(--board-text);
+    outline-offset: 2px;
+  }
+
+  .led-copy h3 {
+    margin: 0 0 0.35rem;
+    font-size: clamp(1.75rem, 3.15vw, 2.9rem);
+    font-weight: 700;
+    letter-spacing: -0.055em;
+    line-height: 1.06;
+  }
+
+  .led-copy p {
+    margin: 0;
+    color: var(--board-muted);
+    font-size: 0.94rem;
+    line-height: 1.48;
+  }
+
+  .led-palette {
+    min-inline-size: 0;
+    margin: 0.85rem 0 0;
+    padding: 0;
+    border: 0;
+  }
+
+  .led-palette legend {
+    margin-bottom: 0.3rem;
+    color: var(--board-muted);
+    font: 0.78rem var(--font-mono);
+  }
+
+  .led-colours,
+  .led-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+  }
+
+  .led-colour,
+  .led-actions button {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    min-height: 2.75rem;
+    border: 1px solid var(--board-rule);
+    background: transparent;
+    padding: 0.4rem 0.62rem;
+    color: inherit;
+    cursor: pointer;
+    font-size: 0.82rem;
+    line-height: 1.2;
+  }
+
+  .led-colour:has(input:checked) {
+    border-color: var(--board-text);
+    background: var(--board-text);
+    color: var(--board);
+    box-shadow: inset 0 -3px 0 var(--board);
+  }
+
+  .led-colour input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: 0;
+    opacity: 0;
+  }
+
+  .led-swatch {
+    width: 0.65rem;
+    height: 0.65rem;
+    border: 1px solid #0005;
+    background: var(--swatch);
+  }
+
+  .led-actions {
+    margin-top: 0.8rem;
+  }
+
+  .led-actions button:hover,
+  .led-colour:hover {
+    border-color: var(--board-text);
+  }
+
+  .led-board,
+  .led-row {
+    display: grid;
+    gap: clamp(2px, 0.35vw, 5px);
+  }
+
+  .led-board {
+    border: 1px solid var(--board-rule);
+    background: var(--board);
+    padding: clamp(0.35rem, 0.9vw, 0.75rem);
+    touch-action: none;
+    user-select: none;
+  }
+
+  .led-row {
+    grid-template-columns: repeat(var(--led-columns), minmax(0, 1fr));
+  }
+
+  .led-pixel {
+    --pixel-colour: var(--unlit);
+    display: block;
+    width: 100%;
+    aspect-ratio: 1;
+    border: 0;
+    background-color: var(--pixel-colour);
+    padding: 0;
+    cursor: crosshair;
+  }
+
+  .led-pixel[data-led-colour="green"] {
+    --pixel-colour: var(--led-green);
+  }
+  .led-pixel[data-led-colour="gold"] {
+    --pixel-colour: var(--led-gold);
+  }
+  .led-pixel[data-led-colour="light-blue"] {
+    --pixel-colour: var(--led-light-blue);
+  }
+  .led-pixel[data-led-colour="dark-blue"] {
+    --pixel-colour: var(--led-dark-blue);
+  }
+  .led-pixel[data-led-colour="purple"] {
+    --pixel-colour: var(--led-purple);
+  }
+  .led-pixel[data-led-colour="white"] {
+    --pixel-colour: var(--led-white);
+  }
+
+  .led-pixel[aria-pressed="true"] {
+    box-shadow: 0 0 6px color-mix(in srgb, var(--pixel-colour) 45%, transparent);
+  }
+
+  .led-sketchpad .led-pixel:focus-visible {
+    outline: 2px solid var(--board-text);
+    outline-offset: 0;
+    box-shadow: inset 0 0 0 3px var(--board);
+  }
+
+  @media (max-width: 1000px) {
+    .led-sketchpad {
+      grid-template-columns: 1fr;
+    }
+
+    .led-board {
+      width: min(100%, 34rem);
+    }
+  }
+</style>

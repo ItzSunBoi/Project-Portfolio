@@ -1,12 +1,9 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
+import { getSweepHeight, profilerParts } from "../src/lib/profiler";
 
 const illustration = readFileSync(
   new URL("../src/components/hero/HeroIllustration.astro", import.meta.url),
-  "utf8",
-);
-const styles = readFileSync(
-  new URL("../src/styles/global.css", import.meta.url),
   "utf8",
 );
 const hero = readFileSync(
@@ -19,7 +16,22 @@ describe("hero exploded-render contract", () => {
     expect(hero).toMatch(
       /href="\/projects\/">\s*Explore projects\s*<span aria-hidden="true">→<\/span>/,
     );
-    expect(hero).toContain('GitHub profile <span aria-hidden="true">↗</span>');
+  });
+
+  it("presents one named hero heading for the active direction", () => {
+    expect(hero.match(/<h1\b/g)).toHaveLength(1);
+    expect(hero).toContain('<span class="sr-only">I build hardware.</span>');
+    expect(hero).toContain('<span class="sr-only">{content.site.name}.</span>');
+    expect(hero).not.toContain("Hardware, firmware & software");
+  });
+
+  it("shows the shared profiler beside the desktop hero and below the phone copy", () => {
+    expect(hero.match(/<HeroIllustration\s*\/>/g)).toHaveLength(1);
+    expect(hero).toMatch(/<div class="profiler">\s*<HeroIllustration/);
+    expect(hero).toMatch(
+      /\.home-hero\s*\{[^}]*grid-template-areas: "title profiler" "intro profiler";/,
+    );
+    expect(hero).toContain('grid-template-areas: "title" "intro" "profiler";');
   });
 
   it("layers the shared render beneath both theme-specific callouts", () => {
@@ -35,27 +47,49 @@ describe("hero exploded-render contract", () => {
   });
 
   it("uses black callouts in light mode and white callouts in dark mode", () => {
-    expect(styles).toMatch(/\.exploded-labels-light\s*\{[^}]*opacity:\s*1;/s);
-    expect(styles).toMatch(
-      /:root\[data-theme="dark"\] \.exploded-labels-light\s*\{[^}]*opacity:\s*0;/s,
+    expect(illustration).toMatch(
+      /\.exploded-labels-light\s*\{[^}]*opacity:\s*1;/s,
     );
-    expect(styles).toMatch(
-      /:root\[data-theme="dark"\] \.exploded-labels-dark\s*\{[^}]*opacity:\s*1;/s,
+    expect(illustration).toMatch(
+      /:global\(:root\[data-theme="dark"\]\) \.exploded-labels-light\s*\{[^}]*opacity:\s*0;/s,
+    );
+    expect(illustration).toMatch(
+      /:global\(:root\[data-theme="dark"\]\) \.exploded-labels-dark\s*\{[^}]*opacity:\s*1;/s,
     );
   });
 
-  it("restores the project title in the original visual-label position", () => {
-    expect(illustration).toContain("Dual Laser Surface Profiler");
-    expect(illustration).toContain('class="hero-visual-title"');
-    expect(styles).toMatch(
-      /\.hero-visual-title\s*\{[^}]*position:\s*absolute;[^}]*z-index:\s*3;[^}]*top:\s*1\.25rem;[^}]*left:\s*1\.4rem;/s,
+  it("keeps a live title and a square inspection bed", () => {
+    expect(illustration).toMatch(
+      /<figcaption[^>]*>\s*Dual Laser Surface Profiler\s*<\/figcaption>/,
     );
+    expect(illustration).toMatch(/\.profiler-bed\s*\{[^}]*aspect-ratio:\s*1;/s);
   });
 
   it("removes the superseded build-loop diagram", () => {
     expect(illustration).not.toContain("SYSTEM / BUILD_LOOP");
     expect(illustration).not.toContain("<svg");
-    expect(styles).not.toContain(".workflow-card");
-    expect(styles).not.toContain(".visual-readout");
+  });
+
+  it("provides the mockup component controls with selectable callouts", () => {
+    expect(profilerParts.map(({ label }) => label)).toEqual([
+      "Assembly",
+      "PCB",
+      "Optics",
+      "Case",
+    ]);
+    for (const part of profilerParts.slice(1)) {
+      expect(illustration).toContain(
+        `[data-part="${part.id}"] .exploded-labels`,
+      );
+    }
+  });
+
+  it("rounds the sweep position and keeps it within the visible bed", () => {
+    expect(getSweepHeight(-1)).toBe(5);
+    expect(getSweepHeight(52.65)).toBe(53);
+    expect(getSweepHeight(120)).toBe(95);
+    expect(
+      profilerParts.every(({ height }) => getSweepHeight(height) === height),
+    ).toBe(true);
   });
 });

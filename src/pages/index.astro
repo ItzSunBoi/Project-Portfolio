@@ -1,5 +1,6 @@
 ---
 import Hero from "../components/hero/Hero.astro";
+import GigaplexFeature from "../components/hero/GigaplexFeature.astro";
 import ProjectCard from "../components/projects/ProjectCard.astro";
 import SectionHeading from "../components/common/SectionHeading.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
@@ -10,9 +11,11 @@ import {
 } from "../lib/content";
 
 const projects = getVisibleProjects();
-const featuredProjects = projects
-  .filter((project) => project.featured)
-  .slice(0, 6);
+const featuredProjects = projects.filter((project) => project.featured);
+const gigaplex = featuredProjects.find((project) => project.id === "gigaplex");
+const otherFeaturedProjects = featuredProjects
+  .filter((project) => project !== gigaplex)
+  .slice(0, gigaplex ? 5 : 6);
 const projectById = new Map(projects.map((project) => [project.id, project]));
 const explorationItems = getExplorationItems();
 
@@ -35,51 +38,62 @@ const homeJsonLd = {
 <BaseLayout jsonLd={homeJsonLd}>
   <Hero />
 
-  <section class="section section-soft" aria-labelledby="featured-title">
-    <div class="site-shell">
-      <SectionHeading
-        id="featured-title"
-        eyebrow="Selected work"
-        title="Projects that cross the hardware–software boundary"
-        description="A selection of systems, tools and experiments. Each starts with a practical problem and usually acquires a PCB somewhere along the way."
-      />
-      <div class="projects-grid" data-project-count={featuredProjects.length}>
-        {featuredProjects.map((project) => <ProjectCard project={project} />)}
-      </div>
-      <div class="section-action">
-        <a class="button button-secondary" href="/projects/">
-          Browse all projects <span aria-hidden="true">→</span>
-        </a>
-      </div>
-    </div>
-  </section>
+  {
+    featuredProjects.length > 0 && (
+      <section
+        class="site-shell selected-work"
+        aria-labelledby="featured-title"
+      >
+        <div class="selected-rule">
+          <h2 id="featured-title">Selected Work</h2>
+          <a href="/projects/">
+            Project index <span aria-hidden="true">→</span>
+          </a>
+        </div>
+        {gigaplex && <GigaplexFeature project={gigaplex} />}
+        {otherFeaturedProjects.length > 0 && (
+          <div
+            class="projects-grid"
+            data-project-count={otherFeaturedProjects.length}
+          >
+            {otherFeaturedProjects.map((project) => (
+              <ProjectCard project={project} />
+            ))}
+          </div>
+        )}
+      </section>
+    )
+  }
 
-  <section class="section" id="skills" aria-labelledby="skills-title">
-    <div class="site-shell">
-      <SectionHeading
-        id="skills-title"
-        eyebrow="Skills & toolbox"
-        title="A practical stack for making systems work"
-        description="Grouped by the work they enable."
-      />
-      <div class="skills-grid">
-        {
-          content.skills.map((group) => (
-            <article class="skill-group">
-              <div class="skill-group-heading">
-                <span class="skill-group-number">{group.code}</span>
-                <h3>{group.title}</h3>
-                <p>{group.description}</p>
-              </div>
-              <ul class="skill-list" aria-label={`${group.title} skills`}>
-                {group.skills.map((skill) => (
-                  <li>{skill}</li>
+  <section
+    class="site-shell toolbox"
+    id="skills"
+    aria-labelledby="skills-title"
+  >
+    <SectionHeading id="skills-title" eyebrow="Skills" title="My toolbox" />
+    <div class="toolbox-groups">
+      {
+        content.skills.map((group) => (
+          <article class="toolbox-row">
+            <h3>{group.title}</h3>
+            <div>
+              <p>{group.description}</p>
+              <ul
+                class="toolbox-tools"
+                role="list"
+                aria-label={`${group.title} skills`}
+              >
+                {group.skills.map((skill, index) => (
+                  <li>
+                    {index > 0 && <span aria-hidden="true">/ </span>}
+                    {skill}
+                  </li>
                 ))}
               </ul>
-            </article>
-          ))
-        }
-      </div>
+            </div>
+          </article>
+        ))
+      }
     </div>
   </section>
 
@@ -118,25 +132,108 @@ const homeJsonLd = {
       </section>
     )
   }
-
-  <section class="section section-soft">
-    <div class="site-shell cta-band">
-      <div>
-        <p class="eyebrow">Find a project</p>
-        <h2>Start with the system, then follow the decisions.</h2>
-        <p>
-          Explore the complete project index or see the tools I use to turn
-          questionable ideas into measurable ones.
-        </p>
-      </div>
-      <div class="hero-actions">
-        <a class="button button-primary" href="/projects/"
-          >Explore projects <span aria-hidden="true">→</span></a
-        >
-        <a class="button button-secondary" href="/contact/"
-          >Contact <span aria-hidden="true">→</span></a
-        >
-      </div>
-    </div>
-  </section>
 </BaseLayout>
+
+<style>
+  .selected-work {
+    padding-bottom: clamp(2.8rem, 7.8vw, 7.6rem);
+  }
+
+  .selected-rule {
+    display: flex;
+    min-height: 2.8rem;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    border-top: 1px solid var(--border-strong);
+  }
+
+  .selected-rule h2 {
+    margin: 0;
+    color: var(--text-secondary);
+    font: 700 0.77rem var(--font-mono);
+    letter-spacing: 0.055em;
+    text-transform: uppercase;
+  }
+
+  .selected-rule a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35em;
+    min-height: 2.75rem;
+    font-size: 0.88rem;
+    font-weight: 700;
+    text-decoration: underline;
+    text-underline-offset: 0.23em;
+  }
+
+  .selected-rule a:hover {
+    text-decoration-thickness: 2px;
+  }
+
+  .selected-work article + .projects-grid {
+    margin-top: 1.5rem;
+  }
+
+  .toolbox {
+    border-top: 1px solid var(--border-strong);
+    padding-block: 0.85rem clamp(3.4rem, 8vw, 8rem);
+  }
+
+  .toolbox :global(.eyebrow) {
+    margin: 0 0 0.6rem;
+    color: var(--text-secondary);
+  }
+
+  .toolbox :global(.section-heading h2) {
+    margin-left: -0.04em;
+    font-size: clamp(2.65rem, 7vw, 6.5rem);
+    font-weight: 700;
+    letter-spacing: -0.085em;
+    line-height: 0.94;
+  }
+
+  .toolbox-row {
+    display: grid;
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.15fr);
+    align-items: baseline;
+    gap: 0.55rem 2rem;
+    padding-block: 1.35rem;
+    border-top: 1px solid var(--border);
+  }
+
+  .toolbox-row:last-child {
+    border-bottom: 1px solid var(--border);
+  }
+
+  .toolbox-row h3 {
+    margin: 0;
+    font-size: clamp(1.55rem, 3vw, 2.9rem);
+    font-weight: 700;
+    letter-spacing: -0.055em;
+    line-height: 1;
+  }
+
+  .toolbox-row p {
+    margin: 0;
+    line-height: 1.5;
+  }
+
+  .toolbox-tools {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.1rem 0.4em;
+    margin: 0.6rem 0 0;
+    padding: 0;
+    list-style: none;
+    color: var(--text-secondary);
+    font: 0.81rem/1.6 var(--font-mono);
+  }
+
+  @media (max-width: 720px) {
+    .toolbox-row {
+      grid-template-columns: minmax(0, 1fr);
+      padding-block: 1.1rem;
+    }
+  }
+</style>

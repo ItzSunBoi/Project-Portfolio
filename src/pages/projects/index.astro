@@ -13,6 +13,26 @@ import {
 const includeDrafts =
   import.meta.env.DEV && import.meta.env.PUBLIC_SHOW_DRAFTS === "true";
 const projects = getVisibleProjects(undefined, includeDrafts);
+const filterGroups = [
+  {
+    name: "category",
+    title: "Category",
+    fallback: "All categories",
+    options: projectCategories.map((value) => ({
+      value,
+      label: projectCategoryLabels[value],
+    })),
+  },
+  {
+    name: "status",
+    title: "Status",
+    fallback: "All statuses",
+    options: projectStatuses.map((value) => ({
+      value,
+      label: projectStatusLabels[value],
+    })),
+  },
+];
 ---
 
 <BaseLayout
@@ -20,115 +40,278 @@ const projects = getVisibleProjects(undefined, includeDrafts);
   description="My hardware, firmware, robotics, PCB, manufacturing and software projects."
   canonicalPath="/projects/"
 >
-  <header class="site-shell page-header">
-    <SectionHeading
-      as="h1"
-      eyebrow="Project index"
-      title="Systems, tools and experiments"
-      description="A working archive of machines, embedded systems and software, documented around the problem, decisions and current state."
-    />
-  </header>
+  <div class="site-shell project-index">
+    <header>
+      <SectionHeading
+        as="h1"
+        variant="page"
+        title="Projects."
+        description="Machines, embedded systems and software. Each write-up follows the decisions that shaped the build."
+      />
+    </header>
 
-  <section
-    class="site-shell section"
-    style="padding-top: 0"
-    aria-label="Project browser"
-  >
-    <form
-      class="filters-panel"
-      method="get"
-      action="/projects/"
-      data-project-filters
-    >
-      <div class="filters-top">
-        <label class="search-label">
+    <section aria-label="Project browser">
+      <form
+        class="project-controls"
+        method="get"
+        action="/projects/"
+        role="search"
+        aria-label="Filter projects"
+        data-project-filters
+      >
+        <label class="project-filter-field">
           Search projects
-          <span class="search-field">
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <circle cx="11" cy="11" r="7"></circle>
-              <path d="m20 20-4-4"></path>
-            </svg>
-            <input
-              type="search"
-              name="q"
-              placeholder="Try ESP32, vision or CAN bus"
-              autocomplete="off"
-            />
-          </span>
+          <input
+            type="search"
+            name="q"
+            placeholder="Search by name or technology"
+            autocomplete="off"
+          />
         </label>
-        <button class="button button-secondary filter-submit" type="submit">
-          Apply filters
+
+        {
+          filterGroups.map(({ name, title, fallback, options }) => (
+            <div class="project-filter-field">
+              <span id={`filter-${name}-label`}>{title}</span>
+              <details name="project-filter" data-filter-options>
+                <summary
+                  aria-labelledby={`filter-${name}-label filter-${name}-selection`}
+                >
+                  <span
+                    id={`filter-${name}-selection`}
+                    data-filter-selection={name}
+                    data-unfiltered={fallback}
+                  >
+                    {fallback}
+                  </span>
+                  <svg viewBox="0 0 16 16" aria-hidden="true">
+                    <path
+                      d="m3.5 6 4.5 4.5L12.5 6"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.5"
+                    />
+                  </svg>
+                </summary>
+                <fieldset
+                  class="project-filter-options"
+                  aria-labelledby={`filter-${name}-label`}
+                >
+                  {options.map(({ value, label }) => (
+                    <label>
+                      <input type="checkbox" name={name} value={value} />
+                      {label}
+                    </label>
+                  ))}
+                </fieldset>
+              </details>
+            </div>
+          ))
+        }
+
+        <button
+          class="button button-secondary project-reset"
+          type="button"
+          data-clear-filters
+          disabled
+        >
+          Reset
         </button>
-      </div>
+        <button type="submit" hidden>Apply filters</button>
+      </form>
 
-      <div class="filter-groups">
-        <fieldset class="filter-group">
-          <legend>Categories</legend>
-          <div class="filter-options">
-            {
-              projectCategories.map((category) => (
-                <label class="filter-chip">
-                  <input type="checkbox" name="category" value={category} />
-                  <span>{projectCategoryLabels[category]}</span>
-                </label>
-              ))
-            }
-          </div>
-        </fieldset>
-        <fieldset class="filter-group">
-          <legend>Status</legend>
-          <div class="filter-options">
-            {
-              projectStatuses.map((status) => (
-                <label class="filter-chip">
-                  <input type="checkbox" name="status" value={status} />
-                  <span>{projectStatusLabels[status]}</span>
-                </label>
-              ))
-            }
-          </div>
-        </fieldset>
-      </div>
-    </form>
-
-    <div class="results-bar" aria-live="polite">
-      <span data-result-count>
+      <p class="project-count" aria-live="polite" data-result-count>
         {projects.length} project{projects.length === 1 ? "" : "s"}
-      </span>
-      <button class="clear-filters" type="button" data-clear-filters hidden>
-        Reset view
-      </button>
-    </div>
-
-    <div
-      class="projects-grid"
-      data-project-results
-      data-project-count={projects.length}
-    >
-      {
-        projects.map((project) => (
-          <ProjectCard project={project} filterable headingAs="h2" />
-        ))
-      }
-    </div>
-
-    <div class="empty-state" data-empty-state hidden>
-      <div>
-        <span class="empty-state-icon" aria-hidden="true">∅</span>
-        <h2>No matching projects</h2>
-        <p>Broaden the search or reset the active filters above.</p>
-      </div>
-    </div>
-
-    <noscript>
-      <p class="content-callout callout-info">
-        Every published project is shown. Enable JavaScript to filter the list.
-        Individual project pages remain fully available.
       </p>
-    </noscript>
-  </section>
+
+      <div
+        class="project-records"
+        data-project-results
+        data-project-count={projects.length}
+      >
+        {
+          projects.map((project) => (
+            <ProjectCard project={project} filterable headingAs="h2" />
+          ))
+        }
+      </div>
+
+      <div class="project-empty" data-empty-state hidden={projects.length > 0}>
+        <h2>No matching projects</h2>
+        <p>Try a different search or reset the filters.</p>
+      </div>
+
+      <noscript>
+        <p class="content-callout callout-info">
+          Every published project is shown. Enable JavaScript to filter the
+          list.
+        </p>
+      </noscript>
+    </section>
+  </div>
 
   <script>
     import "../../scripts/project-filters";
   </script>
 </BaseLayout>
+
+<style>
+  .project-index {
+    padding-bottom: clamp(3.2rem, 8vw, 7.5rem);
+  }
+
+  .project-controls {
+    display: grid;
+    grid-template-columns: minmax(0, 1.4fr) repeat(2, minmax(0, 0.65fr)) auto;
+    align-items: end;
+    gap: 0.7rem;
+    border-block: 1px solid var(--border-strong);
+    padding-block: 1rem;
+  }
+
+  .project-filter-field {
+    display: grid;
+    gap: 0.45rem;
+    min-width: 0;
+    font-size: 0.88rem;
+    font-weight: 700;
+  }
+
+  .project-filter-field details {
+    position: relative;
+  }
+
+  .project-filter-field :is(input[type="search"], summary) {
+    width: 100%;
+    min-height: 44px;
+    border: 1px solid var(--border-strong);
+    border-radius: 0;
+    background: var(--secondary-bg);
+    padding: 0.55rem 0.65rem;
+    color: var(--text);
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.35;
+  }
+
+  .project-filter-field input::placeholder {
+    color: var(--text-secondary);
+  }
+
+  .project-filter-field summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.35rem;
+    cursor: pointer;
+  }
+
+  .project-filter-field summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .project-filter-field summary svg {
+    width: 1rem;
+    flex: none;
+  }
+
+  .project-filter-field details[open] summary svg {
+    transform: rotate(180deg);
+  }
+
+  .project-filter-options {
+    position: absolute;
+    z-index: 4;
+    inset-block-start: calc(100% + 0.25rem);
+    inset-inline-start: 0;
+    display: grid;
+    min-width: max(100%, 10rem);
+    margin: 0;
+    border: 1px solid var(--border-strong);
+    padding: 0.25rem;
+    background: var(--surface);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .project-filter-options label {
+    display: flex;
+    min-height: 44px;
+    align-items: center;
+    gap: 0.45rem;
+    padding-inline: 0.5rem;
+    cursor: pointer;
+    font-weight: 400;
+  }
+
+  .project-filter-options label:hover,
+  .project-filter-options label:has(:checked) {
+    background: var(--secondary-bg);
+  }
+
+  .project-filter-options input {
+    appearance: auto;
+    width: 1rem;
+    height: 1rem;
+    margin: 0;
+    accent-color: var(--primary-strong);
+  }
+
+  .project-reset {
+    min-height: 44px;
+    background: transparent;
+  }
+
+  .project-count {
+    margin: 0;
+    padding-block: 0.9rem;
+    color: var(--text-secondary);
+    font: 500 0.77rem / 1.4 var(--font-mono);
+    letter-spacing: 0.055em;
+    text-transform: uppercase;
+  }
+
+  .project-records {
+    display: grid;
+    gap: 1rem;
+  }
+
+  .project-empty {
+    border: 1px solid var(--border-strong);
+    padding: 2rem;
+  }
+
+  .project-empty h2 {
+    margin: 0;
+    font-size: 1.4rem;
+    font-weight: 700;
+  }
+
+  .project-empty p {
+    margin: 0.35rem 0 0;
+    color: var(--text-secondary);
+  }
+
+  @media (max-width: 720px) {
+    .project-controls {
+      grid-template-columns: repeat(2, minmax(0, 1fr)) auto;
+    }
+
+    .project-filter-field:first-child {
+      grid-column: 1 / -1;
+    }
+  }
+
+  @media (max-width: 490px) {
+    .project-controls {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .project-filter-field:last-of-type .project-filter-options {
+      inset-inline: auto 0;
+    }
+
+    .project-reset {
+      justify-self: start;
+    }
+  }
+</style>

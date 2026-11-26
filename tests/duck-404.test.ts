@@ -28,20 +28,21 @@ describe("404 duck", () => {
     expect(duckLoader).toContain("image.src = RANDOM_DUCK_IMAGE_ENDPOINT");
   });
 
-  it("keeps the requested copy and duck loading hooks on the error page", () => {
-    expect(errorPage).toContain(
-      "documentation is still negotiating. But here is a duck to make it",
+  it("keeps both lines in one error heading and preserves duck loading", () => {
+    const heading = errorPage.match(/<h1>([\s\S]*?)<\/h1>/)?.[1] ?? "";
+
+    expect(errorPage.match(/<h1>/g)).toHaveLength(1);
+    expect(heading).toMatch(
+      />Error 404<.*\n\s*<span[^>]*>the page wandered off\.</,
     );
-    expect(errorPage).toContain("better. :D");
+    expect(errorPage).toContain("Astro.response.status = 404");
     expect(errorPage).toContain("data-duck-image");
     expect(errorPage).toContain("initializeRandomDuck");
   });
 
   it("includes the full footer credit", () => {
-    expect(footer).toContain("Sun Zheng (ItzSunBoi)");
-    expect(footer).toContain(
-      "Built with Astro and stubborn curiosity plus a sprinkle of AI.",
-    );
+    expect(footer).toContain("© 2026 Sun Zheng (ItzSunBoi)");
+    expect(footer).toContain("Built with Astro plus a sprinkle of AI.");
     expect(footer).toContain("https://random-d.uk/");
   });
 });

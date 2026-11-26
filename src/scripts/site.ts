@@ -1,8 +1,10 @@
 import { initializeMobileMenu } from "../lib/mobile-menu";
 import { initializeNavigationState } from "../lib/navigation-state";
+import { initializePaperLight } from "../lib/paper-light";
 
 initializeMobileMenu();
 initializeNavigationState();
+initializePaperLight();
 
 const root = document.documentElement;
 const themeButtons = document.querySelectorAll<HTMLButtonElement>(
@@ -23,6 +25,8 @@ function syncThemeButtons() {
     );
     button.title =
       theme === "dark" ? "Switch to light theme" : "Switch to dark theme";
+    const label = button.querySelector("[data-theme-label]");
+    if (label) label.textContent = theme === "dark" ? "Dark" : "Light";
   });
 }
 
@@ -61,6 +65,20 @@ if (typeof compatibleMedia.addEventListener === "function") {
 }
 
 syncThemeButtons();
+
+if (root.dataset.design === "workbench") {
+  document
+    .querySelectorAll<HTMLAnchorElement>("a[href^='/']")
+    .forEach((link) => {
+      const url = new URL(link.href);
+      if (url.origin !== location.origin || link.hasAttribute("download"))
+        return;
+      if (url.pathname !== "/" && !url.pathname.endsWith("/")) return;
+
+      url.searchParams.set("design", "workbench");
+      link.href = url.href;
+    });
+}
 
 document
   .querySelectorAll<HTMLImageElement>("[data-project-image]")

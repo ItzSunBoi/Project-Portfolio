@@ -1,9 +1,9 @@
 {
   "email": "contact@itzsunboi.dev",
   "eyebrow": "Where to find me",
-  "title": "I'm somewhere,",
+  "title": "I’m somewhere.",
   "knownContact": "If you know me personally, then you'll easily find me.",
-  "inquiryPrefix": "Otherwise please direct all inquiries to",
-  "profilesTitle": "Public links",
+  "inquiryPrefix": "For everything else, there’s email.",
+  "profilesTitle": "Elsewhere",
   "emptyProfilesMessage": "More links will appear here when I decide they should."
 }

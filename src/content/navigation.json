@@ -4,12 +4,12 @@
     "href": "/"
   },
   {
-    "label": "Skills",
-    "href": "/#skills"
-  },
-  {
     "label": "Projects",
     "href": "/projects/"
+  },
+  {
+    "label": "Skills",
+    "href": "/#skills"
   },
   {
     "label": "About",
